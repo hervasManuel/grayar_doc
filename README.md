@@ -1,12 +1,12 @@
-# GrayAR - Técnicas de visión por computador y realidad aumentada aplicadas a la gestión documental
+# GrayAR - Computer vision and augmented reality techniques applied to achievement management 
 
-## Memoria del proyecto
+## Project Report
 
-> Autor: Manuel Hervás Ortega
+> Author: Manuel Hervás Ortega
 
 > Director: Dr. Carlos González Morcillo
 
-> Universidad de Castilla-La Mancha
+> University of Castilla-La Mancha
 
 
 ## License
