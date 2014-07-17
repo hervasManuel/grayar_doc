@@ -1,21 +1,18 @@
-Este directorio contiene un ejemplo «mínimo» de memoria de Trabajo Fin
-de Grado según las normas de la Escuela Superior de Informática de
-Ciudad Real. Puede que no cumpla alguna de dichas normas, pero lo
-iremos perfeccionando.
+# GrayAR - Computer vision and augmented reality techniques applied to achievement management 
 
-http://webpub.esi.uclm.es/archivos/216/NormativaTFG
+## Project Report
 
-EDICIÓN
-=======
-Se recomienda enérgicamente utilizar un sistema operativo GNU/Linux (como
-Debian) y el editor GNU Emacs (versión 23 o mayor) y el modo "auctex".
+> Author: Manuel HervÃ¡s Ortega
 
+> Director: Dr. Carlos GonzÃ¡lez Morcillo
 
-DEPENDENCIAS
-============
+> University of Castilla-La Mancha
+
+## Dependences
+==============
 - arco-authors (deb http://babel.esi.uclm.es/arco/ unstable main)
 
-Paquetes Debian oficiales
+## Debian packages
 -------------------------
 - texlive-latex-extra
 - lmodern
@@ -26,3 +23,11 @@ Paquetes Debian oficiales
 - inkscape
 - dia
 - auctex
+
+## License
+===========
+Copyright Â© 2014 Manuel HervÃ¡s <hervas.manuel@gmail.com>
+
+Permission is granted to copy, distribute and/or modify this document under the terms of the GNU
+Free Documentation License, Version 1.3 or any later version published by the Free Software
+Foundation; with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts. A copy of the license can be found in http://www.gnu.org/copyleft/fdl.html
