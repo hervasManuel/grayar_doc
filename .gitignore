@@ -1,0 +1,13 @@
+# Compiled source #
+*.pdf
+
+# Logs, indexes and tables of contents#
+*.blg
+*.lof
+*.log
+*.lot
+*.out
+*.toc
+*.lol
+*.aux
+
