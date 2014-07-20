@@ -20,6 +20,28 @@ Al producirse una reducción de la documentación, procesos como la  generación
 \bigskip
 En la actualidad existe un gran abanico de herramientas software con el objetivo de controlar e incrementar la eficiencia del flujo de documentos que soportan los negocios o sus actividades denominados Sistemas de Gestión Documental (SOD) o, en ingles, Document Management Systems (DMS)
 
+\subsection{Visión por computador}
+
+La visión por computador es un área relacionada con la  inteligencia artificial que tiene como objetivo la extracción de información del mundo físico a partir de imágenes utilizando sistemas computacionales. 
+
+La visión artificial, en un intento de imitar o reproducir la capacidad que utiliza el ser humano para interpretar su entorno mediante el sentido de la vista, define tradicionalmente cuatro fases principales ~\cite{velez}: 
+
+\begin{itemize}
+
+\item \textbf{Captura:} Consiste en la adquisición de las imágenes mediante algún sensor o cámara. 
+
+\item \textbf{Procesamiento:} Se realiza un tratamiento digital de las imágenes mediante filtros y transformaciones para eliminar o realzar partes de la imagen sobre las que se realizará el análisis posterior. 
+
+\item \textbf{Segmentación:} En esta fase se aíslan los elementos que interesan de una escena para comprenderla. 
+
+\item \textbf{Clasificación:} En ella se intentará distinguir los objetos segmentados realizando un análisis de ciertas características que se definen para diferenciarlos.
+
+\end{itemize}
+
+En la actualidad, las técnicas de visión por computador se utilizan en multitud de entornos industriales. El reconocimiento facial, seguimiento de objetos en tareas de vídeo-vigilancia, búsqueda de imágenes a través de características visuales o el mapeo de una escena para generar un modelo 3D son algunos ejemplos de exitosa implantación comercial.
+
+La realidad aumentada se podría considerar como la aplicación de distintas técnicas de visión por computador. El principal problema que deben tratar los sistemas de realidad aumentada se considera \textbf{registro}, que consiste en calcular la posición relativa de la cámara respecto a la escena para colocar correctamente las imágenes sintéticas dentro de la  imagen real. Este registro se suele realizar empleando diferentes técnicas, como por ejemplo tracking visual~\cite{gonzalez}.
+
 \section{Realidad Aumentada}
 La realidad aumentada es una tecnología mediante la cual la percepción del mundo real se complementa con información adicional generada por ordenador en tiempo real. Esta información adicional puede ser desde etiquetas virtuales, representaciones de modelos tridimensionales, o incluso cambios de iluminación. 
 
@@ -37,27 +59,86 @@ Las aplicaciones de Realidad Aumentada deben cumplir las siguientes característ
 \item[La alineación de los elementos virtuales debe realizarse en 3D.] Los objetos sintéticos deben de estar correctamente alineados en el espacio tridimensional,  o la sensación de integración se verá seriamente afectada.
 \end{description}
  
-%\subsection{Visión por computador y realidad aumentada}
+\subsection{Componentes de un sistema de realidad aumentada}
+Un sistema de realidad aumentada depende de cuatro componentes físicos:
 
-%La visión por computador es un área relacionada con la  inteligencia artificial que tiene como objetivo la extracción de información del mundo físico a partir de imágenes utilizando sistemas computacionales. 
+\begin{description}
 
-%La visión artificial, en un intento de imitar o reproducir la capacidad que utiliza el ser humano para interpretar su entorno mediante el sentido de la vista, define tradicionalmente cuatro fases principales ~\cite{velez}: 
+\item[Elementos de entrada y sensores de orientación] Proporciona al sistema la información visual, la entrada del usuario y, potencialmente, ayudar a la orientación.
 
-%\begin{itemize}
+\item[Fuente de datos] Proporciona información aplicable al medio ambiente para que el sistema aumente la visión del usuario.
 
-%\item \textbf{Captura:} Consiste en la adquisición de las imágenes mediante algún sensor o cámara. 
+\item[Periféricos de retroalimentación de los usuarios] Principalmente en la forma de producción visual, pero también pueden incluir audio y otras interfaces de usuario.
 
-%\item \textbf{Procesamiento:} Se realiza un tratamiento digital de las imágenes mediante filtros y transformaciones para eliminar o realzar partes de la imagen sobre las que se realizará el análisis posterior. 
+\item[Unidad de procesamiento] Combina los datos de los sensores de entrada para determinar la orientación y aumentar la visión del usuario con información de la fuente de datos. Envía el resultado a los periféricos de retroalimentación del usuario.
+\end{description}
 
-%\item \textbf{Segmentación:} En esta fase se aíslan los elementos que interesan de una escena para comprenderla. 
+\subsubsection{Elementos de entrada y sensores de orientación}
+Un sistema de realidad aumentada debe ser capaz de conocer su orientación y posición dentro del entorno circundante con el fin de ofrecer una experiencia ``aumentada'' satisfactoria. La combinación de la orientación y la posición de un observador que se conoce como \emph{pose}. La estimación de la \emph{pose} se definirá con más detalle en la sección 4. La orientación y posición se pueden determinar mediante técnicas de visión por computador, pero hay métodos alternativos para estimar la \emph{pose}  utilizando  sensores diseñados específicamente para medir alguno o todos los parámetros de los seis grados de libertad que componen la \emph{pose}.
 
-%\item \textbf{Clasificación:} En ella se intentará distinguir los objetos segmentados realizando un análisis de ciertas características que se definen para diferenciarlos.
+\paragraph{Localización}
+La manera más popular para determinar la posición es mediante la utilización del Sistema de Posicionamiento Global (GPS), desarrollado por el ejército de Estados Unidos y totalmente operativo desde 1994. 
+Un receptor GPS es lo suficientemente preciso para determinar la ubicación en las aplicaciones de realidad aumentada, además, debido a su bajo coste, los sensores de GPS se llevan incluido en los teléfonos móviles desde 2005.
 
-%\end{itemize}
-%\bigskip
-%En la actualidad, las técnicas de visión por computador se utilizan en multitud de entornos industriales. El reconocimiento facial, seguimiento de objetos en tareas de vídeo-vigilancia, búsqueda de imágenes a través de características visuales o el mapeo de una escena para generar un modelo 3D son algunos ejemplos de exitosa implantación comercial.
+\paragraph{Orientación}
+En el espacio 3D, la orientación de un cuerpo rígido puede ser determinado de forma única por tres ángulos o grados de libertad (3DOF): \emph{pitch, roll y yaw}. La figura \ref{fig:ángulos}  se puede observar una representación de estos tres ángulos como rotaciones alrededor de sus ejes correspondientes. 
 
-%La realidad aumentada se podría considerar como la aplicación de distintas técnicas de visión por computador. El principal problema que deben tratar los sistemas de realidad aumentada se considera \textbf{registro}, que consiste en calcular la posición relativa de la cámara respecto a la escena para colocar correctamente las imágenes sintéticas dentro de la  imagen real. Este registro se suele realizar empleando diferentes técnicas, como por ejemplo tracking visual~\cite{gonzalez}.
+Para facilitar la tarea de orientación los dispositivos móviles, sobre todo smartphones y tablets, están equipados una serie de sensores como:
+\begin{itemize}
+\item Sensores magneto-resistivos, o magnetómetros, que son utilizados como una ``brújula electrónica'' y se utilizan para determinar el \emph{yaw} y la dirección. Las nuevas generaciones de brújulas electrónicas utilizan tres ejes para asegurar una lectura correcta sin importar la inclinación del sensor.
+ 
+\item Acelerómetros para medir la aceleración aceleración experimentada por un objeto con respecto a un marco de referencia. Los acelerómetros no pueden determinar el \emph{yaw}, pero pueden ser utilizados para determinar el \emph{pitch} y el \emph{roll}. 
+\item Giroscopios electrónicos que son utilizados para determinar los tres grados de libertad de orientación a la vez.
+\end{itemize}
+
+Un problema común en los sistemas de seguimiento visual es que los movimientos bruscos de la cámara pueden ocasionar que la imagen salga borrosa y verse afectado el seguimiento visual. Un dispositivo híbrido equipado con un giroscopio y un acelerómetro será capaz de determinar rápidamente y con precisión tres de los seis grados de libertad de la \emph{pose} y ayudar al sistema de seguimiento visual a recuperarse cuando se experimentan imágenes borrosas. 
+
+\paragraph{Fuentes de Vídeo}
+La realidad aumentada superpone información sobre lo que el usuario está viendo. Para los sistemas dinámicos en los que la información virtual debe ser mezclada con la imagen real, se requiere un dispositivo de captura, como una cámara digital. Para los propósitos de las aplicaciones de realidad aumentada es preferible una cámara de vídeo. La mayoría de las aplicaciones utilizan una única cámara y se conocen como sistemas monoculares. También existen sistemas estereoscópicos, que  utilizan dos cámaras para determinar la profundidad.
+
+El desarrollo tecnológico en el ámbito de la captura de imagen digital que han mantenido los principales fabricantes en los últimos 10 años, conocido como la batalla del mega-píxel, ha supuesto un gran avance para disponer de sensores con una gran calidad de imagen y un coste reducido. Actualmente es normal encontrar cámaras de alta resolución en prácticamente todos los dispositivos móviles, permitiendo grabar vídeo en una resolución de 1920x1080 (FullHD) y obtener imágenes fijas de hasta 7136x5360px.
+
+\paragraph{Entrada táctil}
+En sistemas de realidad aumentada portátiles tales como teléfonos inteligentes o tablets, la pantalla funciona al mismo tiempo como una entrada para manipular objetos directamente en la pantalla y un dispositivo de salida.
+
+\subsubsection{Fuente de datos}
+Un sistema de realidad aumentada requiere una fuente de datos e información con la que aumentar la realidad de un usuario. La fuente de datos puede ser desde una base de datos directamente disponible en el sistema, o puede ser información agregada a partir de fuentes disponibles a través de una conexión de red. Actualmente existe un gran desarrollo para el uso de Internet como fuente de datos para aplicaciones de realidad aumentada. Aplicaciones como Wikitude y Layar son ejemplos de las sistemas que utilizan los datos disponibles en el Internet como fuente de datos.
+
+\subsubsection{Periféricos de retroalimentación de los usuarios}
+\paragraph{Dispositivos  de Visualización}
+Existen  muchos métodos y dispositivos para mostrar la información o imágenes generadas para su combinación y alineación con la realidad: 
+\begin{description}
+\item[Monitores y pantallas tradicionales]
+  Sobre todo impulsado por la popularidad de frameworks y bibliotecas como ARToolkit \cite{Kato}, existen muchas implementaciones de realidad aumentada para utilizar con un ordenador de sobremesa o portátil. No requieren de tecnología especial, únicamente una webcam que el usuario puede controlar. La aplicación se suele presentar en una pagina web y permite a los usuarios superponer información o imágenes sobre lo capturado por la webcam. Para la tarea de tracking y registro se utilizan marcadores que el usuario previamente ha impreso.
+  
+\item[HMDs (Head Mount Display)] Los HDM o Head Mount Display son dispositivos que permiten al usuario ver el el mundo real con objetos virtuales superpuesto mediante técnicas ópticas y de vídeo. Los HDM se pueden clasificar en dos categorías:
+  \begin{description}
+  \item[Ópticos (OST - Optical See-Throug)] Permiten al usuario ver el mundo real a través de sus ojos y la imagen virtual se muestra mediante elementos ópticos holográficos, espejos semi-plateados o alguna otra técnica similar. Un ejemplo de este tipo de dispositivo son las Google Glass.
+    
+  \item[Vídeo (VST - Vídeo See-Throug)] En los dispositivos de esta categoría, el usuario percibe tanto el mundo real como la imagen virtual mediante una o varias pantallas. Como ventajas de los VST esta una mayor consistencia entre el mundo real y el virtual.
+  \end{description}
+  
+\item[Visualización basada en proyección]
+  Un sistema de visualización basado en proyección es una buena opción para sistemas fijos, además proporciona una intrusión mínima y la capacidad de interacción con varios usuarios.
+  Se han propuesto una gran variedad de técnicas de visualización mediante proyectores sobre objetos y otras superficies (no necesariamente pantallas). Ehnes \cite{Ehnes} amplió el trabajo anterior de Pinhanez \cite{Pinhanez} sobre la proyección de vídeo para mostrar imágenes virtuales sobre objetos reales directamente utilizando técnicas de tracking de vídeo para seguir el movimiento y manteniendo la imagen sobre objeto mientras este se mueve.
+  
+\item[Dispositivos portátiles (smartphones, tablets)]
+  Hoy en día el dispositivo portátil por excelencia es el smartphone. Es mínimamente invasivo, muy portable y ampliamente extendido. Según el informe de comScore \cite{comScore} el 66\% de los españoles tienen un teléfono inteligente, por lo que son una gran alternativa para la visualización de aplicaciones de realidad aumentada.
+\end{description}
+
+\paragraph{Audio}
+El audio se utiliza principalmente de dos formas diferentes en los sistemas de realidad aumentada: como una modalidad de la interfaz de usuario multimodal o para ofrecer una experiencia aural aumentada. 
+
+Por ejemplo, el usuario pueda ser capaz de dar comandos de voz y el sistema devuelva retroalimentación con señales de audio (pitidos). Este tipo de audio no direccional es trivial desde el punto de vista tecnológico aportando una nueva dimensión a las aplicaciones móviles. El audio aumentado puede servir a personas con discapacidad visual para ayudar a comprender el entorno. Mediante unos altavoces o un par de auriculares, es bastante simple proporcionar al usuario la información en forma de audio. La síntesis de voz también se puede utilizar para leer información, por ejemplo, leer palabras en voz alta desde un sistema de reconocimiento de texto.
+
+\subsubsection{Unidad de procesamiento}
+\paragraph{Dispositivos móviles: Smartphones,  tablets y SBCs (Single Board Computer)}
+
+El teléfono móvil ha evolucionado hacia una plataforma informática móvil (smartphone), en la que desarrollar las actividades habituales de un ordenador personal. El principal inconveniente de estos era la pantalla reducida que disponen (hasta 5”) lo que ha derivado en el desarrollo de un nuevo dispositivo denominado tablet. 
+
+Las tablets disponen de prácticamente las mismas características que los smartphones (incluso el mismo sistema operativo) pero las pantallas son mayores (hasta 10”) sin necesidad de teclado físico ni ratón, con las que se interactúa principalmente mediante la pantalla táctil con los dedos o un stylus (Samsung Galaxy Note).
+
+Otra tendencia tecnológica es el desarrollo de SBCs, (Single Board Computer) que básicamente es un ordenador completo montado sobre un circuito. Su diseño se basa en un microprocesador de bajo rendimiento (normalmente de arquitectura ARM), RAM y diversos dispositivos de E/S como puertos USB, lectores de tarjetas, conectores Ethernet, y salida de audio y vídeo con un precio final muy reducido (alrededor de 40 \euro). Este tipo de dispositivos se crearon para utilizarlos con fines educativos, pero entre la comunidad de usuarios, debido a su gran versatilidad se utilizan para múltiples aplicaciones tales como centros multimedia o distintos tipos de servidores dado su bajo consumo.  
 
 \section{Reconocimiento y análisis de documentos}
 
@@ -103,11 +184,9 @@ Casi todos los algoritmos de reconocimiento de documentos obtienen grandes resul
 
 \section{Impacto socio-económico}
 
+El presente proyecto se enmarca dentro de la Cátedra Indra-UCLM, en el proyecto “ARgos: Sistema de Ayuda a la Gestión Documental basado en Visión por Computador y Realidad Aumentada” que tiene como objetivo la construcción de un sistema de ayuda a la gestión de documentos, basado principalmente en visión por computador y síntesis visual y auditiva en el espacio físico, empleando técnicas de realidad aumentada.  
 
-
-
-
-
+El proyecto Argos está pensado para facilitar la integración laboral de cualquier persona con discapacidad que tenga que gestionar documentación impresa. 
 
 
 \section{Estructura del documento}
@@ -116,10 +195,10 @@ Este documento se ha estructurado según las indicaciones de la normativa de tra
 \begin{definitionlist}
 \item[Capítulo \ref{chap:objetivos}: \nameref{chap:objetivos}] Finalidad y justificación  (con todo detalle) del presente documento.
 \item[Capítulo \ref{chap:antecedentes}: \nameref{chap:antecedentes}] Explica herramientas y aspectos básicos de edición con \LaTeX.
-\item[Capítulo \ref{chap:metodo}: \nameref{chap:antecedentes}] Explica herramientas y aspectos básicos de edición con \LaTeX.
-\item[Capítulo \ref{chap:resultados}: \nameref{chap:antecedentes}] Explica herramientas y aspectos básicos de edición con \LaTeX.
-\item[Capítulo \ref{chap:conclusiones}: \nameref{chap:antecedentes}] Explica herramientas y aspectos básicos de edición con \LaTeX.
-\item[Capítulo \ref{chap:bibliografia}: \nameref{chap:antecedentes}] Explica herramientas y aspectos básicos de edición con \LaTeX.
+\item[Capítulo \ref{chap:metodo}: \nameref{chap:metodo}] Explica herramientas y aspectos básicos de edición con \LaTeX.
+\item[Capítulo \ref{chap:resultados}: \nameref{chap:resultados] Explica herramientas y aspectos básicos de edición con \LaTeX.
+\item[Capítulo \ref{chap:conclusiones}: \nameref{chap:conclusiones}] Explica herramientas y aspectos básicos de edición con \LaTeX.
+\item[Capítulo \ref{chap:bibliografia}: \nameref{chap:bibliografia}] Explica herramientas y aspectos básicos de edición con \LaTeX.
 \end{definitionlist}
 
 
