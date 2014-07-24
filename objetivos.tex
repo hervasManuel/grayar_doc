@@ -22,23 +22,11 @@ Hoy en día la mayor parte de la producción de información en forma de documen
     \end{center}
 \end{figure}
    
-Según lo anterior, sería deseable disponer de  una herramienta que permitiera el tratamiento directo sobre estos documentos \textit{físicos}.  ARgos, es un proyecto de la Cátedra INDRA-UCLM que pretende la construcción de un sistema de ayuda a la gestión de documentos impresos mediante el uso de técnicas de visión por computador, síntesis visual y auditiva y técnicas de realidad aumentada. En la figura \ref{fig:diagrama_argos} se recogen los componentes funcionales del sistema.
+Según lo anterior, sería deseable disponer de una herramienta que permitiera el tratamiento directo sobre estos documentos \textit{físicos}.  ARgos, es un proyecto de la Cátedra INDRA-UCLM que pretende la construcción de un sistema de ayuda a la gestión de documentos impresos mediante el uso de técnicas de visión por computador, síntesis visual y auditiva y técnicas de realidad aumentada. En la figura \ref{fig:diagrama_argos} se recogen los componentes funcionales del sistema.
 
 
 %\subsection{Objetivos específicos}
-El Trabajo Fin de Grado propuesto abordará el desarrollo de los sistemas de captura, tracking y registro, e identificación de documentos dentro del proyecto ARgos, mientras que la construcción de los sistemas de representación, delegación de tareas y comunicaciones serán realizadas en \textbf{BelfegAR}, el Trabajo Fin de Grado de Santiago Sánchez Sobrino. 
-
-\begin{figure}[h]
-  \begin{center}
-    \includegraphics[width=0.75\textwidth]{Sistema_ARgos_Manuel.png}
-    \caption{Esquema de subsistema de ARgos}
-    \label{fig:subsistemas_argos}
-  \end{center}
-\end{figure}
-
-Las tareas a realizar dentro de este TFG corresponden a los módulos que aparecen sombreados en la figura \ref{fig:subsistemas_argos} y por tanto los objetivos específicos a desarrollar se resumen a continuación:   
-
-
+El Trabajo Fin de Grado propuesto abordará el desarrollo de los sistemas de captura, tracking y registro, e identificación de documentos dentro del proyecto ARgos y por tanto los objetivos específicos a desarrollar se resumen a continuación:   
 
 \section{Objetivo general}
 El sistema emplea una cámara de bajo coste como entrada al módulo de visión por computador y utilizaremos un cañón de proyección portátil para mostrar información visual, directamente alineada sobre el documento del mundo físico. El sistema responderá a las peticiones que el usuario realice sobre el espacio físico, ampliando información relacionada que sea relevante a la acción que quiera realizar.
@@ -51,27 +39,22 @@ La unidad de proceso se encargará de tomar como entrada las imágenes obtenidas
 Deberemos proveer al sistema de un módulo para obtener las imágenes y aplicarle el procesado previo necesario, como puede ser el escalado, umbralización, detección de bordes o detección de características \cite{ortiz} \cite{Bay}. Otra tarea a realizar es calcular la distorsión debida a la proyección en perspectiva mediante los parámetros extrínsecos e intrínsecos de la cámara.
 
 \subsection{Sistema de identificación de documentos}
-GrayAR contará con un sistema de identificación rápida empleando algoritmos de recuperación de imágenes como Locally Likely Arrangement Hashing (LLAH) \cite{Nakai} y comparará el documento que está siendo analizado con una base de datos de documentos conocidos por el sistema.
+GrayAR contará con un sistema de identificación rápida empleando algoritmos de recuperación de imágenes y comparará el documento que está siendo analizado con una base de datos de documentos conocidos por el sistema.
 
 \subsection{Implementación de técnicas de tracking y registro}
 Para el correcto alineado de la información mostrada, el módulo de tracking y registro contará con funciones de cálculo de \emph{pose} (rotación y translación del objeto en el espacio 3D) en tiempo real y algoritmos para la estimación y descripción del movimiento como Optical Flow \cite{LucasKanade}.   
 
 \subsection{Utilización de paradigmas de interacción natural con el usuario  (NUI)}
-El usuario podrá interactuar directamente en el espacio físico sin utilizar sistemas de mando o dispositivos de entrada tradicionales como sería un ratón,
-teclado, etc. y en su lugar, se hará uso de movimientos gestuales con las manos y se estudiará la posible incorporación de otros mecanismos de interacción como el reconocimiento de voz.
+El usuario podrá interactuar directamente en el espacio físico sin utilizar sistemas de mando o dispositivos de entrada tradicionales como sería un ratón, teclado, etc. y en su lugar, se hará uso de movimientos gestuales con las manos.
 
-\subsection{Facilitar la gestión documental a personas con distinto tipos de  discapacidad mediante amplificación multimodal} 
-Contará con diferentes modos de amplificación de la información del mundo real. Por un lado, la información visual se amplificará empleando el cañón de proyección que mostrará información relevante al contexto directamente sobre el espacio del papel. 
-
-El sistema de cómputo generará a la vez información auditiva relevante a la operación que se está realizando (síntesis de voz y alertas sonoras). La pantalla del sistema de cómputo podrá mostrar información 3D perfectamente alineada en el espacio del documento, así como otras fuentes de información visual adicionales.
+\subsection{Facilitar la gestión documental a personas con discapacidad mediante amplificaciónde información} 
+Contará con diferentes modos de amplificación de la información del mundo real. Por un lado, la información visual se amplificará empleando el cañón de proyección que mostrará información relevante al contexto directamente sobre el espacio del papel, así como otras fuentes de información visual adicionales. 
 
 \subsection{Se debe basar en componentes de bajo coste}
 Para facilitar la implantación real en el entorno de trabajo, deberá funcionar con componentes de bajo coste, incorporando mecanismos de corrección de distorsión y registro 3D totalmente software.
 
 \subsection{Dispositivo multiplataforma (hardware y software)}
 El desarrollo de GrayAR se realizará siguiendo estándares, tecnologías y bibliotecas libres multiplataforma, con el objetivo de que pueda ser utilizado en el mayor número de plataformas posibles tanto  hardware (x86, x86-64 y ARM) como software (GNU/Linux, Windows y Mac).
-
-
 
 
 % Local Variables:
