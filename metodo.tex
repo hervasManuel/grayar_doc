@@ -1,30 +1,142 @@
 \chapter{Método de trabajo}
 \label{chap:metodo}
 
+\drop{E}{n} este capítulo se describe la metodología de desarrollo aplicada, sus ventajas y motivo de elección. También se listan y describen todas las herramientas utilizadas en el desarrollo, ya sean hardware o software.
 
+Al final del capitulo se presenta la evolución del proyecto en base a la metodología empleada, los hitos conseguidos en cada fase, su complejidad y el tiempo empleado en cada una de ellas, detallando las iteraciones realizadas hasta conseguir la versión final del sistema. Igualmente se aportará información del rendimiento (profiling) del sistema en diferentes situaciones.
 
 \section{Metodologia del desarrollo}
 
 \section{Tecnologias y herramientas utilizadas}
 
-\subsection{Lenguajes}
-\subsection{Hardware}
-\subsection{Software}
+En esta sección se listan y detallan los recursos software y hardware empleados en la construcción de la plataforma. Además de una breve explicación del recurso, se enuncia la versión utilizada y sobre qué plataformas opera.
 
+\subsection{Lenguajes}
+\begin{itemize}
+\item \textbf{C++} - El lenguaje empleado para el desarrollo del proyecto ha sido C++ [Str13], debido a la eficiencia y velocidad de ejecución que proporciona a la hora trabajar en aplicaciones y sistemas en tiempo real. También por ser el estándar referente en bibliotecas gráficas y de visión artificial.
+\end{itemize}
+
+\subsection{Hardware}
+\begin{itemize}
+\item Como plataforma hardware del sistema se dispondrá de una placa Raspberry Pi, 
+\item una cámara USB, 
+\item una cámara Raspberry Pi Board conectada a través de un cable plano de 15 pines MPI al puerto CSI (Camera Serie Interface) de la placa.
+\item un pico-proyector portátil 
+\item Amplificador de Audio LM386 montado en una placa de test con un altavoz de 1W
+\item Dos equipos informáticos para el desarrollo del proyecto. Intel Core i7-2600K 3.4 GHz 4 nucleos y dos hilos por nucleo 16 GB de RAM y Nvidia GeForce GTX 560 Ti
+
+\end{itemize}
+
+\subsection{Software}
 \subsubsection{Sistemas Operativos}
 
+\begin{itemize}
+\item \textbf{Debian} - Es una distribución de GNU/Linux desarrollada y mantenida por una comunidad de voluntarios. Es una de las famosas y un gran número de distribuciones estan basadas en ella. Para el desarrollo del proyecto se ha utilizado la versión \emph{unstable}. 
+
+\item \textbf{Raspbian} - Es una distribución de GNU/Linux basada en Debian Wheeze especialmente diseñada y optimizada para la ejecución en la placa Raspberry Pi con  CPU ARMv6   
+\end{itemize}
+
 \subsubsection{Aplicaciones de desarrollo}
+\begin{itemize}
+\item \textbf{GNU Emacs} - Editor y entorno de desarrollo. Se ha utilizado la generación del código fuente y la escritura de la documentación. Versión 24.3.1
+\item \textbf{GNU Make} - Herramienta para la compilación incremental, con soporte multiproceso.
+\item \textbf{GNU GCC} - La colección de compiladores GNU. En concreto se ha utilizado el compilador de C++ (g++) en su versión 4.5.2.
+\item Make: se ha utilizado para crear el sistema de Makefiles de compilación que facilita el proceso. La versión instalada es la 3.81.
+\item \textbf{GNU GDB} - se trata del depurador por excelencia de los sistemas GNU/Linux. Se ha utilizado la versión 7.2.
+\item \textbf{GNU GPROF} - es una herramienta para hacer profiling (ver Sección 6.2) para compiladores de la familia gcc. Se ha utilizado la versión 2.21.
+\item \textbf{GNU CMAKE} - se trata de una herramienta análoga a make, aunque de más alto nivel, para la automatización de generación de código. Se ha utilizado principalmente para la compilación de la biblioteca Bullet. La versión de CMake es la 2.8.3. 
+\end{itemize}
+
+
+
+
 \subsubsection{Documentación y gráficos}
+\begin{itemize}
+\item \textbf{Doxygen} - Sistema de documentación de código fuente [dox10]. Compatible con C++. Se ha utilizado para realizar el manual de referencia de MARS.
+
+\item \textbf{InkScape} - Programa de edición de imágenes vectoriales.
+
+\item \textbf{GIMP} - Herramienta de manipulación de gráficos, utilizada para la creación de overlays para OGRE3D y gráficas de módulos. Versión 2.6.12.
+
+\item \textbf{LibreOffice Draw} - Potente herramienta de dibujado vectorial perteneciente a la suite ofimática LibreOffice. Utilizada para la generación de diagramas para la documentación. Versión 3.5.4.
+
+\item \textbf{LibreOffice Calc} - Potente hoja de cálculo perteneciente a la suite ofimática LibreOffice. Utilizada para el análisis de resultados de la red neuronal empleada, datos estadísticos, generación de gráficas, comparación de valores. . . Versión 3.5.4.
+\item \textbf{\LaTeX{}} - Es un sistema de composición de textos, orientado especialmente a la creación de libros, documentos científicos y técnicos que contengan fórmulas matemáticas. Elegido para la generación de la documentación mediante la distribución Texlive. Versión 2009-15.
+\end{itemize}
+
+
 \subsubsection{Bibliotecas}
+\begin{itemize}
+\item \textbf{OpenCV} - Biblioteca libre que proporciona funciones dirigidas principalmente para el desarrollo de aplicaciones de visión por computador en tiempo real. La versión utilizada es la 2.4.9
+\item \textbf{RapidXML} - 
+\item \textbf{RaspiCam} -  Es una biblioteca para la utilización de la cámara Raspberry Pi Board desarrollada en C++ por el grupo de investigación ``Aplicaciones de la Visión Artificial'' de la Universidad de Cordoba. La versión utilizada es la 0.1.1 
+\end{itemize}
+
 \subsubsection{Control de Versiones}
+\begin{itemize}
+\item \textbf{Git} - Sistema de control de versiones distribuido. Como repositorio central se ha utilizado la plataforma Bitbucket.
+\end{itemize}
 
-\section{Evolución y costes}
-\subsection{Iteración 1}
-\subsection{Iteración 2}
-\subsection{Iteración 3}
-\subsection{Iteración 4}
-\subsection{Iteración 5}
-\subsection{Iteración 6}
-\subsection{Iteración 7}
+\section{Evolución del proyecto}
+\subsection{Concepto del software}
+\subsection{Análisis preliminar de requisitos}
+\subsection{Diseño general}
+\subsection{Iteraciones}
+
+\subsubsection{Iteracion 0}
+Como punto de partida para la elaboración del estado del arte se realizo una revisión sistemática de las diferentes técnicas para la identificación de documentos y su recuperación de una base de datos. Como resultado de esta revisión se ha podido conocer las técnicas más empleadas, así como sus ventajas e inconvenientes. 
+
+El claro ganador es LLAH (Locally Likely Arrangement Hashing) con casi un 40\% de utilización ya sea con su implementación inicial o implementaciones optimizadas creadas para salvar las limitaciones del algoritmo original, lo que lo hace aún mas potente y versatil.
+
+Aunque los metodos basados en detección de descriptores de caracteristicas invariantes como SIFT, SURF, aparecen como muy utilizados, realmente no funcionan correctamente en identificación de documentos ya que no presentan zonas de textura y se producen repeticiones de patrones binarios (el propio texto cumple este patron). La mayoria son una variación del proceso inspirado en la metodologia de Lowe [SIFT], y en la que se obtienen buenos resultados sobre documentos semiestructurados realizando una selección de puntos extraidos y una adaptación del algoritmo RANSAC para la validación de supuestos aciertos en la comparación. El algoritmo tiene una tasa elevada de recuperación y precisión, es robusto a las deformaciones que pueda tener la imagen (perspectiva) y no necesita ningun paso previo de segmentación pero, como inconvenientes, no funciona ante grandes secciones de texto y la identificación que realiza es para obtener documentos similares (un ticket, un billete de tren,....) a la imagen utilizada como consulta.
+
+Uno de los puntos del analisis de resultados, indica que al utilizar hardware con distinto rendimiento, es dificil tener mediciones normalizadas para todos los métodos. Como trabajo futuro se puede realizar para el gestor documental, la implementación de varios de los metodos mas utilizados y ofrecer un estudio comparativo completo al ejecutarse en la misma plataforma.
+
+Existen varias implementaciones optimizadas sobre LLAH para salvar las limitaciones iniciales del algoritmo. Sería un trabajo futuro la tarea de buscar sólo las publicaciones que se hayan hecho sobre LLAH e intentar crear una implementación conjunta  con todas las optimizaciones. 
 
 
+\subsubsection{Iteración 1}
+\begin{description}
+\item [Arquitectura básica] Una vez conocidas las técnicas necesarias y los objetivos del sistema a desarrollar construimos una arquitectura básica que iremos completando y refinando en cada una de las sucesivas iteraciones.
+\item [Captura de imágenes] La raspberry tiene opción de conectar una cámara USB u obtener las ímagenes por medio de una raspiCam, que se conecta por directamente a un puerto de expansión de la placa. Se crea un módulo de captura de imagenes que soporte ambas cámaras.
+
+\item [Calibrado de la cámara] Diseñamos y construimos un sistema de calibrado para obtener los parametros intrínsecos de la cámara, necesarios para los cálculos posteriores de posicionamiento.
+
+\item [Detección de un folio en la imagen] Mediante segmentación de la imagen obtenida, detectamos una hoja de papel y obtenemos la posición de sus 4 esquinas.
+
+\item [Sistema básico de cálculo de homografias] Creamos un sistema básico de cálculo homogŕafico necesario para la proyección de la perspectiva. En esta primera fase, los cálculos son los
+  necesarios para realizar el registro y visualizarlo en la pantalla del ordenador.
+
+\end{description}
+
+\subsubsection{Iteración 2}
+\begin{description}
+\item [Cálculo de homografias del sistema cámara-proyector] Un proyector se calibra usando los mismos algoritmos de calibración que una cámara ya que puede considerarse como una ``cámara inversa''. Sin embargo como el proyector no ve, el método no es tan directo como en el caso de una cámara.
+Para la calibración de un proyector es inevitable el uso al menos de una cámara. Para calibrar un proyector, es necesario obtener un conjunto de coordenadas 3D-2D correspondientes. Las coordenadas pueden determinarse usando una cámara situada en una posición con una vista similar a la que tendria el proyector. El método consiste en proyectar con el proyector un plano de calibración y establecer la correspondencia entre lo proyectado y lo que vé la camara.
+
+\end{description}
+
+\subsubsection{Iteración 3}
+\begin{description}
+\item [Optical Flow] Para la estimación y descripción del movimiento, se implementa Optical Flow  (Lucas-Kanade) que nos va a proporcionar herramientas para detección, segmentación y seguimiento de  objetos móviles en la escena a partir de un conjunto de imágenes. 
+
+\end{description}
+\subsubsection{Iteración 4}
+\begin{description}
+\item [Detector de documentos mediante descriptores de imagenes] Se realiza la implementación de detección de documentos mediante descriptores de imagenes. En esta fase se ha utilizado SURF.
+\item [Dibujado mediante OpenCV] Se realizan una serie de funciones para dibujado mediante OpenCV para servir de modo debug ya que permite recibir una ventana con la imagen por medio de SSH.
+\end{description}
+
+\subsubsection{Iteración 5}
+\begin{description}
+\item [Historico de percepciones] Al igual que en ARToolKit, se desarrolla una función de tratamiento del histórico de percepciones para estabilizar el tracking. Este histórico se implementa  almacenando las últimas 10 percepciones similares y realizando una media ponderada en la que las percepciones recientes tienen más peso que las antiguas. Para determinar si son percepciones próximas se establece un umbral. Mediante el uso de esta técnica eliminanos gran parte del efecto tembloroso en la proyección.
+\end{description}
+
+\subsubsection{Iteración 6}
+\subsubsection{Iteración 7}
+
+
+\section{Recursos y costes}
+\subsection{Coste económico}
+\subsection{Estadísticas del repositorio}
+\subsection{Profiling}

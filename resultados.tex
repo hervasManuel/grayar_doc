@@ -1,2 +1,34 @@
 \chapter{Resultados}
 \label{chap:resultados}
+
+
+
+
+\section{Arquitectura}
+\subsection{Descripción general}
+\subsection{Módulo de captura}
+\subsection{Módulo de calibración}
+\subsubsection{Calibración de la cámara}
+\subsubsection{Calibración del proyector}
+\subsubsection{Cálculo de las matrices de transformación camara-proyector}
+\subsection{Módulo de tracking y registro}
+\subsection{Módulo de detección de documentos}
+\subsection{Módulo de interaccion natural}
+\subsection{Módulo de soporte y utilidades}
+\subsubsection{Gestor de configuración}
+Existen muchos parametros configurables en GrayAR. En las primeras versiones del proyecto estos parametros estaban implementados en variables dentro del programa y cada vez que era necesario modificar estos parametros, por ejemplo para la realizacion de pruebas, era necesario recompilar el código. Para los archivos que se encuentran en la raspberry, el tiempo de compilación al modificar el valor de uno de esto parametros podia incluso a tardar varios minutos. Otro problema que surgió al crecer el proyecto esra que estos parametros estaban repartidos entre varios ficheros, lo que suponia tener que recordar donde estaba localizado cada parametro y el consecuente riesgo de dejarse alguno sin actualizar que invalidaria las pruebas realizadas.
+
+Lo primero que se realizo fue sacar todos los parametros configurables a un fichero XML que es leido al inicio del programa permitiendo que todos los parametros sean accesibles por cualquier módulo dentro del programa.
+
+Las ventajas son apreciables a instante, el proceso de pruebas es mucho más rápido, ya que no es necesario volver a compilar cada vez que se realiza un cambio en la configuración. Todos los parametros se encuentran en un único fichero, que al ser XML, tiene una estructura clara y legible para las personas, y que permite una edicion y modificacion sencilla. Tambien permite tener varios ficheros con distintas configuraciones y que se cargue en el programa uno u otro en funcion de las necesidades del momento.
+
+  
+
+
+
+
+Otra ventaja del Singleton está en que los métodos no son estáticos, y por tanto se pueden sobreescribir en las clases herederas (son "overrideables"). No se puede hacer un override de un método estático
+
+
+The Singleton pattern has several advantages over static classes. First, a singleton can extend classes and implement interfaces, while a static class cannot (it can extend classes, but it does not inherit their instance members). A singleton can be initialized lazily or asynchronously while a static class is generally initialized when it is first loaded, leading to potential class loader issues. However the most important advantage, though, is that singletons can be handled polymorphically without forcing their users to assume that there is only one instance.
+\subsubsection{Funciones de representación para depuración}
