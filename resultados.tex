@@ -23,11 +23,14 @@ Para la realización de este proyecto se ha compilado una versión de OpenCV con
 
 
 \subsection{Módulo de calibración}
+Como ya se explicó en el capitulo \ref{chap:antecedentes}, los objetivos de realizar una calibración son dos: obtener los
+
+
 El módulo implementado está basado en una extensión que han realizado Alvaro Cassinelli y Niklas Bergström a partir de un complemento de calibración desarrollado por Kyle McDonald que es capaz de calibrar cámaras y proyectores, consigiendo parametros intrínsecos de ambos, además de los extrinsecos en cuestión de varios minutos 
 
 Se ha creado como una utilidad a parte del proceso principal. Ya que una vez calibrado el sistema, se proporcionan unos ficheros XML con los parametros intrinsecos y extrinsecos que se cargan en el proyecto. Mientras que la cámara y el proyector mantengan su posición y rotacion entre ellos, no es necesario realizar una nueva calibración y es posible mover todo el sistema.
 
-Aunque la cámara y el proyector podría ser calibrados de forma simultánea, es mejor comenzar primero por calibrar la cámara. A continuación, la cámara se utiliza para calcular la posición 3D de los círculos proyectados (por retroproyección). Entonces podemos empezar a calibrar el proyector. Una vez que tengamos una buena error reproyección suficiente (para el proyector), podemos empezar a mover los puntos proyectados en torno a fin de explorar mejor el espacio (y obtener una mejor y más precisa calibración). En esta fase, podemos ejecutar la calibración estéreo OpenCV para obtener los extrinsics cámara-proyector. Después de unos pocos ciclos (y limpieza de malas "tablas"), el proceso converge, los datos se guardan y se puede hacer AR (*) 
+Aunque la cámara y el proyector podría ser calibrados de forma simultánea, es mejor comenzar primero por calibrar la cámara. A continuación, la cámara se utiliza para calcular la posición 3D de los círculos proyectados (por retroproyección). Entonces podemos empezar a calibrar el proyector. Una vez que tengamos una buena error reproyección suficiente (para el proyector), podemos empezar a mover los puntos proyectados en torno a fin de explorar mejor el espacio (y obtener una mejor y más precisa calibración). En esta fase, podemos ejecutar la calibración estéreo OpenCV para obtener los parametros extrinsecos cámara-proyector. Después de unos pocos ciclos (y limpieza de malas "tablas"), el proceso converge, los datos se guardan y se puede hacer AR (*) 
 
 Básicamente, el procedimiento se divide en tres pasos: 
 
@@ -57,8 +60,7 @@ Existen muchos parametros configurables en GrayAR. En las primeras versiones del
 Lo primero que se realizo fue sacar todos los parametros configurables a un fichero XML que es leido al inicio del programa permitiendo que todos los parametros sean accesibles por cualquier módulo dentro del programa.
 
 Las ventajas son apreciables a instante, el proceso de pruebas es mucho más rápido, ya que no es necesario volver a compilar cada vez que se realiza un cambio en la configuración. Todos los parametros se encuentran en un único fichero, que al ser XML, tiene una estructura clara y legible para las personas, y que permite una edicion y modificacion sencilla. Tambien permite tener varios ficheros con distintas configuraciones y que se cargue en el programa uno u otro en funcion de las necesidades del momento.
-
-  
+ 
 La necesidad es la de tener una clase centralizada y accesible desde cualquier parte del programa que sea capaz de leer un fichero de configuración en XML y almacene aquellas variables parametrizables de
 
 Para implementar el gestor de configuración se ha creado la clase ConfigManager. Esta tiene la funcion loadConfiguration a la que se le indica el fichero xml con la configuración a cargar 
