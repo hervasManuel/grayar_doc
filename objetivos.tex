@@ -1,7 +1,7 @@
 \chapter{Objetivos}
 \label{chap:objetivos}
 
-\drop{H}{oy} en día la mayor parte de la producción de información en forma de documentos se realiza por medio de herramientas informáticas. Actualmente en la administración pública se está extendiendo el uso de la firma electrónica, que garantiza la autenticidad del documento digital, pero todavía hay un gran número de personas que no lo utilizan. Es un caso muy habitual que muchos formularios, aún encontrándose en formato digital, la presentación de los documentos se realice sobre un soporte físico. %En estos casos para conseguir una gestión eficaz y ágil, es necesario digitalizar previamente estos documentos para incorporarlos al sistema que tenga implementado la organización.
+\drop{H}{oy} en día, la mayor parte de la producción de información en forma de documentos se realiza por medio de herramientas informáticas. Actualmente, en la administración pública se está extendiendo el uso de la firma electrónica, que garantiza la autenticidad del documento digital, pero todavía hay un gran número de personas que no lo utilizan. Es un caso muy habitual que muchos formularios, aún encontrándose en formato digital,se presenten los documentos sobre un soporte físico. %En estos casos para conseguir una gestión eficaz y ágil, es necesario digitalizar previamente estos documentos para incorporarlos al sistema que tenga implementado la organización.
 \begin{figure}[h!]
   \begin{center}
       \includegraphics[width=0.65\textwidth]{dibujo1.png}
@@ -14,10 +14,10 @@ Según lo anterior, sería deseable disponer de una herramienta que permitiera e
 
 
 %\subsection{Objetivos específicos}
-El Trabajo Fin de Grado propuesto abordará el desarrollo de los sistemas de captura, tracking y registro, e identificación de documentos dentro del proyecto ARgos, mientras que la parte de representación, delegación de tareas y scripting se realizará por Santiago Sánchez Sobrino en su TFG ``BelfegAR: Plataforma para el despliegue gráfico 3D y delegación de tareas en gestión documental con realidad aumentada''. Por tanto los objetivos específicos a desarrollar se resumen a continuación:   
+GrayAR, el Trabajo Fin de Grado propuesto, abordará el desarrollo de los sistemas de captura, tracking y registro, e identificación de documentos dentro del proyecto ARgos, mientras que la parte de representación, delegación de tareas y scripting se realizará por Santiago Sánchez Sobrino en su TFG ``BelfegAR: Plataforma para el despliegue gráfico 3D y delegación de tareas en gestión documental con realidad aumentada''. Los objetivos específicos a desarrollar se resumen a continuación.   
 
 \section{Objetivo general}
-El sistema emplea una cámara de bajo coste como entrada al módulo de visión por computador y utilizaremos un cañón de proyección portátil para mostrar información visual, directamente alineada sobre el documento del mundo físico. El sistema responderá a las peticiones que el usuario realice sobre el espacio físico, ampliando información relacionada que sea relevante a la acción que quiera realizar.
+El sistema emplea una cámara de bajo coste como entrada al módulo de visión por computador y un cañón de proyección portátil para mostrar información visual, directamente alineada sobre el documento del mundo físico. Responderá a las peticiones que el usuario realice sobre el espacio físico, ampliando información relacionada que sea relevante a la acción que quiera realizar.
 
 La unidad de proceso se encargará de tomar como entrada las imágenes obtenidas por la cámara y generar la salida para el cañón de proyección. Esta salida deberá tener en cuenta el posicionamiento 3D relativo entre el documento y el cañón para que el registro de la amplificación visual sea perfecto. El documento podrá moverse dentro de una región del escritorio y la amplificación deberá quedar perfectamente alineada en el espacio físico. Se utilizará un computador en placa Raspberry Pi con arquitectura ARM.
 
@@ -33,9 +33,9 @@ GrayAR contará con un sistema de identificación rápida empleando algoritmos d
 Para el correcto alineado de la información mostrada, el módulo de tracking y registro contará con funciones de cálculo de \emph{pose} (rotación y translación del objeto en el espacio 3D) en tiempo real y algoritmos para la estimación y descripción del movimiento como Optical Flow \cite{LucasKanade}.   
 
 \subsection{Utilización de paradigmas de interacción natural con el usuario  (NUI)}
-El usuario podrá interactuar directamente en el espacio físico sin utilizar sistemas de mando o dispositivos de entrada tradicionales como sería un ratón, teclado, etc. y en su lugar, se hará uso de movimientos gestuales con las manos.
+El usuario podrá interactuar directamente en el espacio físico sin utilizar sistemas de mando o dispositivos de entrada tradicionales como sería un ratón, teclado, etc. siendo sustituidos por funciones más naturales como el uso de movimientos gestuales con las manos.
 
-\subsection{Facilitar la gestión documental a personas con discapacidad mediante amplificación de información} 
+\subsection{Facilitar la gestión documental a personas con necesidades especiales mediante amplificación de información} 
 Contará con diferentes modos de amplificación de la información del mundo real. Por un lado, la información visual se amplificará empleando el cañón de proyección que mostrará información relevante al contexto directamente sobre el espacio del papel, así como otras fuentes de información visual adicionales. 
 
 \subsection{Se debe basar en componentes de bajo coste}
