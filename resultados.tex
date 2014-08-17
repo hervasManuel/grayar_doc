@@ -23,30 +23,55 @@ Para la realización de este proyecto se ha compilado una versión de OpenCV con
 
 
 \subsection{Módulo de calibración}
-Como ya se explicó en el capitulo \ref{chap:antecedentes}, los objetivos de realizar una calibración son dos: obtener los
-parametros intrinsecos y extrinsecos de la cámara y el proyector y calcular los coeficientes de distorsión para ajustarse al modelo de camara pinhole ideal.
-
-El módulo implementado está basado en una extensión que han realizado Alvaro Cassinelli y Niklas Bergström a partir de un complemento de calibración desarrollado por Kyle McDonald que es capaz de calibrar cámaras y proyectores, consigiendo parametros intrínsecos de ambos, además de los extrinsecos en cuestión de varios minutos 
+Como ya se explicó en el capitulo \ref{chap:antecedentes}, los objetivos de realizar el proceso de calibración son la estimación de los parámetros intrínsecos y extrínsecos de la cámara. Los parámetros intrínsecos se refieren a las características internas de la cámara, como por ejemplo, su distancia focal, distorsión, y el centro de la imagen. Los parámetros extrínsecos describen su posición y orientación dentro de un espacio de refencia. Conocer los parámetros intrínsecos es un primer paso esencial, ya que permite calcular la estructura de la escena en el espacio euclideo y elimina la distorsión de lentes, la cual afecta a la precisión.
 
 Se ha creado como una utilidad a parte del proceso principal. Ya que una vez calibrado el sistema, se proporcionan unos ficheros XML con los parametros intrinsecos y extrinsecos que se cargan en el proyecto. Mientras que la cámara y el proyector mantengan su posición y rotacion entre ellos, no es necesario realizar una nueva calibración y es posible mover todo el sistema.
 
-Aunque la cámara y el proyector podrían ser calibrados de forma simultánea, es mejor comenzar primero por calibrar la cámara. 
- 
-El proceso consiste en obtener una serie de 
+El proceso de calibrado de la cámara esta basado esencialmente por el enfoque de [Zhang, 1999]. Se utiliza un patron tipo tablero de ajedrez, en la que se alternan cuadrados blancos y negros, de dimensiones conocidas. El patron se imprime y se pega sobre una superficie plana rígida.
+
+A continuación se obtiene una serie de imágenes en los que se encuentre visible el patrón, con distintas orientaciones y distancias de la cámara. 
+
+Se realiza el cálculo de las homografías entre el patrón y sus imágenes. Estas transformaciones proyectivas 2D producen un sistema de ecuaciones lineales que al resolverse obtiene los parámetros de la cámara. Esta fase generalmente es seguida por una etapa de refinamiento no lineal, basado en la minimización del error total de reproyección.
+
+En principio, cualquier objeto caracterizado apropiadamente podría ser utilizado para la calibración. Existen otros métodos que basan sus referencias en objetos tridimensionales (por ejemplo, una caja cubierta con marcadores).  
+La pricipal ventaja de la utilización de patrones planos, y que ha sido decisiva en la decisión del algoritmo a utilizar, es que son mucho más fáciles de tratar; resulta mucho más complicada la construcción y distribución de objetos 3D precisos para realizar una calibración.
+
+
+El módulo implementado está basado en una extensión que han realizado Alvaro Cassinelli y Niklas Bergström a partir de un complemento de calibración desarrollado por Kyle McDonald que es capaz de calibrar cámaras y proyectores, consigiendo parametros intrínsecos de ambos, además de los extrinsecos en cuestión de varios minutos 
+
+
+Aunque la cámara y el proyector podrían ser calibrados de forma simultánea, es mejor comenzar primero por calibrar la cámara.
+
+El proyector proyecta un patron de circulos asimetrico, primero en una posición fija. La cámara se utiliza para calcular la posición 3D de los círculos proyectados, primero según el sistema de coordenadas de la cámara, y luego seǵun el sistema de coordenadas del patron proyectado. Con esto parametros se calculan los parametros instrinsecos del proyector porque tiene puntos 3D (los círculos proyectados) en coordenadas reales, y sus respectivas proyecciones en el plano de imagen del proyector. El procedimiento de cálculo de homografiás es el mismo que para las cámaras, ya que el modelo matématico del proyector, es el de una cámara invertida. 
+
+
+(c) Finally, we can start computing the extrinsics of the camera-projector (because basically we have 3d points in "world coordinates" (the board), which are the projected circles, and also their projection (2d points) in the camera image and projector "image"). This means you can use the standard stereo calibration routine in openCV (this is done in the function. The reason why we compute FIRST the instrinsics of the projector is because the method stereoCalibrationCameraProjector will call the openCV stereo calibration function using "fixed intrinsics" to ensure better convergence of the algorithm (presumably better because if the camera is very well calibrated first, then the instrinsics of the projector should be good - probably better than if recomputed from all the 3d points and image points in camera and projector). 
+3) Once we get a good enough reprojection error (for the projector), we can start moving the projected points around so as to better explore the space (and get better and more accurate calibration). In this phase, we can run openCV stereo calibration to obtain the camera-projector extrinsics and again, we don't need to recompute the instrinics of the projector. After a few cycles (and cleaning of bad "boards"), the process converges, data is saved and you can do AR. 
 
 
 
 
+calibración de la cámara / proyector comienza: el proyector proyecta una rejilla de círculos (primero en una posición fija, a continuación, como la calibración logra cierta exactitud, la parrilla de salida siguiendo el patrón impreso). Este paso es el siguiente: (a) la cámara se utiliza para calcular la posición 3D de los círculos proyectados (por retroproyección) en la cámara de sistema de coordenadas, y luego en el "tablero" de coordenadas del sistema de coordenadas (o "mundo"). Esto se hace en el método de "backProject" (método de la calibración clase, pero llama sólo cuando el objeto es de tipo "cámara"). 
+
+Una vez calibrada, esta se se utiliza para calcular la posición 3D de los círculos proyectados (por retroproyección) en la cámara de sistema de coordenadas, y luego en el "tablero" de coordenadas del sistema de coordenadas (o "mundo"). Esto se hace en el método de "backProject" (método de la calibración clase, pero llama sólo cuando el objeto es de tipo "cámara"). 
+
+(b) Esto significa que podemos comenzar a computar los instrinsics del proyector porque tiene puntos 3d (los círculos proyectados) en coordenadas del mundo, y sus respectivos "proyección" "imagen" en el proyector plano. 
+
+(c) Finalmente, podemos empezar a calcular los extrinsics de la cámara-proyector (porque básicamente tenemos puntos 3d en "coordenadas mundo" (la mesa), que son los círculos proyectados, y también su proyección (puntos 2d) en la cámara imagen y proyector "imagen"). Esto significa que puede utilizar la rutina de calibración estéreo estándar en OpenCV (esto se hace en la función. La razón por la cual se calcula en primer lugar el instrinsics del proyector se debe a que el método stereoCalibrationCameraProjector llamará a la función de calibración OpenCV estéreo utilizando "intrínsecos fijos" para asegurar mejor convergencia del algoritmo (presumiblemente mejor, porque si la cámara está muy bien calibrado en primer lugar, a continuación, los instrinsics del proyector debe ser bueno - probablemente mejor que si recalculado desde todos los puntos 3D y puntos de imagen en la cámara y el proyector). 
+
+3) Una vez que tengamos una buena error reproyección suficiente (para el proyector), podemos empezar a mover los puntos proyectados en torno a fin de explorar mejor el espacio (y obtener una mejor y más precisa calibración). En esta fase, podemos ejecutar la calibración estéreo OpenCV para obtener los extrinsics cámara-proyector y otra vez, no necesitamos para volver a calcular los instrinics del proyector. Después de unos pocos ciclos (y limpieza de malas "tablas"), el proceso converge, los datos se guardan y se puede hacer AR. 
+
+
+
+
+
+\subsubsection{Calibración de la cámara}
+
+\subsubsection{Calibración del proyector}
 
 A continuación, la cámara se utiliza para calcular la posición 3D de los círculos proyectados (por retroproyección). Entonces podemos empezar a calibrar el proyector. Una vez que tengamos una buena error reproyección suficiente (para el proyector), podemos empezar a mover los puntos proyectados en torno a fin de explorar mejor el espacio (y obtener una mejor y más precisa calibración). En esta fase, podemos ejecutar la calibración estéreo OpenCV para obtener los parametros extrinsecos cámara-proyector. Después de unos pocos ciclos (y limpieza de malas "tablas"), el proceso converge, los datos se guardan y se puede hacer AR (*) 
 
 Básicamente, el procedimiento se divide en tres pasos: 
-
-\subsubsection{Calibración de la cámara}
-
-1) se inicia por primera calibración de la cámara, y el cálculo de sus parametros intrínsecos (el programa es muy similar a la de Kyle McDonald ofxCV: https://github.com/kylemcdonald/ofxCv) 
-
-\subsubsection{Calibración del proyector}
 
  Notes: In case of camera/projector calibration, we need to proceed in TWO PHASES to give time to the projected image to refresh before trying to detect it (in case of "dynamic projected pattern"). Otherwise we may be detecting the OLD projected pattern, but using the newer image points (which completely breaks the calibration of course)
                 
@@ -74,13 +99,69 @@ El proceso de calibrado del proyector se divide en dos fases
 
 el proyector proyecta una rejilla de círculos (primero en una posición fija, a continuación, como la calibración logra cierta exactitud, la parrilla de salida siguiendo el patrón impreso). Este paso es el siguiente: 
 
-(a) la cámara se utiliza para calcular la posición 3D de los círculos proyectados (por retroproyección) en la cámara de sistema de coordenadas, y luego en el "tablero" de coordenadas del sistema de coordenadas (o "mundo"). Esto se hace en el método de "backProject" (método de la calibración clase, pero llama sólo cuando el objeto es de tipo "cámara"). 
 
-(b) Esto significa que podemos comenzar a computar los instrinsics del proyector porque tiene puntos 3d (los círculos proyectados) en coordenadas del mundo, y sus respectivos "proyección" "imagen" en el proyector plano. 
 
-(c) Finalmente, podemos empezar a calcular los extrinsics de la cámara-proyector (porque básicamente tenemos puntos 3d en "coordenadas mundo" (la mesa), que son los círculos proyectados, y también su proyección (puntos 2d) en la cámara imagen y proyector "imagen"). Esto significa que puede utilizar la rutina de calibración estéreo estándar en OpenCV (esto se hace en la función. La razón por la cual se calcula en primer lugar el instrinsics del proyector se debe a que el método stereoCalibrationCameraProjector llamará a la función de calibración OpenCV estéreo utilizando "intrínsecos fijos" para asegurar mejor convergencia del algoritmo (presumiblemente mejor, porque si la cámara está muy bien calibrado en primer lugar, a continuación, los instrinsics del proyector debe ser bueno - probablemente mejor que si recalculado desde todos los puntos 3D y puntos de imagen en la cámara y el proyector). 
 
-3) Una vez que tengamos una buena error reproyección suficiente (para el proyector), podemos empezar a mover los puntos proyectados en torno a fin de explorar mejor el espacio (y obtener una mejor y más precisa calibración). En esta fase, podemos ejecutar la calibración estéreo OpenCV para obtener los extrinsics cámara-proyector y otra vez, no necesitamos para volver a calcular los instrinics del proyector. Después de unos pocos ciclos (y limpieza de malas "tablas"), el proceso converge, los datos se guardan y se puede hacer AR. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+El funcionamiento del algoritmo de calibración se basa en encontrar las esquinas de los
+cuadrados en el patrón de calibración y realizar una asociación entre ellos. Además, habrá
+que proporcionar un valor de la medida real del mundo. Se proporciona la medida del lado
+de un cuadrado del tablero de ajedrez para ello y se utiliza un vector con la medida de las
+esquinas partiendo de esta base.
+Los puntos detectados en las imágenes se almacenan en un vector de objetos cv::Point2f.
+Para el programa se utilizará una matriz que contendrá dos vectores, uno por cada conjunto
+de puntos en una de las imágenes. Los puntos 3D que miden las distancias de las esquinas del
+tablero en unidades del mundo se almacenan en un vector de objetos cv::Point3f.
+Para detectar las esquinas en las imágenes se utiliza la función cv::findChessboardCor-
+ners(...). Adicionalmente, para mejorar esta detección se emplea cv::cornerSubPix, que se
+encargará de ubicar estas esquinas en medidas de subpíxels 1 .
+
+
+
+
+We use a pattern of alternating black and white squares (see Figure 11-9),
+which ensures that there is no bias toward one side or the other in measurement. Also,
+the resulting grid corners lend themselves naturally to the subpixel localization func-
+tion discussed in Chapter 10.
+Given an image of a chessboard (or a person holding a chessboard, or any other scene
+with a chessboard and a reasonably uncluttered background), you can use the OpenCV
+function cvFindChessboardCorners() to locate the corners of the chessboard.
+
+
+In this routine, the method of
+calibration is to target the camera on a known structure that has many individual and
+identifi able points. By viewing this structure from a variety of angles, it is possible to
+then compute the (relative) location and orientation of the camera at the time of each
+image as well as the intrinsic parameters of the camera (see Figure 11-9 in the “Chess-
+boards” section). In order to provide multiple views, we rotate and translate the object,
+so let’s pause to learn a little more about rotation and translation.
+
+Imprimir un Select a pattern, download, and print
+Mount the pattern onto a rigid flat surface
+Take many pictures of the target at different orientations and distances
+Download pictures to compute and select ones that are in focus
+
+
 
 \subsubsection{Cálculo de las matrices de transformación camara-proyector}
 \subsection{Módulo de tracking y registro}
