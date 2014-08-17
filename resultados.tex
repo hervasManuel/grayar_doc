@@ -24,13 +24,21 @@ Para la realización de este proyecto se ha compilado una versión de OpenCV con
 
 \subsection{Módulo de calibración}
 Como ya se explicó en el capitulo \ref{chap:antecedentes}, los objetivos de realizar una calibración son dos: obtener los
-
+parametros intrinsecos y extrinsecos de la cámara y el proyector y calcular los coeficientes de distorsión para ajustarse al modelo de camara pinhole ideal.
 
 El módulo implementado está basado en una extensión que han realizado Alvaro Cassinelli y Niklas Bergström a partir de un complemento de calibración desarrollado por Kyle McDonald que es capaz de calibrar cámaras y proyectores, consigiendo parametros intrínsecos de ambos, además de los extrinsecos en cuestión de varios minutos 
 
 Se ha creado como una utilidad a parte del proceso principal. Ya que una vez calibrado el sistema, se proporcionan unos ficheros XML con los parametros intrinsecos y extrinsecos que se cargan en el proyecto. Mientras que la cámara y el proyector mantengan su posición y rotacion entre ellos, no es necesario realizar una nueva calibración y es posible mover todo el sistema.
 
-Aunque la cámara y el proyector podría ser calibrados de forma simultánea, es mejor comenzar primero por calibrar la cámara. A continuación, la cámara se utiliza para calcular la posición 3D de los círculos proyectados (por retroproyección). Entonces podemos empezar a calibrar el proyector. Una vez que tengamos una buena error reproyección suficiente (para el proyector), podemos empezar a mover los puntos proyectados en torno a fin de explorar mejor el espacio (y obtener una mejor y más precisa calibración). En esta fase, podemos ejecutar la calibración estéreo OpenCV para obtener los parametros extrinsecos cámara-proyector. Después de unos pocos ciclos (y limpieza de malas "tablas"), el proceso converge, los datos se guardan y se puede hacer AR (*) 
+Aunque la cámara y el proyector podrían ser calibrados de forma simultánea, es mejor comenzar primero por calibrar la cámara. 
+ 
+El proceso consiste en obtener una serie de 
+
+
+
+
+
+A continuación, la cámara se utiliza para calcular la posición 3D de los círculos proyectados (por retroproyección). Entonces podemos empezar a calibrar el proyector. Una vez que tengamos una buena error reproyección suficiente (para el proyector), podemos empezar a mover los puntos proyectados en torno a fin de explorar mejor el espacio (y obtener una mejor y más precisa calibración). En esta fase, podemos ejecutar la calibración estéreo OpenCV para obtener los parametros extrinsecos cámara-proyector. Después de unos pocos ciclos (y limpieza de malas "tablas"), el proceso converge, los datos se guardan y se puede hacer AR (*) 
 
 Básicamente, el procedimiento se divide en tres pasos: 
 
@@ -39,6 +47,31 @@ Básicamente, el procedimiento se divide en tres pasos:
 1) se inicia por primera calibración de la cámara, y el cálculo de sus parametros intrínsecos (el programa es muy similar a la de Kyle McDonald ofxCV: https://github.com/kylemcdonald/ofxCv) 
 
 \subsubsection{Calibración del proyector}
+
+ Notes: In case of camera/projector calibration, we need to proceed in TWO PHASES to give time to the projected image to refresh before trying to detect it (in case of "dynamic projected pattern"). Otherwise we may be detecting the OLD projected pattern, but using the newer image points (which completely breaks the calibration of course)
+                
+PHASE 1 goal is just to set the projector image points to be projected, so the projector  will project something to be detected in the draw function. The first time, this is using the recorded pattern, but later (as the projector gets calibrated) we can use some arbitrary points "closer" to the printed pattern.
+
+In this later case (dynamic pattern), if the printed pattern is not visible, then we won't go to phase 2. 
+                
+
+En caso de calibración de la cámara / proyector, tenemos que proceder en dos fases para dar tiempo a la imagen proyectada para refrescar antes de tratar de detectarlo (en caso de "patrón proyectado dinámica"). De lo contrario podemos estar detectando el viejo patrón proyectado, pero el uso de los puntos de imagen más recientes (que rompe por completo la calibración por supuesto) 
+
+FASE 1 gol es sólo para establecer los puntos de la imagen del proyector para ser proyectados, por lo que el proyector proyectará algo para ser detectado en la función draw. La primera vez, esto es usar el patrón grabado, pero más tarde (ya que el proyector se calibra) podemos utilizar algunos puntos arbitrarios "más cerca" del patrón impreso.
+
+
+
+El proceso de calibrado del proyector se divide en dos fases
+
+
+
+
+
+
+
+
+
+
 el proyector proyecta una rejilla de círculos (primero en una posición fija, a continuación, como la calibración logra cierta exactitud, la parrilla de salida siguiendo el patrón impreso). Este paso es el siguiente: 
 
 (a) la cámara se utiliza para calcular la posición 3D de los círculos proyectados (por retroproyección) en la cámara de sistema de coordenadas, y luego en el "tablero" de coordenadas del sistema de coordenadas (o "mundo"). Esto se hace en el método de "backProject" (método de la calibración clase, pero llama sólo cuando el objeto es de tipo "cámara"). 
