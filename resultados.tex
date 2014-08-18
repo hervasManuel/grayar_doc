@@ -5,6 +5,13 @@
 
 
 \section{Arquitectura}
+En este capítulo se mostrarán los resultados obtenidos al aplicar la metodología descrita en la sección  \ref{chap:método}: \nameref{chap:método}
+En el capítulo actual se describe la arquitectura de la plataforma QuQuSI a través de un
+enfoque top-down, comenzando con una descripción general, continuando con las decisiones
+de diseño y terminando con los detalles de implementación. La plataforma QuQuSI es un
+sistema distribuido formado por una serie de aplicaciones (Fig. 5.1):
+
+
 \subsection{Descripción general}
 \subsection{Módulo de captura}
 El módulo de captura de vídeo se encarga de crear y proporcionar fuentes de vídeo de diversa naturaleza para dar soporte al submódulo de registro (ver Sección 5.5), y al submódulo de representación 2D (ver Sección 5.3.4).
@@ -36,13 +43,11 @@ Se realiza el cálculo de las homografías entre el patrón y sus imágenes. Est
 En principio, cualquier objeto caracterizado apropiadamente podría ser utilizado para la calibración. Existen otros métodos que basan sus referencias en objetos tridimensionales (por ejemplo, una caja cubierta con marcadores).  
 La pricipal ventaja de la utilización de patrones planos, y que ha sido decisiva en la decisión del algoritmo a utilizar, es que son mucho más fáciles de tratar; resulta mucho más complicada la construcción y distribución de objetos 3D precisos para realizar una calibración.
 
-
 El módulo implementado está basado en una extensión que han realizado Alvaro Cassinelli y Niklas Bergström a partir de un complemento de calibración desarrollado por Kyle McDonald que es capaz de calibrar cámaras y proyectores, consigiendo parametros intrínsecos de ambos, además de los extrinsecos en cuestión de varios minutos 
-
 
 Aunque la cámara y el proyector podrían ser calibrados de forma simultánea, es mejor comenzar primero por calibrar la cámara.
 
-El proyector proyecta un patron de circulos asimetrico, primero en una posición fija. La cámara se utiliza para calcular la posición 3D de los círculos proyectados, primero según el sistema de coordenadas de la cámara, y luego seǵun el sistema de coordenadas del patron proyectado. Con esto parametros se calculan los parametros instrinsecos del proyector porque tiene puntos 3D (los círculos proyectados) en coordenadas reales, y sus respectivas proyecciones en el plano de imagen del proyector. El procedimiento de cálculo de homografiás es el mismo que para las cámaras, ya que el modelo matématico del proyector, es el de una cámara invertida. 
+El proyector proyecta un patron de circulos asimetrico, primero en una posición fija. La cámara se utiliza para calcular la posición 3D de los círculos proyectados, primero según el sistema de coordenadas de la camara, y luego segun el sistema de coordenadas del patron proyectado. Con esto parametros se calculan los parametros instrinsecos del proyector porque tiene puntos 3D (los círculos proyectados) en coordenadas reales, y sus respectivas proyecciones en el plano de imagen del proyector. El procedimiento de cálculo de homografiás es el mismo que para las cámaras, ya que el modelo matématico del proyector, es el de una cámara invertida. 
 
 
 (c) Finally, we can start computing the extrinsics of the camera-projector (because basically we have 3d points in "world coordinates" (the board), which are the projected circles, and also their projection (2d points) in the camera image and projector "image"). This means you can use the standard stereo calibration routine in openCV (this is done in the function. The reason why we compute FIRST the instrinsics of the projector is because the method stereoCalibrationCameraProjector will call the openCV stereo calibration function using "fixed intrinsics" to ensure better convergence of the algorithm (presumably better because if the camera is very well calibrated first, then the instrinsics of the projector should be good - probably better than if recomputed from all the 3d points and image points in camera and projector). 

@@ -7,6 +7,145 @@ Al final del capitulo se presenta la evolución del proyecto en base a la metodo
 
 \section{Metodologia del desarrollo}
 
+Hay que tener en consideración la muy diferente naturaleza de los métodos, aunque todos se
+engloben dentro de los métodos ágiles. Mientras que Scrum se decanta por la gestión, otros
+como XP especifican las prácticas a seguir en el equipo, Pragmatic Programming da pautas
+para desarrollar un buen código, algunos como FDD no abarcan la totalidad del proceso de
+desarrollo, AgileUP surge como una versión ágil de RUP y propone EUP que es una
+ampliación para abarcar todo el ciclo de vida del software, etc.
+
+La visión general facilitará el entendimiento e incluso el poder complementar varios métodos.
+Por ejemplo, se podría proponer MSF como marco general, Planguage como lenguaje de
+especificación de requisitos, Scrum (con sus patrones organizacionales) como método de
+gestión, XP (con patrones de diseño, programación guiada por pruebas y refactorización)
+como metodología de desarrollo, RUP como abastecedor de artefactos, ASD como cultura
+empresarial y quizá hasta CMM como método de evaluación de madurez.
+
+La aparición de Extreme Programming por parte de Kent Beck en 1999, se considera el punto
+de partida de los métodos ágiles. Los métodos ágiles, utilizan prácticas adaptativas (no
+basadas en predicciones), iterativas, centradas en la gente (cliente y programadores),
+orientadas a entregas incrementales, con mucha comunicación y necesitan que el cliente esté
+muy involucrado en el proyecto para recibir su feedback. El feedback continuo es
+indispensable para evitar que el cliente, con el software acabado, diga “es lo que pedí, pero
+no es lo que necesitaba”, algo habitual cuando se utiliza el método en cascada.
+
+En resumen, las principales características a las que deben dar forma los métodos ágiles son:
+• Incremental: versiones pequeñas de software, con ciclos rápidos.
+• Cooperativo: desarrolladores y cliente siempre en contacto constante.
+• Directo: el método en si es fácil de aprender y modificar, bien documentado.
+• Adaptativo: capaz de tolerar los cambios propuestos por el cliente.
+
+2.9.1 Descripción del contexto 
+El  equipo  de  desarrollo  lo  constituyen  los  autores  de  este  PFC,  estando  muy 
+habituados  a  trabajar  juntos,  con  experiencia  práctica  y  conocimientos  teóricos  en 
+metodologías  ágiles.    Debido  al  tamaño  del  equipo  y  condiciones  del  mismo,  las  reuniones 
+diarias pierden su utilidad.  
+Como ya se ha mencionado, la figura del cliente esta desvirtuada y su función es desempeñada 
+por el equipo de desarrollo. 
+ Al comienzo de cada iteración el equipo se reunirá y creará el Iteration Backlog que consta de 
+un subconjunto de las User Stories del Product Backlog. Estas User Stories son seleccionadas 
+atendiendo a las prioridades del cliente. En esta reunión se descompondrá cada User Story del 
+Iteration Backlog en tareas, estimando el tiempo necesario para llevarlas acabo. 
+
+
+2.9.2 Descripción de las prácticas a utilizar 
+Las prácticas XP que se van a utilizar son: 
+‐ Sentarse juntos 
+Todo el desarrollo se llevará a cabo en un espacio que permita un trabajo cercano, cooperativo 
+y  que  facilite  la  comunicación  directa.  En  las  ocasiones  en  las  que  ésto  no  sea  posible,  se 
+utilizarán medios de videoconferencia como Skype o NetMeeting. 
+
+‐ Iteraciones cortas 
+La  primera  iteración  será  de  15  días  de  duración,  y    en  ella  el  equipo  se  familiarizará  con  el 
+dominio  de  aplicación  y  las  tecnologías  a  utilizar.  También  se  definirá  en  buena  medida  la 
+arquitectura del sistema.  
+Las siguientes iteraciones serán de una semana. 
+ 
+‐ Integración continua. 
+No se utilizarán herramientas que automaticen este proceso, no obstante, debido al tamaño 
+reducido del equipo y a la frecuencia de las integraciones (al menos una al día), esta tarea no 
+resultará demasiado compleja. 
+
+ Diseño incremental 
+A  pesar  de  definir  buena  parte  de  la  arquitectura  en  las  primeras  iteraciones,  el  diseño  del 
+sistema evolucionará iteración tras iteración, sometiéndose a sucesivas refactorizaciones para 
+mejorar su calidad.  
+
+ Código compartido 
+Esta práctica ha sido utilizada con anterioridad en el equipo de desarrollo. Cualquier miembro 
+del mismo podrá introducir cambios en cualquier parte del código para mejorar su calidad. 
+Sin olvidar que el presente desarrollo ágil se encuentra en el contexto de la elaboración de un 
+PFC,  al  finalizar  cada  iteración  se  destinará  tiempo  a  completar  y  refinar  la  documentación 
+obtenida del proceso
+
+2.10.1 Product Backlog de la herramienta 
+En  la  tabla  2.1  se  muestra  el  Product  Backlog  de  la  herramienta  que  constituye  la 
+especificación completa de la funcionalidad de la misma. Recordemos que esta especificación 
+viene determinada por las Historias de Usuario. 
+Contiene el nombre de las Historias de Usuario y su identificador, así como la página de este 
+PFC en la que se puede encontrar la información detallada de cada una.  
+
+El Product Backlog define todo lo necesario en el producto final, basándose en los
+conocimientos de ese momento. Por tanto, define el trabajo a hacer en el proyecto. Incluye
+una lista ordenada por prioridades y actualizada de requisitos técnicos para que el sistema se
+haga o mejore. Los puntos del Product Backlog, por ejemplo, pueden incluir características,
+funciones, parches para bugs, defectos, peticiones de mejoras o actualizaciones de tecnología.
+También se incluyen temas que requieren solución para poder hacer otros puntos de la lista. A
+la lista de backlog puede contribuir el cliente, el equipo del proyecto y los departamentos de
+ventas, marketing y atención al cliente.
+
+
+
+
+2.10.2 Iteraciones 
+En este capítulo se presenta toda la documentación generada para gestionar este 
+proyecto de desarrollo.  Esta documentación está  estructurada en cuatro iteraciones, tal y 
+como se describió en el estudio teórico de las metodologías ágiles.  
+En cada iteración se presentará sólo aquella documentación generada en ese intervalo de 
+tiempo.  
+2.10.2.1 Iteración 1 
+La  iteración  1  está  comprendida  entre  el  1  de  julio  y  el  15  de  julio  del  2008.  Es  la 
+iteración más larga debido a que en ella se llevan a cabo actividades que no se repetirán en el 
+resto  de  iteraciones,  tales  como  familiarización  con  el  dominio  de  aplicación,  especificación 
+inicial de la funcionalidad del sistema y esbozo de la arquitectura general del sistema. 
+A continuación se mostrará el Backlog de la Iteración, las pruebas y el diseño generado en esta 
+iteración. 
+
+
+
+
+3.11.3 Reutilización del código 
+Uno  de  los  principales  objetivos  que  se  persiguen  con  las  metodologías  ágiles  es  entregar 
+proyectos  en  tiempo  y  bajo  presupuesto.  En  otras  palabras,  se  pretende  minimizar  el  TTM 
+(Time To Market) para lo que la reutilización del código constituye un aspecto muy importante, 
+no  se  ha  de  perder  tiempo  reinventando  la  rueda  en  cada  proyecto.    Se  ha  de  tratar  de 
+obtener  diseños  con  una  alta  modularidad,  reutilizando,  como  cajas  negras,  todos  los 
+elementos  software  que  tengamos  y  necesitemos.  De  esta  forma  se  consiguen  sistemas  
+modulares en los que se reduce el coste de introducir modificaciones, reduciendo el coste de 
+su  mantenimiento;  Por  otro  lado  se  consigue  aumentar  el  repositorio  de  componentes  para 
+futuros  proyectos,  con  todas  las  ventajas  que  ello  conlleva  (ver  Desarrollo  Basado  en 
+Componentes). 
+
+Se ha de tener en cuenta que no todos los elementos en un proyecto son reutilizables, puesto 
+que es inevitable que algunos estén estrechamente ligados a condiciones particulares propias 
+de cada dominio de aplicación, la modularidad tampoco ha de convertirse en una obsesión que 
+nos obstaculice el avance del proyecto. Recordemos que si se conoce la mejor forma de hacer 
+algo,  que  así  se  haga,  sino  que  se  haga  de  la  mejor  forma  conocida  para  la  que  se  tenga 
+tiempo. 
+  
+Puede parecer que un diseño iterativo e incremental es incompatible con un diseño modular 
+cuyos  componentes presenten bajo acoplamiento y alta cohesión. La introducción de la User 
+Story  “ver  contexto  (User  Story)  de  la  información”,  que  inicialmente  no  se  contemplaba 
+dentro de la funcionalidad del sistema (Product Backlog), constituye un síntoma de un diseño 
+altamente modular, que a pesar de ser creado de  manera iterativa e incremental, respondió 
+bien  a  los  cambios.  Debido  a  que  su  implementación  requirió  introducir  pequeñas 
+modificaciones en componentes en los que en ningún caso varió la estructura de los mismos. 
+Dichos  elementos  fueron:  “amtlist”,  “amttable”  y  la  creación  de  una  nueva  pantalla  en  la 
+interfaz de grafica de usuario (elemento “amtui”). 
+
+
+
+
 \section{Tecnologias y herramientas utilizadas}
 
 En esta sección se listan y detallan los recursos software y hardware empleados en la construcción de la plataforma. Además de una breve explicación del recurso, se enuncia la versión utilizada y sobre qué plataformas opera.
