@@ -167,24 +167,66 @@ Uno de los puntos del analisis de resultados, indica que al utilizar hardware co
 
 Existen varias implementaciones optimizadas sobre LLAH para salvar las limitaciones iniciales del algoritmo. Sería un trabajo futuro la tarea de buscar sólo las publicaciones que se hayan hecho sobre LLAH e intentar crear una implementación conjunta  con todas las optimizaciones. 
 
+Elección del Proyector
+
+Una vez recibida la raspberry se procede a la configuración del entorno de trabajo. Instalación de Raspbian, OpenCV, compiladores, editores y configuración del servicio de SSH para controlarla desde el puesto de trabajo.
 
 \subsubsection{Iteración 1}
-Una vez conocidas las técnicas necesarias y los objetivos del sistema a desarrollar construimos una arquitectura básica que iremos completando y refinando en cada una de las sucesivas iteraciones.
+El objetivo de esta primera iteración es obtener una arquitectura básica que iremos completando y refinando en cada una de las sucesivas iteraciones.
+
+Analisis
+Partiendo de las premisas que tiene el proyecto ARgos de ser un sistema autonomo, de inicio automático, sin dispositivos como ratones y teclados, en el que la experiencia de usuario vendra en función de lo que se vaya detectando en cada fotograma. 
+Las limitadas capacidades de la raspberry pi y la experiencia que otros programadores han tenido a la hora de trabajar en sistemas de visión por computador en este dispositivo, no pone en alerta de que es posible que llegado un momento la alta carga de computo que tienen los procesos de visión por computador, afecten al rendimiento, y perdamos la sensación de tiempo real. Las consecuencias de esto es que sea necesario que los procesos más costosos deban ser ejecutados en otro dispositivo o computador con mejores prestaciones.  
+
+Diseño 
+Partiendo de las presimas anteriores, no queda otra opción de realizar una arquitectura completamente modular y con todos los subsistemas desacoplados. Una clase \emph{core} será la encargada de inicializar todos los subsistemas, establecer las comunicaciones entre ellos y ejecutar la lógica de usuario soportada dentro de un bucle infinito.
+
+Codificación
+La raspberry tiene la opcion de conectar cámaras USB. Se construye un módulo de captura de vídeo, utilizando las funciones de la clase VideoCapture de OpenCV, que proporcione los distintos frames necesarios para dar soporte al resto de módulos del sistema. 
+
+Mediante segmentación de la imagen obtenida, detectamos una hoja de papel y obtenemos la posición de sus 4 esquinas en píxeles de pantalla.
+
+Para la medida de rendimiento se implementa el cálculo de los FPS que da el sistema a la salida y que nos va a determinar si se obtienen resultados aceptables para un sistema de tiempo real.
+
+Pruebas
+Esta primera fase de pruebas nos pone en situación de los numerosos factores que influyen en este tipo de sistemas.
+
+El primero de ellos es la iluminación. El tipo de luz (natural, fluorescente, incandescente,...), intensidad de la luz natural (luz por la mañana, al mediodia o por la tarde), dirección de la luz (crea sombras en uno u otro sentido), los reflejos producidos por las superficies se convierten en interferencias en forma de grandes manchas en la imagen. Incluso se han detectado variaciones en la detección al encontrase varias personas entre el sistema y una ventana.
+
+En cuestión de rendimiento, los primeros resultados son mucho peores de lo esperado. A una resolución de 320x240 pixeles y solo realizando el proceso de captura y visualización de los frames capturados en pantalla, tenemos un lag de 2 segundos y una tasa de 2 FPS. Si estos valores son inadminisibles en un sistema en tiempo real con una arquitectura tan básica, y sin realizar ningún tipo de procesado en la imagen, cuando se tengan que realizar algun tratamiento a la imagen o realizar algun tipo de computo adicional, el sistema sera no usable, con una sensación de bloqueo del sistema para el usuario.   
+
+Se vuelven a realizar las pruebas con otra cámara USB más moderna (Logitech S720) y afortunadamente los resultados mejoran sensiblemente, a 6 FPS y hasta 10 FPS para imágenes obtenidas en blanco y negro. 
+
 \begin{description}
 
-\item [Captura de imágenes] La raspberry tiene opción de conectar una cámara USB u obtener las ímagenes por medio de una raspiCam, que se conecta por directamente a un puerto de expansión de la placa. Se crea un módulo de captura de imagenes que soporte ambas cámaras.
-
-\item [Calibrado de la cámara] Diseñamos y construimos un sistema de calibrado para obtener los parametros intrínsecos de la cámara, necesarios para los cálculos posteriores de posicionamiento.
-
+Una vez conocidas las técnicas necesarias y los objetivos del sistema a desarrollar construimos una arquitectura básica que iremos completando y refinando en cada una de las sucesivas iteraciones.
+\begin{description}
+\item [Captura de imágenes] La raspberry tiene opción de conectar una cámara USB. Se crea un módulo de captura de imagenes que soporte ambas cámaras.
 \item [Detección de un folio en la imagen] Mediante segmentación de la imagen obtenida, detectamos una hoja de papel y obtenemos la posición de sus 4 esquinas.
-
-\item [Sistema básico de cálculo de homografias] Creamos un sistema básico de cálculo homogŕafico necesario para la proyección de la perspectiva. En esta primera fase, los cálculos son los
-  necesarios para realizar el registro y visualizarlo en la pantalla del ordenador.
-
 \end{description}
 
 \subsubsection{Iteración 2}
+Analisis
+Los objetivos de esta iteración vienen determinados por los malos resultados obtenidos en el sprint anterior. Hay que conseguir mejorar enormente los resultados anteriores o la viabilidad del proyecto se verá seriamente afectada.
+
+Con solo cambiar la cámara USB se obtuvieron grandes mejoras, por lo que la elección de la cámara era un elemento importante
+
+
+Diseño
+Desarrollo
+Pruebas
+
+
+
+
+
+
+
 \begin{description}
+\item [Calibrado de la cámara] Diseñamos y construimos un sistema de calibrado para obtener los parametros intrínsecos de la cámara, necesarios para los cálculos posteriores de posicionamiento.
+\item [Detección de un folio en la imagen] Mediante segmentación de la imagen obtenida, detectamos una hoja de papel y obtenemos la posición de sus 4 esquinas.
+\item [Sistema básico de cálculo de homografias] Creamos un sistema básico de cálculo homogŕafico necesario para la proyección de la perspectiva. En esta primera fase, los cálculos son los
+  necesarios para realizar el registro y visualizarlo en la pantalla del ordenador.
 \item [Cálculo de homografias del sistema cámara-proyector] Un proyector se calibra usando los mismos algoritmos de calibración que una cámara ya que puede considerarse como una ``cámara inversa''. Sin embargo como el proyector no ve, el método no es tan directo como en el caso de una cámara.
 Para la calibración de un proyector es inevitable el uso al menos de una cámara. Para calibrar un proyector, es necesario obtener un conjunto de coordenadas 3D-2D correspondientes. Las coordenadas pueden determinarse usando una cámara situada en una posición con una vista similar a la que tendria el proyector. El método consiste en proyectar con el proyector un plano de calibración y establecer la correspondencia entre lo proyectado y lo que vé la camara.
 
@@ -204,6 +246,12 @@ Para la calibración de un proyector es inevitable el uso al menos de una cámar
 \subsubsection{Iteración 5}
 \begin{description}
 \item [Historico de percepciones] Al igual que en ARToolKit, se desarrolla una función de tratamiento del histórico de percepciones para estabilizar el tracking. Este histórico se implementa  almacenando las últimas 10 percepciones similares y realizando una media ponderada en la que las percepciones recientes tienen más peso que las antiguas. Para determinar si son percepciones próximas se establece un umbral. Mediante el uso de esta técnica eliminanos gran parte del efecto tembloroso en la proyección.
+\item [Obtencion de imagenes con RaspiCam y cámaraUSB]
+ u obtener las ímagenes por medio de una raspiCam, que se conecta por directamente a un puerto de expansión de la placa.
+\item [Detección de papeles con solapamiento] 
+\item [Reconocimiento de manos] 
+
+
 \end{description}
 
 \subsubsection{Iteración 6}
