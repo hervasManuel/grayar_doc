@@ -6,145 +6,208 @@
 Al final del capitulo se presenta la evolución del proyecto en base a la metodología empleada, los hitos conseguidos en cada fase, su complejidad y el tiempo empleado en cada una de ellas, detallando las iteraciones realizadas hasta conseguir la versión final del sistema. Igualmente se aportará información del rendimiento (profiling) del sistema en diferentes situaciones.
 
 \section{Metodologia del desarrollo}
+Para la construcción de un proyecto de cierta envergadura, como es el caso de un Trabajo Fin de Grado, la aplicación de un marco de trabajo para estructurar, planificar y controlar el proceso, es esencial para desarrollar software de calidad.
 
-Hay que tener en consideración la muy diferente naturaleza de los métodos, aunque todos se
-engloben dentro de los métodos ágiles. Mientras que Scrum se decanta por la gestión, otros
-como XP especifican las prácticas a seguir en el equipo, Pragmatic Programming da pautas
-para desarrollar un buen código, algunos como FDD no abarcan la totalidad del proceso de
-desarrollo, AgileUP surge como una versión ágil de RUP y propone EUP que es una
-ampliación para abarcar todo el ciclo de vida del software, etc.
+Las caŕacteristicas del proyecto, con requisitos con posibilidad de cambios y adaptaciones a lo largo de todo el proceso, el reducido ``equipo de desarrollo'' o la necesidad de obtener versiones incrementales que son testeadas y validas por el director de proyecto, hacen que la elección se decante hacia metodologias ágiles de desarrollo de software.
 
-La visión general facilitará el entendimiento e incluso el poder complementar varios métodos.
-Por ejemplo, se podría proponer MSF como marco general, Planguage como lenguaje de
-especificación de requisitos, Scrum (con sus patrones organizacionales) como método de
-gestión, XP (con patrones de diseño, programación guiada por pruebas y refactorización)
-como metodología de desarrollo, RUP como abastecedor de artefactos, ASD como cultura
-empresarial y quizá hasta CMM como método de evaluación de madurez.
-
-La aparición de Extreme Programming por parte de Kent Beck en 1999, se considera el punto
-de partida de los métodos ágiles. Los métodos ágiles, utilizan prácticas adaptativas (no
-basadas en predicciones), iterativas, centradas en la gente (cliente y programadores),
-orientadas a entregas incrementales, con mucha comunicación y necesitan que el cliente esté
-muy involucrado en el proyecto para recibir su feedback. El feedback continuo es
-indispensable para evitar que el cliente, con el software acabado, diga “es lo que pedí, pero
-no es lo que necesitaba”, algo habitual cuando se utiliza el método en cascada.
+Los métodos ágiles, utilizan prácticas adaptativas (no basadas en predicciones), iterativas, centradas en la gente (clientes y programadores), orientadas a entregas incrementales, con mucha comunicación y necesitan que el cliente esté muy involucrado en el proyecto para recibir su feedback. El feedback continuo es indispensable para evitar que el cliente, con el software acabado, diga “es lo que pedí, pero no es lo que necesitaba”, algo habitual cuando se utiliza métodos clásicos.
 
 En resumen, las principales características a las que deben dar forma los métodos ágiles son:
-• Incremental: versiones pequeñas de software, con ciclos rápidos.
-• Cooperativo: desarrolladores y cliente siempre en contacto constante.
-• Directo: el método en si es fácil de aprender y modificar, bien documentado.
-• Adaptativo: capaz de tolerar los cambios propuestos por el cliente.
+\begin{itemize}
+\item \textbf{Incremental:} versiones pequeñas de software, con ciclos rápidos. 
+\item \textbf{Cooperativo:} desarrolladores y cliente siempre en contacto constante.
+\item \textbf{Directo:} el método en si es fácil de aprender y modificar, bien documentado.
+\item \textbf{Adaptativo:} capaz de tolerar los cambios propuestos por el cliente.
+\end{itemize}
+
+Hay que tener en consideración la muy diferente naturaleza de los métodos ágiles. Mientras que Scrum se decanta por la gestión, otros como XP especifican las prácticas a seguir en el equipo, Pragmatic Programming da pautas para desarrollar un buen código, algunos como FDD no abarcan la totalidad del proceso de desarrollo, AgileUP surge como una versión ágil de RUP y propone EUP que es una ampliación para abarcar todo el ciclo de vida del software, etc.
+
+Scrum se ha desarrollado para gestionar el proceso de desarrollo de sistemas. Aplica ideas de proceso industrial para controlar el desarrollo de los sistemas. Su enfoque reintroduce las ideas de flexibilidad, adaptabilidad y productividad. No define ninguna técnica de desarrollo de software específica para la fase de aplicación. Scrum se centra en cómo deben funcionar los miembros del equipo para que el sistema sea flexible y se adapte a unas condiciones
+constantemente cambiantes.
+
+\subsection{Fases de Scrum}
+El proceso de Scrum consta de tres fases: pre-game, desarrollo o game y post-game.
+
+A continuación se detallan las fases de Scrum según Schwaber y Beedle. La fase pre-game incluye dos subfases:
+\begin{itemize}
+
+\item \textbf{Pre-game}
+El planteamiento incluye la definición del sistema a desarrollar y asegurar la financiación. Se crea una lista de acumulación o pila de producto, Product Backlog list conteniendo todos los requisitos conocidos hasta el momento. Los requisitos los puede originar el cliente, los programadores o los departamentos de ventas, marketing o atención al cliente. Se priorizan los requisitos y se estima el esfuerzo necesario para su desarrollo. La Product Backlog list se actualiza constantemente con puntos nuevos y más detalles, así como con estimaciones más exactas y el nuevo orden de prioridades. El planning también incluye la definición del equipo del proyecto, herramientas y otros recursos, la valoración de riesgos, necesidades de formación y la aprobación de la gestión de comprobaciones. En cada iteración, el equipo(s) de Scrum revisa la Product Backlog list actualizada. En la jerga de Scrum, se llaman paquetes a los objetos o componentes que necesitan cambiarse en la siguiente iteración.
+
+En la fase de la arquitectura, se crea el diseño del sistema a alto nivel basándose en los requisitos actuales del Backlog. En el caso de una mejora a un sistema ya existente, se identifican los cambios necesarios en el backlog así como los problemas que puedan causar. En una reunión se revisa el diseño del plan para cumplir las propuestas. Además, se preparan los contenidos de las versiones que serán lanzadas. 
+
+\item \textbf{Game}
+Esta fase, la parte ágil de Scrum, se trata como una caja negra donde se espera lo imprevisible. Las diferentes variables técnicas y de entorno que pueden cambiar (calendario, calidad, requisitos, recursos, tecnologías, herramientas, e incluso métodos de desarrollo) se observan y controlan durante los sprints. En lugar de considerar estos puntos sólo al principio del proyecto, Scrum los controla constantemente para adaptarse a los cambios. En la fase de desarrollo, el sistema funciona en sprints o carreras cortas. Los sprints son ciclos iterativos donde se desarrollan o mejoran las funcionalidades para producir los nuevos incrementos. Cada sprint incluye las fases habituales de desarrollo del software: requisitos, análisis, diseño, desarrollo y entrega. La arquitectura y el diseño del sistema evolucionan durante el desarrollo del sprint. Un sprint dura de una semana a un mes. Puede haber de tres a ocho sprints, por ejemplo, antes de que el sistema esté listo para lanzarse. También puede haber más de un equipo que construya cada incremento.
+
+\item \textbf{Post-game}
+Contiene el cierre de la versión. Se entra en esta fase cuando se completan todos los requisitos. En este caso, no se incorpora ni mejora ninguna función. El sistema ya está listo para lanzarse (release) y ahora se integra, se pone a prueba y se documenta.
+\end{itemize}
+
+\subsection{Papeles y responsabilidades}
+Los papeles en Scrum tienen tareas y propósitos diferentes durante el proceso y sus prácticas.
+
+\begin{itemize}
+\item \textbf{Scrum Master} Es responsable de asegurar que el proyecto se realiza según las prácticas, valores y reglas de Scrum y que progresa como estaba previsto. Actúa recíprocamente tanto con el equipo del proyecto como con el cliente. También es responsable de resolver cualquier impedimento para seguir trabajando tan productivamente como sea posible. 
+
+\item \textbf{Propietario del producto} El propietario del producto es oficialmente responsable del proyecto, gestionando, controlando, y haciendo visible la Product backlog list. Es elegido por el Scrum Master, el cliente y la dirección. Toma las últimas decisiones de las tareas relacionadas con la Product backlog list, participa estimando el esfuerzo de desarrollo para los puntos del Backlog y los concreta en funcionalidades a desarrollar.
+
+\item \textbf{Equipo de Scrum} El equipo de Scrum tiene autoridad para decidir las acciones pertinentes para organizarse y lograr lo propuesto en cada sprint. El equipo de Scrum está involucrado, por ejemplo, en estimar el esfuerzo requerido para cada parte, crear y revisar la Product Backlog list e identificar problemas a tratar.
+
+\item \textbf{Cliente} El cliente participa en las tareas relacionadas con los puntos del Backlog para diseñar o mejorar el sistema.
+
+\item \textbf{Director} La gestión o dirección toma la última decisión y se encarga de los documentos, normas y convenciones seguidas en el proyecto. La dirección también participa en identificar objetivos y requisitos. Por ejemplo, ayuda a seleccionar el product owner, valorar los progresos y reducir el Backlog con el Scrum Master.
+\end{itemize}
+
+\subsection{Elementos}
+\subsubsection{Documentos}
+\begin{itemize}
+\item \textbf{Product Backlog} El Product Backlog define todo lo necesario en el producto final, basándose en los conocimientos de ese momento. Por tanto, define el trabajo a hacer en el proyecto. Incluye una lista ordenada por prioridades y actualizada de requisitos técnicos para que el sistema se haga o mejore. Los puntos del Product Backlog, por ejemplo, pueden incluir características, funciones, parches para bugs, defectos, peticiones de mejoras o actualizaciones de tecnología.
+ 
+También se incluyen temas que requieren solución para poder hacer otros puntos de la lista. A la lista de backlog puede contribuir el cliente, el equipo del proyecto y los departamentos de ventas, marketing y atención al cliente.
+Esta práctica incluye las tareas para crear la lista de backlog, actualizarla agregando, quitando o especificando puntos con sus respectivas prioridades. El Product Owner es responsable de mantener el Product Backlog.
+
+\item \textbf{Sprint Backlog} Es el punto de partida para cada sprint, una lista de puntos de la lista del Product Backlog seleccionados para llevarse a cabo en el próximo sprint. El equipo de Scrum junto con el Scrum Master y el Product Owner seleccionan los puntos en la reunión para planear el Sprint, basándose en los puntos con prioridad y los objetivos de ese sprint. A diferencia del Product Backlog, el Sprint Backlog no se modifica hasta que el sprint (es decir, 30 días) termina.
+ 
+Cuando todos los puntos del Sprint Backlog están completos, se prepara una nueva iteración del sistema. El registro incluye los valores que representan las horas de trabajo pendiente; en función de esos valores se acostumbra a elaborar un gráfico de quemado (se pueden ver ejemplos en el apartado de Crystal, 2.3), usados también en muchos otros métodos.
+\end{itemize}
+\subsubsection{Reuniones}
+\begin{itemize}
+\item \textbf{Reunión diaria de Scrum} Se organizan reuniones de Scrum diarias para seguir el progreso del equipo y planear las reuniones: qué se ha hecho desde la última reunión y qué se hará para la siguiente. También se ponen sobre la mesa problemas y otros asuntos que puedan aparecer en esta reunión diaria de unos 15 minutos. Se busca y soluciona cualquier deficiencia o imprevisto del proceso. El Scrum Master dirige las reuniones. La dirección (Management), también puede colaborar en la reunión.
+
+\item \textbf{Reunión para plantear el Sprint} El Sprint Planning meeting consta de dos fases y la organiza el Scrum Master. En la primera fase, los clientes, usuarios, la dirección, el Product Owner y el equipo, eligen los objetivos y las funcionalidades del próximo sprint. En la segunda fase, el Scrum Master y el equipo concretan la manera de conseguir esos objetivos (product increment) en el siguiente sprint.
+
+\item \textbf{Sprint review meeting} En el último día del sprint, el equipo y el Scrum Master presentan los resultados del sprint, (el incremento producido) a la dirección, clientes, usuarios y Product Owner en una reunión informal. Los participantes evalúan la evolución y deciden sobre las siguientes actividades. La reunión de la revisión puede revelar nuevos puntos e incluso cambiar la dirección tomada del sistema que se está construyendo.
+
+Al final de cada iteración de treinta días hay una demostración a cargo del Scrum Master. Las presentaciones en PowerPoint están prohibidas. En los encuentros diarios, las gallinas deben estar fuera del círculo. Todos tienen que ser puntuales; si alguien llega tarde, se le cobra una multa que se destinará a obras de caridad. Se permite usar artefactos de los métodos a los que Scrum acompañe, por ejemplo Listas de Riesgos si se utiliza UP, Planguage si el método es
+Evo, o los Planes de Proyecto sugeridos en la disciplina de Gestión de Proyectos de Microsoft Solutions Framework. No se permiten, en cambio, instrumentos como diagramas PERT, porque parten del supuesto de que las tareas de un proyecto se pueden identificar y ordenar.
+\end{itemize}
+\subsubsection{Sprint}
+ El sprint consiste en adaptarse a las condiciones cambiantes del proyecto como requisitos, tiempo, recursos, conocimiento, tecnología, etc. El Equipo de Scrum se organiza para producir un nuevo incremento ejecutable en un sprint que dura aproximadamente un mes natural. Las herramientas activas del equipo son las reuniones para planear el sprint, el Sprint Backlog y las reuniones diarias de Scrum.
+
+
+
+\section{Evolución del proyecto}
+
+Para la resolución de este proyecto se ha optado por una aproximación en la que se complementan las mejores prácticas y técnicas recomendadas en Scrum, con sus patrones organizacionales como método de gestión y XP, con patrones de diseño, programación guiada por pruebas y refactorización, como metodología de desarrollo
+
+2.2.3. La práctica
+Scrum no requiere o proporciona ninguna práctica específica para el desarrollo del software. Sin embargo, requiere adoptar ciertas pautas y prácticas para evitar el caos causado por imprevistos y complejidades.
+Las pautas de Scrum son:
+• Equipos auto-dirigidos y auto-organizados. No hay manager que decida, sino “miembros del equipo”; la excepción es el Scrum Master que debe ser 50\% programador y que resuelve problemas, pero no manda. Los observadores externos pueden observar, pero no interferir ni opinar.
+• Una vez elegida una tarea, no se agrega trabajo extra. En caso que se agregue algo, se recomienda quitar alguna otra cosa.
+• Encuentros diarios con esta tres preguntas indicadas:
+- ¿Qué has hecho desde la última reunión (día anterior)?
+- ¿Has encontrado algún obstáculo?
+- ¿Qué harás para la siguiente reunión (mañana)?
+Se realizan siempre en el mismo lugar, en círculo. La reunión diaria impide caer en el problema señalado por Fred Brooks: “¿Cómo es que un proyecto puede retrasarse un año? Un día cada vez”.
+• Iteraciones de 30 días; se admite que sean más frecuentes.
+• Demostración a participantes externos al final de cada iteración.
+• Al principio de cada iteración, planeamiento adaptativo guiado por el cliente.
+
 
 2.9.1 Descripción del contexto 
-El  equipo  de  desarrollo  lo  constituyen  los  autores  de  este  PFC,  estando  muy 
-habituados  a  trabajar  juntos,  con  experiencia  práctica  y  conocimientos  teóricos  en 
-metodologías  ágiles.    Debido  al  tamaño  del  equipo  y  condiciones  del  mismo,  las  reuniones 
-diarias pierden su utilidad.  
-Como ya se ha mencionado, la figura del cliente esta desvirtuada y su función es desempeñada 
-por el equipo de desarrollo. 
- Al comienzo de cada iteración el equipo se reunirá y creará el Iteration Backlog que consta de 
-un subconjunto de las User Stories del Product Backlog. Estas User Stories son seleccionadas 
-atendiendo a las prioridades del cliente. En esta reunión se descompondrá cada User Story del 
-Iteration Backlog en tareas, estimando el tiempo necesario para llevarlas acabo. 
+El  equipo  de  desarrollo  lo  constituyen  los  autores  de  este  PFC,  estando  muy  habituados  a  trabajar  juntos,  con  experiencia  práctica  y  conocimientos  teóricos  en metodologías  ágiles.    Debido  al  tamaño  del  equipo  y  condiciones  del  mismo,  las  reuniones  diarias pierden su utilidad.  Como ya se ha mencionado, la figura del cliente esta desvirtuada y su función es desempeñada por el equipo de desarrollo. 
+ Al comienzo de cada iteración el equipo se reunirá y creará el Iteration Backlog que consta de  un subconjunto de las User Stories del Product Backlog. Estas User Stories son seleccionadas  atendiendo a las prioridades del cliente. En esta reunión se descompondrá cada User Story del Iteration Backlog en tareas, estimando el tiempo necesario para llevarlas acabo. 
 
 
 2.9.2 Descripción de las prácticas a utilizar 
 Las prácticas XP que se van a utilizar son: 
-‐ Sentarse juntos 
-Todo el desarrollo se llevará a cabo en un espacio que permita un trabajo cercano, cooperativo 
-y  que  facilite  la  comunicación  directa.  En  las  ocasiones  en  las  que  ésto  no  sea  posible,  se 
-utilizarán medios de videoconferencia como Skype o NetMeeting. 
+Sentarse juntos 
+Todo el desarrollo se llevará a cabo en un espacio que permita un trabajo cercano, cooperativo y  que  facilite  la  comunicación  directa.  En  las  ocasiones  en  las  que  ésto  no  sea  posible,  se utilizarán medios de videoconferencia como Skype o NetMeeting. 
 
-‐ Iteraciones cortas 
-La  primera  iteración  será  de  15  días  de  duración,  y    en  ella  el  equipo  se  familiarizará  con  el 
-dominio  de  aplicación  y  las  tecnologías  a  utilizar.  También  se  definirá  en  buena  medida  la 
-arquitectura del sistema.  
+Iteraciones cortas 
+La  primera  iteración  será  de  15  días  de  duración,  y    en  ella  el  equipo  se  familiarizará  con  el  dominio  de  aplicación  y  las  tecnologías  a  utilizar.  También  se  definirá  en  buena  medida  la arquitectura del sistema.  
 Las siguientes iteraciones serán de una semana. 
  
-‐ Integración continua. 
-No se utilizarán herramientas que automaticen este proceso, no obstante, debido al tamaño 
-reducido del equipo y a la frecuencia de las integraciones (al menos una al día), esta tarea no 
-resultará demasiado compleja. 
+Integración continua. 
+No se utilizarán herramientas que automaticen este proceso, no obstante, debido al tamaño  reducido del equipo y a la frecuencia de las integraciones (al menos una al día), esta tarea no resultará demasiado compleja. 
 
  Diseño incremental 
-A  pesar  de  definir  buena  parte  de  la  arquitectura  en  las  primeras  iteraciones,  el  diseño  del 
-sistema evolucionará iteración tras iteración, sometiéndose a sucesivas refactorizaciones para 
-mejorar su calidad.  
+A  pesar  de  definir  buena  parte  de  la  arquitectura  en  las  primeras  iteraciones,  el  diseño  del  sistema evolucionará iteración tras iteración, sometiéndose a sucesivas refactorizaciones para mejorar su calidad.  
 
  Código compartido 
-Esta práctica ha sido utilizada con anterioridad en el equipo de desarrollo. Cualquier miembro 
-del mismo podrá introducir cambios en cualquier parte del código para mejorar su calidad. 
-Sin olvidar que el presente desarrollo ágil se encuentra en el contexto de la elaboración de un 
-PFC,  al  finalizar  cada  iteración  se  destinará  tiempo  a  completar  y  refinar  la  documentación 
-obtenida del proceso
+Esta práctica ha sido utilizada con anterioridad en el equipo de desarrollo. Cualquier miembro del mismo podrá introducir cambios en cualquier parte del código para mejorar su calidad. Sin olvidar que el presente desarrollo ágil se encuentra en el contexto de la elaboración de un PFC,  al  finalizar  cada  iteración  se  destinará  tiempo  a  completar  y  refinar  la  documentación obtenida del proceso
 
 2.10.1 Product Backlog de la herramienta 
-En  la  tabla  2.1  se  muestra  el  Product  Backlog  de  la  herramienta  que  constituye  la 
-especificación completa de la funcionalidad de la misma. Recordemos que esta especificación 
-viene determinada por las Historias de Usuario. 
-Contiene el nombre de las Historias de Usuario y su identificador, así como la página de este 
-PFC en la que se puede encontrar la información detallada de cada una.  
+En  la  tabla  2.1  se  muestra  el  Product  Backlog  de  la  herramienta  que  constituye  la especificación completa de la funcionalidad de la misma. Recordemos que esta especificación viene determinada por las Historias de Usuario. 
+Contiene el nombre de las Historias de Usuario y su identificador, así como la página de este PFC en la que se puede encontrar la información detallada de cada una.  
 
-El Product Backlog define todo lo necesario en el producto final, basándose en los
-conocimientos de ese momento. Por tanto, define el trabajo a hacer en el proyecto. Incluye
-una lista ordenada por prioridades y actualizada de requisitos técnicos para que el sistema se
-haga o mejore. Los puntos del Product Backlog, por ejemplo, pueden incluir características,
-funciones, parches para bugs, defectos, peticiones de mejoras o actualizaciones de tecnología.
-También se incluyen temas que requieren solución para poder hacer otros puntos de la lista. A
-la lista de backlog puede contribuir el cliente, el equipo del proyecto y los departamentos de
-ventas, marketing y atención al cliente.
-
-
+El Product Backlog define todo lo necesario en el producto final, basándose en los conocimientos de ese momento. Por tanto, define el trabajo a hacer en el proyecto. Incluye una lista ordenada por prioridades y actualizada de requisitos técnicos para que el sistema se haga o mejore. Los puntos del Product Backlog, por ejemplo, pueden incluir características, funciones, parches para bugs, defectos, peticiones de mejoras o actualizaciones de tecnología.
+También se incluyen temas que requieren solución para poder hacer otros puntos de la lista. A la lista de backlog puede contribuir el cliente, el equipo del proyecto y los departamentos de ventas, marketing y atención al cliente.
 
 
 2.10.2 Iteraciones 
-En este capítulo se presenta toda la documentación generada para gestionar este 
-proyecto de desarrollo.  Esta documentación está  estructurada en cuatro iteraciones, tal y 
-como se describió en el estudio teórico de las metodologías ágiles.  
-En cada iteración se presentará sólo aquella documentación generada en ese intervalo de 
-tiempo.  
+
+
 2.10.2.1 Iteración 1 
-La  iteración  1  está  comprendida  entre  el  1  de  julio  y  el  15  de  julio  del  2008.  Es  la 
-iteración más larga debido a que en ella se llevan a cabo actividades que no se repetirán en el 
-resto  de  iteraciones,  tales  como  familiarización  con  el  dominio  de  aplicación,  especificación 
-inicial de la funcionalidad del sistema y esbozo de la arquitectura general del sistema. 
-A continuación se mostrará el Backlog de la Iteración, las pruebas y el diseño generado en esta 
-iteración. 
+La  iteración  1  está  comprendida  entre  el  1  de  julio  y  el  15  de  julio  del  2008.  Es  la iteración más larga debido a que en ella se llevan a cabo actividades que no se repetirán en el resto  de  iteraciones,  tales  como  familiarización  con  el  dominio  de  aplicación,  especificación inicial de la funcionalidad del sistema y esbozo de la arquitectura general del sistema. A continuación se mostrará el Backlog de la Iteración, las pruebas y el diseño generado en esta iteración. 
 
 
 
 
 3.11.3 Reutilización del código 
-Uno  de  los  principales  objetivos  que  se  persiguen  con  las  metodologías  ágiles  es  entregar 
-proyectos  en  tiempo  y  bajo  presupuesto.  En  otras  palabras,  se  pretende  minimizar  el  TTM 
-(Time To Market) para lo que la reutilización del código constituye un aspecto muy importante, 
-no  se  ha  de  perder  tiempo  reinventando  la  rueda  en  cada  proyecto.    Se  ha  de  tratar  de 
-obtener  diseños  con  una  alta  modularidad,  reutilizando,  como  cajas  negras,  todos  los 
-elementos  software  que  tengamos  y  necesitemos.  De  esta  forma  se  consiguen  sistemas  
-modulares en los que se reduce el coste de introducir modificaciones, reduciendo el coste de 
-su  mantenimiento;  Por  otro  lado  se  consigue  aumentar  el  repositorio  de  componentes  para 
-futuros  proyectos,  con  todas  las  ventajas  que  ello  conlleva  (ver  Desarrollo  Basado  en 
-Componentes). 
+Uno  de  los  principales  objetivos  que  se  persiguen  con  las  metodologías  ágiles  es  entregar  proyectos  en  tiempo  y  bajo  presupuesto.  En  otras  palabras,  se  pretende  minimizar  el  TTM (Time To Market) para lo que la reutilización del código constituye un aspecto muy importante, no  se  ha  de  perder  tiempo  reinventando  la  rueda  en  cada  proyecto.    Se  ha  de  tratar  de obtener  diseños  con  una  alta  modularidad,  reutilizando,  como  cajas  negras,  todos  los elementos  software  que  tengamos  y  necesitemos.  De  esta  forma  se  consiguen  sistemas  modulares en los que se reduce el coste de introducir modificaciones, reduciendo el coste de su mantenimiento;  Por  otro  lado  se  consigue  aumentar  el  repositorio  de  componentes  para futuros  proyectos,  con  todas  las  ventajas  que  ello  conlleva  (ver  Desarrollo  Basado  en Componentes). 
 
-Se ha de tener en cuenta que no todos los elementos en un proyecto son reutilizables, puesto 
-que es inevitable que algunos estén estrechamente ligados a condiciones particulares propias 
-de cada dominio de aplicación, la modularidad tampoco ha de convertirse en una obsesión que 
-nos obstaculice el avance del proyecto. Recordemos que si se conoce la mejor forma de hacer 
-algo,  que  así  se  haga,  sino  que  se  haga  de  la  mejor  forma  conocida  para  la  que  se  tenga 
-tiempo. 
+Se ha de tener en cuenta que no todos los elementos en un proyecto son reutilizables, puesto que es inevitable que algunos estén estrechamente ligados a condiciones particulares propias de cada dominio de aplicación, la modularidad tampoco ha de convertirse en una obsesión que nos obstaculice el avance del proyecto. Recordemos que si se conoce la mejor forma de hacer algo,  que  así  se  haga,  sino  que  se  haga  de  la  mejor  forma  conocida  para  la  que  se  tenga tiempo. 
   
-Puede parecer que un diseño iterativo e incremental es incompatible con un diseño modular 
-cuyos  componentes presenten bajo acoplamiento y alta cohesión. La introducción de la User 
-Story  “ver  contexto  (User  Story)  de  la  información”,  que  inicialmente  no  se  contemplaba 
-dentro de la funcionalidad del sistema (Product Backlog), constituye un síntoma de un diseño 
-altamente modular, que a pesar de ser creado de  manera iterativa e incremental, respondió 
-bien  a  los  cambios.  Debido  a  que  su  implementación  requirió  introducir  pequeñas 
-modificaciones en componentes en los que en ningún caso varió la estructura de los mismos. 
-Dichos  elementos  fueron:  “amtlist”,  “amttable”  y  la  creación  de  una  nueva  pantalla  en  la 
-interfaz de grafica de usuario (elemento “amtui”). 
+\subsection{Concepto del software}
+\subsection{Análisis preliminar de requisitos}
+\subsection{Diseño general}
+\subsection{Iteraciones}
+En este capítulo se presenta toda la documentación generada para gestionar este proyecto de desarrollo. Esta documentación está estructurada en ocho iteraciones, tal y como se describió en el estudio teórico de las metodologías ágiles. 
+
+\subsubsection{Iteracion 0}
+Como punto de partida para la elaboración del estado del arte se realizo una revisión sistemática de las diferentes técnicas para la identificación de documentos y su recuperación de una base de datos. Como resultado de esta revisión se ha podido conocer las técnicas más empleadas, así como sus ventajas e inconvenientes. 
+
+El claro ganador es LLAH (Locally Likely Arrangement Hashing) con casi un 40\% de utilización ya sea con su implementación inicial o implementaciones optimizadas creadas para salvar las limitaciones del algoritmo original, lo que lo hace aún mas potente y versatil.
+
+Aunque los metodos basados en detección de descriptores de caracteristicas invariantes como SIFT, SURF, aparecen como muy utilizados, realmente no funcionan correctamente en identificación de documentos ya que no presentan zonas de textura y se producen repeticiones de patrones binarios (el propio texto cumple este patron). La mayoria son una variación del proceso inspirado en la metodologia de Lowe [SIFT], y en la que se obtienen buenos resultados sobre documentos semiestructurados realizando una selección de puntos extraidos y una adaptación del algoritmo RANSAC para la validación de supuestos aciertos en la comparación. El algoritmo tiene una tasa elevada de recuperación y precisión, es robusto a las deformaciones que pueda tener la imagen (perspectiva) y no necesita ningun paso previo de segmentación pero, como inconvenientes, no funciona ante grandes secciones de texto y la identificación que realiza es para obtener documentos similares (un ticket, un billete de tren,....) a la imagen utilizada como consulta.
+
+Uno de los puntos del analisis de resultados, indica que al utilizar hardware con distinto rendimiento, es dificil tener mediciones normalizadas para todos los métodos. Como trabajo futuro se puede realizar para el gestor documental, la implementación de varios de los metodos mas utilizados y ofrecer un estudio comparativo completo al ejecutarse en la misma plataforma.
+
+Existen varias implementaciones optimizadas sobre LLAH para salvar las limitaciones iniciales del algoritmo. Sería un trabajo futuro la tarea de buscar sólo las publicaciones que se hayan hecho sobre LLAH e intentar crear una implementación conjunta  con todas las optimizaciones. 
 
 
+\subsubsection{Iteración 1}
+Una vez conocidas las técnicas necesarias y los objetivos del sistema a desarrollar construimos una arquitectura básica que iremos completando y refinando en cada una de las sucesivas iteraciones.
+\begin{description}
 
+\item [Captura de imágenes] La raspberry tiene opción de conectar una cámara USB u obtener las ímagenes por medio de una raspiCam, que se conecta por directamente a un puerto de expansión de la placa. Se crea un módulo de captura de imagenes que soporte ambas cámaras.
+
+\item [Calibrado de la cámara] Diseñamos y construimos un sistema de calibrado para obtener los parametros intrínsecos de la cámara, necesarios para los cálculos posteriores de posicionamiento.
+
+\item [Detección de un folio en la imagen] Mediante segmentación de la imagen obtenida, detectamos una hoja de papel y obtenemos la posición de sus 4 esquinas.
+
+\item [Sistema básico de cálculo de homografias] Creamos un sistema básico de cálculo homogŕafico necesario para la proyección de la perspectiva. En esta primera fase, los cálculos son los
+  necesarios para realizar el registro y visualizarlo en la pantalla del ordenador.
+
+\end{description}
+
+\subsubsection{Iteración 2}
+\begin{description}
+\item [Cálculo de homografias del sistema cámara-proyector] Un proyector se calibra usando los mismos algoritmos de calibración que una cámara ya que puede considerarse como una ``cámara inversa''. Sin embargo como el proyector no ve, el método no es tan directo como en el caso de una cámara.
+Para la calibración de un proyector es inevitable el uso al menos de una cámara. Para calibrar un proyector, es necesario obtener un conjunto de coordenadas 3D-2D correspondientes. Las coordenadas pueden determinarse usando una cámara situada en una posición con una vista similar a la que tendria el proyector. El método consiste en proyectar con el proyector un plano de calibración y establecer la correspondencia entre lo proyectado y lo que vé la camara.
+
+\end{description}
+
+\subsubsection{Iteración 3}
+\begin{description}
+\item [Optical Flow] Para la estimación y descripción del movimiento, se implementa Optical Flow  (Lucas-Kanade) que nos va a proporcionar herramientas para detección, segmentación y seguimiento de  objetos móviles en la escena a partir de un conjunto de imágenes. 
+
+\end{description}
+\subsubsection{Iteración 4}
+\begin{description}
+\item [Detector de documentos mediante descriptores de imagenes] Se realiza la implementación de detección de documentos mediante descriptores de imagenes. En esta fase se ha utilizado SURF.
+\item [Dibujado mediante OpenCV] Se realizan una serie de funciones para dibujado mediante OpenCV para servir de modo debug ya que permite recibir una ventana con la imagen por medio de SSH.
+\end{description}
+
+\subsubsection{Iteración 5}
+\begin{description}
+\item [Historico de percepciones] Al igual que en ARToolKit, se desarrolla una función de tratamiento del histórico de percepciones para estabilizar el tracking. Este histórico se implementa  almacenando las últimas 10 percepciones similares y realizando una media ponderada en la que las percepciones recientes tienen más peso que las antiguas. Para determinar si son percepciones próximas se establece un umbral. Mediante el uso de esta técnica eliminanos gran parte del efecto tembloroso en la proyección.
+\end{description}
+
+\subsubsection{Iteración 6}
+\subsubsection{Iteración 7}
 
 \section{Tecnologias y herramientas utilizadas}
 
@@ -186,9 +249,6 @@ En esta sección se listan y detallan los recursos software y hardware empleados
 \item \textbf{GNU CMAKE} - se trata de una herramienta análoga a make, aunque de más alto nivel, para la automatización de generación de código. Se ha utilizado principalmente para la compilación de la biblioteca Bullet. La versión de CMake es la 2.8.3. 
 \end{itemize}
 
-
-
-
 \subsubsection{Documentación y gráficos}
 \begin{itemize}
 \item \textbf{Doxygen} - Sistema de documentación de código fuente [dox10]. Compatible con C++. Se ha utilizado para realizar el manual de referencia de MARS.
@@ -215,64 +275,6 @@ En esta sección se listan y detallan los recursos software y hardware empleados
 \begin{itemize}
 \item \textbf{Git} - Sistema de control de versiones distribuido. Como repositorio central se ha utilizado la plataforma Bitbucket.
 \end{itemize}
-
-\section{Evolución del proyecto}
-\subsection{Concepto del software}
-\subsection{Análisis preliminar de requisitos}
-\subsection{Diseño general}
-\subsection{Iteraciones}
-
-\subsubsection{Iteracion 0}
-Como punto de partida para la elaboración del estado del arte se realizo una revisión sistemática de las diferentes técnicas para la identificación de documentos y su recuperación de una base de datos. Como resultado de esta revisión se ha podido conocer las técnicas más empleadas, así como sus ventajas e inconvenientes. 
-
-El claro ganador es LLAH (Locally Likely Arrangement Hashing) con casi un 40\% de utilización ya sea con su implementación inicial o implementaciones optimizadas creadas para salvar las limitaciones del algoritmo original, lo que lo hace aún mas potente y versatil.
-
-Aunque los metodos basados en detección de descriptores de caracteristicas invariantes como SIFT, SURF, aparecen como muy utilizados, realmente no funcionan correctamente en identificación de documentos ya que no presentan zonas de textura y se producen repeticiones de patrones binarios (el propio texto cumple este patron). La mayoria son una variación del proceso inspirado en la metodologia de Lowe [SIFT], y en la que se obtienen buenos resultados sobre documentos semiestructurados realizando una selección de puntos extraidos y una adaptación del algoritmo RANSAC para la validación de supuestos aciertos en la comparación. El algoritmo tiene una tasa elevada de recuperación y precisión, es robusto a las deformaciones que pueda tener la imagen (perspectiva) y no necesita ningun paso previo de segmentación pero, como inconvenientes, no funciona ante grandes secciones de texto y la identificación que realiza es para obtener documentos similares (un ticket, un billete de tren,....) a la imagen utilizada como consulta.
-
-Uno de los puntos del analisis de resultados, indica que al utilizar hardware con distinto rendimiento, es dificil tener mediciones normalizadas para todos los métodos. Como trabajo futuro se puede realizar para el gestor documental, la implementación de varios de los metodos mas utilizados y ofrecer un estudio comparativo completo al ejecutarse en la misma plataforma.
-
-Existen varias implementaciones optimizadas sobre LLAH para salvar las limitaciones iniciales del algoritmo. Sería un trabajo futuro la tarea de buscar sólo las publicaciones que se hayan hecho sobre LLAH e intentar crear una implementación conjunta  con todas las optimizaciones. 
-
-
-\subsubsection{Iteración 1}
-\begin{description}
-\item [Arquitectura básica] Una vez conocidas las técnicas necesarias y los objetivos del sistema a desarrollar construimos una arquitectura básica que iremos completando y refinando en cada una de las sucesivas iteraciones.
-\item [Captura de imágenes] La raspberry tiene opción de conectar una cámara USB u obtener las ímagenes por medio de una raspiCam, que se conecta por directamente a un puerto de expansión de la placa. Se crea un módulo de captura de imagenes que soporte ambas cámaras.
-
-\item [Calibrado de la cámara] Diseñamos y construimos un sistema de calibrado para obtener los parametros intrínsecos de la cámara, necesarios para los cálculos posteriores de posicionamiento.
-
-\item [Detección de un folio en la imagen] Mediante segmentación de la imagen obtenida, detectamos una hoja de papel y obtenemos la posición de sus 4 esquinas.
-
-\item [Sistema básico de cálculo de homografias] Creamos un sistema básico de cálculo homogŕafico necesario para la proyección de la perspectiva. En esta primera fase, los cálculos son los
-  necesarios para realizar el registro y visualizarlo en la pantalla del ordenador.
-
-\end{description}
-
-\subsubsection{Iteración 2}
-\begin{description}
-\item [Cálculo de homografias del sistema cámara-proyector] Un proyector se calibra usando los mismos algoritmos de calibración que una cámara ya que puede considerarse como una ``cámara inversa''. Sin embargo como el proyector no ve, el método no es tan directo como en el caso de una cámara.
-Para la calibración de un proyector es inevitable el uso al menos de una cámara. Para calibrar un proyector, es necesario obtener un conjunto de coordenadas 3D-2D correspondientes. Las coordenadas pueden determinarse usando una cámara situada en una posición con una vista similar a la que tendria el proyector. El método consiste en proyectar con el proyector un plano de calibración y establecer la correspondencia entre lo proyectado y lo que vé la camara.
-
-\end{description}
-
-\subsubsection{Iteración 3}
-\begin{description}
-\item [Optical Flow] Para la estimación y descripción del movimiento, se implementa Optical Flow  (Lucas-Kanade) que nos va a proporcionar herramientas para detección, segmentación y seguimiento de  objetos móviles en la escena a partir de un conjunto de imágenes. 
-
-\end{description}
-\subsubsection{Iteración 4}
-\begin{description}
-\item [Detector de documentos mediante descriptores de imagenes] Se realiza la implementación de detección de documentos mediante descriptores de imagenes. En esta fase se ha utilizado SURF.
-\item [Dibujado mediante OpenCV] Se realizan una serie de funciones para dibujado mediante OpenCV para servir de modo debug ya que permite recibir una ventana con la imagen por medio de SSH.
-\end{description}
-
-\subsubsection{Iteración 5}
-\begin{description}
-\item [Historico de percepciones] Al igual que en ARToolKit, se desarrolla una función de tratamiento del histórico de percepciones para estabilizar el tracking. Este histórico se implementa  almacenando las últimas 10 percepciones similares y realizando una media ponderada en la que las percepciones recientes tienen más peso que las antiguas. Para determinar si son percepciones próximas se establece un umbral. Mediante el uso de esta técnica eliminanos gran parte del efecto tembloroso en la proyección.
-\end{description}
-
-\subsubsection{Iteración 6}
-\subsubsection{Iteración 7}
 
 
 \section{Recursos y costes}

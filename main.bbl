@@ -1,3 +1,397 @@
-\begin{thebibliography}{}
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{WRM{\etalchar{+}}08}
+
+\bibitem[AAB84]{Adelson}
+E.~Adelson, C.~Anderson, y J.~Bergen.
+\newblock Pyramid methods in image processing.
+\newblock {\em RCA engineer}, 29(6):33--41, 1984.
+
+\bibitem[AiJD13]{Augereau}
+Olivier Augereau, icholas Journet, y Jean-Philippe Domenger.
+\newblock Semi-structured document image matching and recognition.
+\newblock En {\em Proceedings 20th Document Recognition and Retrieval
+  Conference, part of the IS{\&}T-SPIE Electronic Imaging Symposium}, 2013.
+
+\bibitem[AMN{\etalchar{+}}98]{Arya}
+Sunil Arya, David~M. Mount, Nathan~S. Netanyahu, Ruth Silverman, y Angela~Y.
+  Wu.
+\newblock An Optimal Algorithm for Approximate Nearest Neighbor Searching Fixed
+  Dimensions.
+\newblock {\em J. ACM}, 45(6):891--923, Noviembre 1998.
+
+\bibitem[AY11]{Ambai}
+Mitsuru Ambai y Yuichi Yoshida.
+\newblock CARD: Compact And Real-time Descriptors.
+\newblock En {\em Proceedings of the 2011 International Conference on Computer
+  Vision}, ICCV '11, páginas 97--104, Washington, DC, USA, 2011. IEEE Computer
+  Society.
+
+\bibitem[Azu97]{Azuma}
+Ronald.~T. Azuma.
+\newblock A survey of augmented reality.
+\newblock {\em Presence: Teleoperators and Virtual Environments},
+  6(4):355--385, 1997.
+
+\bibitem[BET08]{Bay}
+H.~Bay, A.~Ess, y T.~Tuytelaars.
+\newblock Speeded-Up Robust FeatureS.
+\newblock {\em Computer Vision and Image Understanding}, 110(3):346--359, Junio
+  2008.
+
+\bibitem[BL07]{Brown}
+Matthew Brown y David~G. Lowe.
+\newblock Automatic Panoramic Image Stitching Using Invariant Features.
+\newblock {\em Int. J. Comput. Vision}, 74(1):59--73, Agosto 2007.
+
+\bibitem[Bou00]{Bouguet}
+Jean-Yves Bouguet.
+\newblock Pyramidal Implementation of the Lucas Kanade Feature Tracker
+  Description of the algorithm, 2000.
+\newblock url: \url{http://robots.stanford.edu/cs223b04/algo_tracking.pdf}.
+
+\bibitem[Can86]{Canny}
+J.~Canny.
+\newblock A Computational Approach To Edge Detection.
+\newblock {\em IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  8(6):679--698, 1986.
+
+\bibitem[CCSC13]{Chen}
+Wan-Yu Chen, Jia-Lin Chen, Yu-Chi Su, y Liang-Gee Chen.
+\newblock Intelligent document capturing and blending system based on robust
+  feature matching with an active camera.
+\newblock En {\em IEEE International Conference on Consumer Electronics
+  (ICCE)}, páginas 131--132, Enero 2013.
+
+\bibitem[CLSF10]{Calonder}
+Michael Calonder, Vincent Lepetit, Christoph Strecha, y Pascal Fua.
+\newblock BRIEF: Binary Robust Independent Elementary Features.
+\newblock En {\em Proceedings of the 11th European Conference on Computer
+  Vision: Part IV}, ECCV'10, páginas 778--792, Berlin, Heidelberg, 2010.
+  Springer-Verlag.
+
+\bibitem[CMC03]{Comport}
+Andrew~I. Comport, \'{E}ric Marchand, y Fran\c{c}ois Chaumette.
+\newblock A Real-time Tracker for Markerless Augmented Reality.
+\newblock En {\em Proceedings of the 2Nd IEEE/ACM International Symposium on
+  Mixed and Augmented Reality}, ISMAR '03, páginas 36--, Washington, DC, USA,
+  2003. IEEE Computer Society.
+
+\bibitem[DIIM04]{Datar}
+Mayur Datar, Nicole Immorlica, Piotr Indyk, y Vahab~S. Mirrokni.
+\newblock Locality-sensitive Hashing Scheme Based on P-stable Distributions.
+\newblock En {\em Proceedings of the Twentieth Annual Symposium on
+  Computational Geometry}, SCG '04, páginas 253--262, New York, NY, USA, 2004.
+  ACM.
+
+\bibitem[DKB11]{Donoser}
+Michael Donoser, Peter Kontschieder, y Horst Bischof.
+\newblock Robust Planar Target Tracking and Pose Estimation from a Single
+  Concavity.
+\newblock En {\em Proceedings of the 2011 10th IEEE International Symposium on
+  Mixed and Augmented Reality}, ISMAR '11, páginas 9--15. IEEE Computer
+  Society, 2011.
+
+\bibitem[DM10]{Dame}
+Amaury Dame y Éric Marchand.
+\newblock Accurate real-time tracking using mutual information.
+\newblock En {\em ISMAR}, páginas 47--56. IEEE, 2010.
+
+\bibitem[EAH08]{Erol}
+Berna Erol, Emilio Ant\'{u}nez, y Jonathan~J. Hull.
+\newblock HOTPAPER: Multimedia Interaction with Paper Using Mobile Phones.
+\newblock En {\em Proceedings of the 16th ACM International Conference on
+  Multimedia}, MM '08, páginas 399--408, New York, NY, USA, 2008. ACM.
+
+\bibitem[EHH04]{Ehnes}
+J.~Ehnes, K.~Hirota, y M.~Hirose.
+\newblock Projected Augmentation - Augmented Reality Using Rotatable Video
+  Projectors.
+\newblock En {\em Proceedings of the 3rd IEEE/ACM International Symposium on
+  Mixed and Augmented Reality}, ISMAR '04, páginas 26--35, Washington, DC,
+  USA, 2004. IEEE Computer Society.
+
+\bibitem[HBESB11]{Hagbi}
+Nate Hagbi, Oriel Bergig, Jihad El-Sana, y Mark Billinghurst.
+\newblock Shape Recognition and Pose Estimation for Mobile Augmented Reality.
+\newblock {\em IEEE Transactions on Visualization and Computer Graphics},
+  17(10):1369--1379, 2011.
+
+\bibitem[HS81]{Horn}
+Berthold K.~P. Horn y Brian~G. Schunck.
+\newblock Determining Optical Flow.
+\newblock {\em Artificial Intelligence}, 17(1-3):185--203, 1981.
+\newblock url: \url{http://dblp.uni-trier.de/db/journals/ai/ai17.html#HornS81}.
+
+\bibitem[HS88]{Harris}
+Chris. Harris y Mike. Stephens.
+\newblock A Combined Corner and Edge Detector.
+\newblock En {\em Proceedings of the 4th Alvey Vision Conference}, páginas
+  147--151, 1988.
+
+\bibitem[HYC02]{Hsieh}
+Jun-Wei Hsieh, Shih-Hao Yu, y Yung-Sheng Chen.
+\newblock Morphology-Based License Plate Detection from Complex Scenes.
+\newblock En {\em Proceedings of the 16 th International Conference on Pattern
+  Recognition (ICPR'02) Volume 3 - Volume 3}, ICPR '02, páginas 30176--,
+  Washington, DC, USA, 2002. IEEE Computer Society.
+
+\bibitem[HZ03]{Hartley}
+Richard Hartley y Andrew Zisserman.
+\newblock {\em Multiple View Geometry in Computer Vision}.
+\newblock Cambridge University Press, New York, NY, USA, edición 2, 2003.
+
+\bibitem[IKN{\etalchar{+}}09]{Iwata}
+Kazumasa Iwata, Koichi Kise, Tomohiro Nakai, Masakazu Iwamura, Seiichi Uchida,
+  y Shinichiro Omachi.
+\newblock Capturing Digital Ink As Retrieving Fragments of Document Images.
+\newblock En {\em Proceedings of the 2009 10th International Conference on
+  Document Analysis and Recognition}, ICDAR '09, páginas 1236--1240,
+  Washington, DC, USA, 2009. IEEE Computer Society.
+
+\bibitem[JKK{\etalchar{+}}02]{Jung}
+Keechul Jung, Kwang~In Kim, Takeshi Kurata, Masakastu Kourogi, y JungHyun Han.
+\newblock Text Scanner with Text Detection Technology on Image Sequences.
+\newblock En {\em Proceedings of the 16 th International Conference on Pattern
+  Recognition (ICPR'02) Volume 3 - Volume 3}, ICPR '02, páginas 30473--,
+  Washington, DC, USA, 2002. IEEE Computer Society.
+
+\bibitem[KB99]{Kato}
+H.~Kato y M.~Billinghurst.
+\newblock Marker tracking and HMD calibration for a video-based augmented
+  reality conferencing system.
+\newblock En {\em Augmented Reality, 1999. (IWAR '99) Proceedings. 2nd IEEE and
+  ACM International Workshop on}, páginas 85--94, 1999.
+
+\bibitem[KHP93]{Kanungo}
+Tapas Kanungo, Robert~M. Haralick, y Ihsin~T. Phillips.
+\newblock Global and local document degradation models.
+\newblock En {\em ICDAR}, páginas 730--734, 1993.
+
+\bibitem[KM09]{Klein}
+Georg Klein y David Murray.
+\newblock Parallel Tracking and Mapping on a Camera Phone.
+\newblock En {\em Proceedings of the 2009 8th IEEE International Symposium on
+  Mixed and Augmented Reality}, ISMAR '09, páginas 83--86, Washington, DC,
+  USA, 2009. IEEE Computer Society.
+
+\bibitem[LCS11]{Leutenegger}
+Stefan Leutenegger, Margarita Chli, y Roland~Y. Siegwart.
+\newblock BRISK: Binary Robust Invariant Scalable Keypoints.
+\newblock En {\em Proceedings of the 2011 International Conference on Computer
+  Vision}, ICCV '11, páginas 2548--2555, Washington, DC, USA, 2011. IEEE
+  Computer Society.
+
+\bibitem[LD08]{Liu}
+Xu~Liu y David Doermann.
+\newblock Mobile Retriever: Access to Digital Documents from Their Physical
+  Source.
+\newblock {\em Int. J. Doc. Anal. Recognit.}, 11(1):19--27, Septiembre 2008.
+
+\bibitem[LF06]{Lepetit}
+Vincent Lepetit y Pascal Fua.
+\newblock Keypoint Recognition Using Randomized Trees.
+\newblock {\em IEEE Trans. Pattern Anal. Mach. Intell.}, 28(9):1465--1479,
+  Septiembre 2006.
+
+\bibitem[LK81]{LKanade}
+Bruce~D. Lucas y Takeo Kanade.
+\newblock An Iterative Image Registration Technique with an Application to
+  Stereo Vision.
+\newblock En {\em Proceedings of the 7th International Joint Conference on
+  Artificial Intelligence - Volume 2}, IJCAI'81, páginas 674--679, San
+  Francisco, CA, USA, 1981. Morgan Kaufmann Publishers Inc.
+
+\bibitem[LL12]{LiuLiao}
+Qiong Liu y Chunyuan Liao.
+\newblock PaperUI.
+\newblock En {\em Proceedings of the 4th International Conference on
+  Camera-Based Document Analysis and Recognition}, CBDAR'11, páginas 83--100,
+  Berlin, Heidelberg, 2012. Springer-Verlag.
+
+\bibitem[Low04]{Lowe}
+D.~Lowe.
+\newblock Distinctive image features from scale-invariant key-points.
+\newblock {\em Intl. Journal of Computer Vision}, 60:91--110, 2004.
+
+\bibitem[MCUP02]{Matas}
+Jiri Matas, Ondrej Chum, Martin Urban, y Tomás Pajdla.
+\newblock Robust Wide Baseline Stereo from Maximally Stable Extremal Regions.
+\newblock En Paul~L. Rosin y A.~David Marshall, editors, {\em BMVC}. British
+  Machine Vision Association, 2002.
+
+\bibitem[ML09]{Muja}
+Marius Muja y David~G. Lowe.
+\newblock Fast Approximate Nearest Neighbors with Automatic Algorithm
+  Configuration.
+\newblock En Alpesh Ranchordas y Helder Araújo, editors, {\em VISAPP (1)},
+  páginas 331--340. INSTICC Press, 2009.
+
+\bibitem[Mor12]{Moraleda}
+Jorge Moraleda.
+\newblock Large Scalability in Document Image Matching Using Text Retrieval.
+\newblock {\em Pattern Recogn. Lett.}, 33(7):863--871, Mayo 2012.
+
+\bibitem[NKI06]{Nakai0}
+Tomohiro Nakai, Koichi Kise, y Masakazu Iwamura.
+\newblock Use of Affine Invariants in Locally Likely Arrangement Hashing for
+  Camera-based Document Image Retrieval.
+\newblock En {\em Proceedings of the 7th International Conference on Document
+  Analysis Systems}, DAS'06, páginas 541--552, Berlin, Heidelberg, 2006.
+  Springer-Verlag.
+
+\bibitem[NKI09]{Nakai}
+Tomohiro Nakai, Koichi Kise, y Masakazu Iwamura.
+\newblock Real-Time Retrieval for Images of Documents in Various Languages
+  Using a Web Camera.
+\newblock En {\em Proceedings of the 2009 10th International Conference on
+  Document Analysis and Recognition}, ICDAR '09, páginas 146--150, Washington,
+  DC, USA, 2009. IEEE Computer Society.
+
+\bibitem[OCLF10]{Ozuysal}
+M.~Ozuysal, M.~Calonder, V.~Lepetit, y P.~Fua.
+\newblock Fast Keypoint Recognition Using Random Ferns.
+\newblock {\em IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  32(3):448--461, 2010.
+
+\bibitem[Ort12]{Ortiz}
+Raphael Ortiz.
+\newblock FREAK: Fast Retina Keypoint.
+\newblock En {\em Proceedings of the 2012 IEEE Conference on Computer Vision
+  and Pattern Recognition (CVPR)}, CVPR '12, páginas 510--517, Washington, DC,
+  USA, 2012. IEEE Computer Society.
+
+\bibitem[PAK10]{Psyllos}
+Apostolos~P. Psyllos, Christos-Nikolaos~E. Anagnostopoulos, y Eleftherios
+  Kayafas.
+\newblock Vehicle Logo Recognition Using a SIFT-based Enhanced Matching Scheme.
+\newblock {\em Trans. Intell. Transport. Sys.}, 11(2):322--328, Junio 2010.
+
+\bibitem[Pin01]{Pinhanez}
+Claudio~S. Pinhanez.
+\newblock The Everywhere Displays Projector: A Device to Create Ubiquitous
+  Graphical Interfaces.
+\newblock En {\em Proceedings of the 3rd International Conference on Ubiquitous
+  Computing}, UbiComp '01, páginas 315--331, London, UK, UK, 2001.
+  Springer-Verlag.
+
+\bibitem[PJN99]{Park2}
+Jun Park, Bolan Jiang, y Ulrich Neumann.
+\newblock Vision-Based Pose Computation: Robust and Accurate Augmented Reality
+  Tracking.
+\newblock En {\em Proceedings of the 2Nd IEEE and ACM International Workshop on
+  Augmented Reality}, IWAR '99, páginas 3--, Washington, DC, USA, 1999. IEEE
+  Computer Society.
+
+\bibitem[PLC03]{Peng}
+Hanchuan Peng, Fuhui Long, y Zheru Chi.
+\newblock Document Image Recognition Based on Template Matching of Component
+  Block Projections.
+\newblock {\em IEEE Trans. Pattern Anal. Mach. Intell.}, 25(9):1188--1192, Sept
+  2003.
+
+\bibitem[PLW09]{Park}
+Youngmin Park, Vincent Lepetit, y Woontack Woo.
+\newblock ESM-Blur: Handling \& Rendering Blur in 3D Tracking and Augmentation.
+\newblock En {\em Proceedings of the 2009 8th IEEE International Symposium on
+  Mixed and Augmented Reality}, ISMAR '09, páginas 163--166, Washington, DC,
+  USA, 2009. IEEE Computer Society.
+
+\bibitem[PYN99]{Park3}
+Jun Park, Suya You, y Ulrich Neumann.
+\newblock Natural Feature Tracking for Extendible Robust Augmented Realities.
+\newblock En {\em Proceedings of the International Workshop on Augmented
+  Reality : Placing Artificial Objects in Real Scenes: Placing Artificial
+  Objects in Real Scenes}, IWAR '98, páginas 209--217, Natick, MA, USA, 1999.
+  A. K. Peters, Ltd.
+
+\bibitem[RD05]{Rosten}
+Edward Rosten y Tom Drummond.
+\newblock Fusing Points and Lines for High Performance Tracking.
+\newblock En {\em Proceedings of the Tenth IEEE International Conference on
+  Computer Vision - Volume 2}, ICCV '05, páginas 1508--1515, Washington, DC,
+  USA, 2005. IEEE Computer Society.
+
+\bibitem[RRKB11]{Rublee}
+Ethan Rublee, Vincent Rabaud, Kurt Konolige, y Gary Bradski.
+\newblock ORB: An Efficient Alternative to SIFT or SURF.
+\newblock En {\em Proceedings of the 2011 International Conference on Computer
+  Vision}, ICCV '11, páginas 2564--2571, Washington, DC, USA, 2011. IEEE
+  Computer Society.
+
+\bibitem[SKR99]{Stricker}
+Didier Stricker, Gundrun Klinker, y Dirk Reiners.
+\newblock A Fast and Robust Line-based Optical Tracker for Augmented Reality
+  Applications.
+\newblock En {\em Proceedings of the International Workshop on Augmented
+  Reality : Placing Artificial Objects in Real Scenes: Placing Artificial
+  Objects in Real Scenes}, IWAR '98, páginas 129--145, Natick, MA, USA, 1999.
+  A. K. Peters, Ltd.
+
+\bibitem[ST94]{ShiTomasi}
+Jianbo Shi y Carlo Tomasi.
+\newblock Good features to track.
+\newblock En {\em Proceedings of IEEE Conference on Computer Vision and Pattern
+  Recognition}, volume~94, páginas 593--600. IEEE, 1994.
+
+\bibitem[Tsa86]{Tsai}
+Roger~Y. Tsai.
+\newblock An Efficient and Accurate Camera Calibration Technique for 3D Machine
+  Vision.
+\newblock En {\em Proceedings of IEEE Conference on Computer Vision and Pattern
+  Recognition, Miami Beach, FL}, páginas 364--374,
+  http://www-cgi.cs.cmu.edu/afs/cs.cmu.edu/user/rgw/www/TsaiCode.html, 1986.
+
+\bibitem[UM11]{Uchiyama}
+Hideaki Uchiyama y Eric Marchand.
+\newblock Toward Augmenting Everything: Detecting and Tracking Geometrical
+  Features on Planar Objects.
+\newblock En {\em Proceedings of the 2011 10th IEEE International Symposium on
+  Mixed and Augmented Reality}, ISMAR '11, páginas 17--25, Washington, DC,
+  USA, 2011. IEEE Computer Society.
+
+\bibitem[US09]{Uchiyama2}
+Hideaki Uchiyama y Hideo Saito.
+\newblock Augmenting Text Document by On-line Learning of Local Arrangement of
+  Keypoints.
+\newblock En {\em Proceedings of the 2009 8th IEEE International Symposium on
+  Mixed and Augmented Reality}, ISMAR '09, páginas 95--98, Washington, DC,
+  USA, 2009. IEEE Computer Society.
+
+\bibitem[US11]{Saito}
+H~Uchiyama y H~Saito.
+\newblock Random Dot Markers.
+\newblock En {\em Proceedings of the 2011 IEEE Virtual Reality Conference}, VR
+  '11, páginas 35--38, Washington, DC, USA, 2011. IEEE Computer Society.
+
+\bibitem[WRM{\etalchar{+}}08]{Wagner}
+Daniel Wagner, Gerhard Reitmayr, Alessandro Mulloni, Tom Drummond, y Dieter
+  Schmalstieg.
+\newblock Pose Tracking from Natural Features on Mobile Phones.
+\newblock En {\em Proceedings of the 7th IEEE/ACM International Symposium on
+  Mixed and Augmented Reality}, ISMAR '08, páginas 125--134, Washington, DC,
+  USA, 2008. IEEE Computer Society.
+
+\bibitem[YSSlT07]{Yang}
+Gehua Yang, Charles~V. Stewart, Michal Sofka, y Chia ling Tsai.
+\newblock Alignment of challenging image pairs: Refinement and region growing
+  Starting From Single Keypoint Correspondence.
+\newblock {\em IEEE TRANS. PATTERN ANAL. MACHINE INTELL}, 11(23):1973--1989,
+  2007.
+
+\bibitem[ZFN02]{Zhang}
+Xiang Zhang, Stephan Fronz, y Nassir Navab.
+\newblock Visual Marker Detection and Decoding in AR Systems: A Comparative
+  Study.
+\newblock En {\em Proceedings of the 1st International Symposium on Mixed and
+  Augmented Reality}, ISMAR '02, páginas 97--, Washington, DC, USA, 2002. IEEE
+  Computer Society.
+
+\bibitem[Zha99]{Zhang99}
+Zhengyou Zhang.
+\newblock Flexible camera calibration by viewing a plane from unknown
+  orientations.
+\newblock En {\em Proceedings of the Seventh IEEE International Conference on
+  Pattern Analysis and Machine Intelligence}, volume~1, páginas 666--673.
+  IEEE, 1999.
 
 \end{thebibliography}
