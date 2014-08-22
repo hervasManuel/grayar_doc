@@ -207,8 +207,12 @@ Una vez conocidas las técnicas necesarias y los objetivos del sistema a desarro
 Analisis
 Los objetivos de esta iteración vienen determinados por los malos resultados obtenidos en el sprint anterior. Hay que conseguir mejorar enormente los resultados anteriores o la viabilidad del proyecto se verá seriamente afectada.
 
-Con solo cambiar la cámara USB se obtuvieron grandes mejoras, por lo que la elección de la cámara era un elemento importante
+Con solo cambiar la cámara USB se obtuvieron grandes mejoras, por lo que la elección de la cámara era un elemento importante. Tras consultar en diversos foros especializados, se decide que la mejor opcion es utilizar la Raspberry Pi Camera Board, Esta cámara está especialmente diseñada para utilizarse en la raspberry y se conectsa directamente al conector CSI de la placa mediante un cable plano flexible de 15 pines. Dispone de un sensor de 5MP de resolución y  puede llegar a grabar video a 1080p a 30 fps.
 
+Pierre Raufast
+Based on information on this blog, Emil Valkov wrote an API, very similar to OpenCV, to directly use Raspberry Cam thru raspiCamCvCreateCameraCapture, raspiCamCvQueryFrame,  RaspiCamCvCapture. (instead of cvCreateCameraCapture, cvQueryFrame and CvCapture)
+Chris Cummings
+Rafael Muñoz Salinas
 
 Diseño
 Desarrollo
