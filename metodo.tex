@@ -195,9 +195,7 @@ El primero de ellos es la iluminación. El tipo de luz (natural, fluorescente, i
 
 En cuestión de rendimiento, los primeros resultados son mucho peores de lo esperado. A una resolución de 320x240 pixeles y solo realizando el proceso de captura y visualización de los frames capturados en pantalla, tenemos un lag de 2 segundos y una tasa de 2 FPS. Si estos valores son inadminisibles en un sistema en tiempo real con una arquitectura tan básica, y sin realizar ningún tipo de procesado en la imagen, cuando se tengan que realizar algun tratamiento a la imagen o realizar algun tipo de computo adicional, el sistema sera no usable, con una sensación de bloqueo del sistema para el usuario.   
 
-Se vuelven a realizar las pruebas con otra cámara USB más moderna (Logitech S720) y afortunadamente los resultados mejoran sensiblemente, a 6 FPS y hasta 10 FPS para imágenes obtenidas en blanco y negro. 
-
-\begin{description}
+Se vuelven a realizar las pruebas con otra cámara USB más moderna (Logitech S720) y afortunadamente los resultados mejoran sensiblemente, a 6 FPS y hasta 10 FPS para imágenes obtenidas en blanco y negro.  
 
 Una vez conocidas las técnicas necesarias y los objetivos del sistema a desarrollar construimos una arquitectura básica que iremos completando y refinando en cada una de las sucesivas iteraciones.
 \begin{description}
@@ -246,10 +244,9 @@ Para la calibración de un proyector es inevitable el uso al menos de una cámar
 \subsubsection{Iteración 5}
 \begin{description}
 \item [Historico de percepciones] Al igual que en ARToolKit, se desarrolla una función de tratamiento del histórico de percepciones para estabilizar el tracking. Este histórico se implementa  almacenando las últimas 10 percepciones similares y realizando una media ponderada en la que las percepciones recientes tienen más peso que las antiguas. Para determinar si son percepciones próximas se establece un umbral. Mediante el uso de esta técnica eliminanos gran parte del efecto tembloroso en la proyección.
-\item [Obtencion de imagenes con RaspiCam y cámaraUSB]
- u obtener las ímagenes por medio de una raspiCam, que se conecta por directamente a un puerto de expansión de la placa.
-\item [Detección de papeles con solapamiento] 
-\item [Reconocimiento de manos] 
+\item [Obtencion de imagenes con RaspiCam y cámaraUSB] u obtener las ímagenes por medio de una raspiCam, que se conecta por directamente a un puerto de expansión de la placa.
+\item [Detección de papeles con solapamiento] aaaa
+\item [Reconocimiento de manos] aaaaa
 
 
 \end{description}
