@@ -1,0 +1,334 @@
+%-----------------------------------------------------------------------------
+% Proceso de detección de marcas de realidad aumentada con ArUco
+% Manuel Hervás Ortega
+%----------------------------------------------------------------------------
+
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage[hscale=0.80, vscale=0.90]{geometry}    
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\renewcommand{\baselinestretch}{1.2}
+
+% Mostrar codigo fuente
+\usepackage[T1]{fontenc}
+\usepackage{times}
+\usepackage{color}
+\definecolor{gray97}{gray}{.97}
+\definecolor{gray75}{gray}{.75}
+\definecolor{gray45}{gray}{.45}
+ 
+\usepackage{listings}
+\lstset{ frame=Ltb,
+     framerule=0pt,
+     aboveskip=0.5cm,
+     framextopmargin=3pt,
+     framexbottommargin=3pt,
+     framexleftmargin=0.4cm,
+     framesep=0pt,
+     rulesep=.4pt,
+     backgroundcolor=\color{gray97},
+     rulesepcolor=\color{black},
+     %
+     stringstyle=\ttfamily,
+     showstringspaces = false,
+     basicstyle=\small\ttfamily,
+     commentstyle=\color{gray45},
+     keywordstyle=\bfseries,
+     %
+     numbers=left,
+     numbersep=15pt,
+     numberstyle=\tiny,
+     numberfirstline = false,
+     breaklines=true,
+   }
+ 
+% minimizar fragmentado de listados
+\lstnewenvironment{listing}[1][]
+   {\lstset{#1}\pagebreak[0]}{\pagebreak[0]}
+ 
+\lstdefinestyle{consola}
+   {basicstyle=\scriptsize\bf\ttfamily,
+    backgroundcolor=\color{gray75},
+   }
+ 
+\lstdefinestyle{C++}
+   {language=C++,
+   }
+
+%-------------------------------------------------------------------------
+% Contenido
+%-------------------------------------------------------------------------
+
+\begin{document}
+
+%Título
+\title{Proceso de detección de marcas de realidad aumentada con ArUco}
+\author{}
+\date{}
+\maketitle
+
+
+\begin{itemize}
+\item \textbf{input:} Imagen a color (RGB) de entrada.
+\item \textbf{detectedMarkers:} Vector de salida con las marcas detectadas.
+\item \textbf{camMatrix:} Parámetros intrínsecos de la cámara.
+\item \textbf{distCoeff:} Coeficientes de distorsión de la cámara. Si se establece Mat() se asume que no existe distorsión.
+\item \textbf{markerSizeMeters:} Tamaño del lado de la  marca expresado en metros.
+\item \textbf{setYPerperdicular:} Considerar el eje Y como perpendicular a la superficie. En caso contrario se tomara el eje Z.
+\end{itemize}
+
+
+\begin{lstlisting}[style=C++]
+void MarkerDetector::detect (const cv::Mat &input, vector<Marker> &detectedMarkers, Mat camMatrix, Mat distCoeff, float markerSizeMeters, bool setYPerperdicular) throw (cv::Exception)
+\end{lstlisting}
+
+\section{Conversión a escala de grises (Grayscale)}
+El primer paso en el proceso de detección consiste en convertir el frame capturado por la webcam a escala de grises.  ArUco utiliza la función \textit{cv::cvtColor} para convertir una imagen de un espacio de color a otro.  La constante \textit{CV\_BGR2GRAY} sirve para indicar que queremos pasar de una imagen RGB a otra en escala de grises
+
+Este proceso consiste en recorrer todos los pixels de la imagen, y para cada pixel de forma individual multiplicar sus componente RGB (rojo, verde y azul), cuyos valores oscilan entre 0 y 255, por unos coeficientes y sumarlos.
+Los componentes RGB originales del pixel se sustituyen por el valor resultante de esa suma. Los tres componentes con el mismo valor, para lograr así el efecto de escala de grises, ya que cuando los tres componentes tienen un mismo valor lo que se obtiene es un tono gris, excepto en los extremos, donde (0, 0, 0) es negro y (255, 255, 255) es blanco.
+
+Los coeficientes que se utilizan son 0.299 para el rojo (R), 0.587 para el verde (G), y 0.114 para el azul (B). Al sumar los tres coeficientes el total vale 1 (0.299 + 0.587 + 0.114), lo que garantiza que el valor resultante de la suma de los productos por los componentes originales del pixel será un valor comprendido también entre 0 y 255.
+
+\begin{lstlisting}[style=C++]
+ //it must be a 3 channel image
+    if ( input.type() ==CV_8UC3 )   cv::cvtColor ( input,grey,CV_BGR2GRAY );
+    else     grey=input;
+\end{lstlisting}
+
+\section{Umbralización o binarización (Thresholding)}
+La umbralización consiste en definir un valor umbral y compararlo con cada uno de los pixels de la imagen. A los pixels que estén por debajo del umbral se les asigna un valor, y a los que estén por encima otro. De esta forma se divide toda la población de valores en tan sólo dos grupos, reduciendo considerablemente la complejidad de la información a analizar.
+
+Aplicar un valor umbral a una imagen presenta dos dificultades. La primera es decidir que valor concreto tomar, y la segunda es conseguir que dicho valor sirva para cualquier imagen posible que pueda llegar desde la webcam. Si los pixels tienen un valor que se encuentra dentro del rango que va de 0 a 255, ¿cúal es el mejor valor para el umbral? ¿128, que está en la mitad del rango? ¿Y por qué no 57? No se puede decidir de antemano sin analizar antes la imagen, ya que el mayor inconveniente que presenta este procedimiento es que es muy sensible a la iluminación. Con poca iluminación los pixels tienden a tomar valores bajos, oscuros, cercanos al 0, y con mucha iluminación toman valores altos, claros, cercanos al 255. Y peor es el caso cuando la iluminación varía dentro de la propia imagen, con algunas zonas muy oscuras y otras muy claras.
+
+En ArUco, se han desarrollado tres soluciones distintas para tratar de resolver este problema del thresholding básico (fijo, adaptativo y el método Canny). El método de Canny normalmente debería ser el que mejor resultado ofreciera, pero después de probarlo se han encontrado con problemas debidos a que se generaban huecos no deseados en los contornos de los cuadriláteros que hacían imposible su correcta detección posterior.
+
+\begin{lstlisting}[style=C++]
+  ///Do threshold the image and detect contours
+    thresHold ( _thresMethod,imgToBeThresHolded,thres,ThresParam1,ThresParam2 );
+\end{lstlisting} 
+
+\begin{lstlisting}[style=C++]  
+void MarkerDetector::thresHold ( int method,const Mat &grey,Mat &out,double param1,double param2 ) throw ( cv::Exception )
+{
+
+    if (param1==-1) param1=_thresParam1;
+    if (param2==-1) param2=_thresParam2;
+
+    if ( grey.type() !=CV_8UC1 )     throw cv::Exception ( 9001,"grey.type()!=CV_8UC1","MarkerDetector::thresHold",__FILE__,__LINE__ );
+    switch ( method )
+    {
+    case FIXED_THRES:
+        cv::threshold ( grey, out, param1,255, CV_THRESH_BINARY_INV );
+        break;
+    case ADPT_THRES://currently, this is the best method
+//ensure that _thresParam1%2==1
+        if ( param1<3 ) param1=3;
+        else if ( ( ( int ) param1 ) %2 !=1 ) param1= ( int ) ( param1+1 );
+
+        cv::adaptiveThreshold ( grey,out,255,ADAPTIVE_THRESH_MEAN_C,THRESH_BINARY_INV,param1,param2 );
+        break;
+    case CANNY:
+    {
+        //this should be the best method, and generally it is.
+        //However, some times there are small holes in the marker contour that makes
+        //the contour detector not to find it properly
+        //if there is a missing pixel
+        cv::Canny ( grey, out, 10, 220 );
+        //I've tried a closing but it add many more points that some
+        //times makes this even worse
+// 			  Mat aux;
+// 			  cv::morphologyEx(thres,aux,MORPH_CLOSE,Mat());
+// 			  out=aux;
+    }
+    break;
+    }
+}
+\end{lstlisting}  
+
+\subsection{Adaptive Thresholding}
+Finalmente se decidieron por el Adaptive Thresholding. Este algoritmo no aplica el umbral de una manera global sobre todos los pixels de la imagen, sino que tiene en cuenta las variaciones en la iluminación de una manera local para cada pixel de forma individual. Algo que consigue tomando el valor original de cada pixel de la imagen en escala de grises, y comparándolo con otro valor calculado que sea algún tipo de media de los valores de los pixeles que tiene alrededor. En las zonas homogéneas el valor del pixel se asemejará mucho a la de la media de sus vecinos, mientras que en las zonas de transición abruptas, en los bordes, se diferenciará de dicha media.
+
+\begin{lstlisting}[style=C++]
+/* Applies adaptive threshold to grayscale image.
+   The two parameters for methods CV_ADAPTIVE_THRESH_MEAN_C and
+   CV_ADAPTIVE_THRESH_GAUSSIAN_C are:
+   neighborhood size (3, 5, 7 etc.),
+   and a constant subtracted from mean (...,-3,-2,-1,0,1,2,3,...) */
+CVAPI(void)  cvAdaptiveThreshold( const CvArr* src, CvArr* dst, double max_value,
+                                  int adaptive_method CV_DEFAULT(CV_ADAPTIVE_THRESH_MEAN_C),
+                                  int threshold_type CV_DEFAULT(CV_THRESH_BINARY),
+                                  int block_size CV_DEFAULT(3),
+                                  double param1 CV_DEFAULT(5));
+\end{lstlisting} 
+
+La función adaptive threshold utiliza un filtro gaussiano para calcular los valores medios de los pixels. La aplicación de un filtro sobre una imagen normalmente consiste en recorrer todos los pixels de la imagen, y para cada pixel de forma individual aplicar una operación que genere un nuevo valor para el pixel. En nuestro caso, para conseguir difuminar la imagen de forma coherente, se utiliza como base para calcular el nuevo valor para cada pixel, los pixels más cercanos que tiene a su alrededor. Es decir, si tenemos un pixel negro rodeado de pixels blancos, lo que se quiere obtener es un nuevo pixel gris que difumine la imagen, eliminando ese \textit{ruido} que representa el pixel negro aislado.
+
+El proceso consiste es definir un tamaño de ventana o kernel, por ejemplo de 3x3 pixels, a cada celda de este kernel asignarle un coeficiente numérico, y mover el kernel por encima de cada pixel de la imagen original de forma individual, multiplicando los coeficientes del kernel por los valores de los pixels que cubre cada una de las celdas.
+
+Unos mejores coeficientes serían aquellos que dieran más importancia al pixel original, y fueran decrementado la importancia a medida que se fueran alejando de él. Y eso es precisamente lo que persigue el \textit{Gaussian Blur}, lo que consigue usando unos coeficientes que se calculan con la siguiente fórmula:
+
+\begin{equation}
+\frac{1}{2 \cdot \pi \cdot \sigma^{2}} \cdot e^{\frac{-(x^2 + y^2)}{2 \cdot \sigma^{2}}}
+\end{equation}
+
+Donde x e y son la distancia al pixel original, y sigma la desviación típica de la distribución gaussiana.
+Para obtener los coeficientes del kernel se utiliza la función \textit{getGaussianKernel} de OpenCV. Mirando en la documentación y el código fuente se ve que en realidad implementa una fórmula un poco distinta a la original, y que además, para kernels de tamaño 3x3, 5x5 y 7x7 tiene unos valores precalculados.
+Como ArUco utiliza un kernel fijo de 7x7, entonces siempre utiliza los mismos coeficientes:
+
+\begin{equation}
+[0.03125, 0.109375, 0.21875, 0.28125, 0.21875, 0.109375, 0.03125]
+\end{equation}
+
+De igual forma que en el proceso de conversión a escala de grises, se verifica que la suma de los coeficientes es igual a 1, y como se observa, los coeficientes centrales tienen mucho más peso que los de los extremos. Aunque sólo se ha indicado una fila, en la práctica ha de verse como una matriz de 7x7 con los coeficientes distribuidos de manera uniforme alrededor del elemento central. 
+
+Implementar el filtro resulta sencillo, pero muy lento, ya que por cada pixel hay que realizar 49 (7*7) multiplicaciones. No obstante, el filtro tiene una característica particular. Es un filtro "separable", lo que quiere decir que se puede aplicar en un primer paso en horizontal, multiplicando cada pixel sólo por la fila central del kernel, y al resultado de ese primer paso aplicarle el filtro en vertical, multiplicando cada pixel nuevamente sólo por la fila central. De esta forma se reduce a 14 (7*2) multiplicaciones por pixel. 
+
+Este filtro plantea un problema de implementación en los bordes, donde el kernel abarca pixels que no existen, y que se ha resuelto duplicando los pixels de los bordes para cubrir el kernel. Aunque existen otras estrategias posibles.
+
+Al final de este proceso, disponemos de una imagen en escala de grises y otra con el filtro gaussiano. Se puede imitar el funcionamiento de la función adaptive threshold restando a la primera imagen la segunda, y aplicar el umbral sobre la imagen resultante.
+
+¿Pero qué valor finalmente? El algoritmo no calcula el valor umbral, lo único que ofrece es una imagen más propicia para realizar el thresholding básico sin que se vea afectado por las variaciones de iluminación de la imagen original. ArUco utiliza un valor fijo de 7 como umbral. Puede parecer un poco arbitrario, pero da buen resultado.
+
+A los pixels que están por debajo del umbral se les asigna un 1, y a los que están por encima un 0. De esta forma se obtiene una imagen "binaria", en el sentido de que sólo tiene dos valores (blanco y negro).
+
+\section{Extracción de contornos (Suzuki)}
+El siguiente paso del proceso es la detección de contornos, una operación un tanto distinta a las anteriores por dos motivos principales. El primero es que no consiste en iterar aplicando una misma función de forma monótona sobre todos los pixels de la imagen. Y el segundo es que el resultado que se obtiene no es una nueva imagen, sino un colección de conjuntos de puntos sobre la imagen.
+
+Para este paso se parte de la imagen resultante del Adaptive Thresholding del paso anterior. Es decir, de una imagen que tan solo consta de pixels con valor cero o uno. Sobre ella se aplica un algoritmo que la barre, empezando por su esquina superior izquierda, a la busca de un primer pixel a uno, y que cuando lo encuentra es capaz de seguir la cadena de pixels con valor uno que se encuentran unidos a él hasta volver al pixel de partida. Esa cadena de pixels a uno encontrados se denomina contorno. Y es más, el algoritmo es capaz de encontrar todos los contornos presentes en la imagen, ya que cuando termina con uno empieza de nuevo el proceso hasta asegurarse de haber barrido la imagen por completo.
+
+El algoritmo es bastante potente, ya que no sólo es capaz de encontrar los contornos exteriores, sino también los interiores a otros, y retornarlos clasificados jerárquicamente. ArUco utiliza la función \textit{findContours} de OpenCV que implementa este algoritmo. En la documentación, así como la referencia de implementación, se refiere al \textit{paper} original "Topological structural analysis of digitized binary images by border following"   Satoshi Suzuki and Keiichi Abe.
+\begin{lstlisting}[style=C++]
+cv::findContours ( thres2 , contours2, hierarchy2,CV_RETR_TREE, CV_CHAIN_APPROX_NONE );
+\end{lstlisting} 
+
+\begin{lstlisting}[style=C++]
+CV_IMPL int
+cvFindContours( void*  img,  CvMemStorage*  storage,
+                CvSeq**  firstContour, int  cntHeaderSize,
+                int  mode,
+                int  method, CvPoint offset )
+{
+\end{lstlisting} 
+Básicamente hay un contador de contornos encontrados y un buffer de pixels recorridos. El contador se inicializa a cero y el buffer con una copia de la imagen original. Se barre el buffer de arriba abajo y de izquierda a derecha. Una transición de un pixel 0 a otro 1 indica que se ha detectado un borde exterior, momento en que se suma uno al contador de contornos encontrados y se buscan todos los pixels 1 vecinos del encontrado. Si el pixel no tiene vecinos a 1 se cambia el valor del pixel por el del contador con signo contrario y se empieza otra vez con el siguiente pixel. En caso contrario se cambia el valor del pixel por el del contador, excepto que su valor sea mayor que 1, lo que significa que ya ha sido visitado, y se continúa buscando vecinos a 1 hasta retornar al pixel inicial. Una transición de un pixel con valor igual o mayor que 1 a otro 0 indica que se ha detectado un borde interior, momento en que se repite el mismo proceso usado para los contornos exteriores.
+
+El algoritmo presenta una pequeña dificultad en los bordes de la imagen, y para solventarlo presupone que la imagen está rodeada por los cuatro costados de pixels con valor 0. Es decir, que el buffer que utiliza tiene una fila más por encima y por debajo, y una columna más a derecha e izquierda, que la imagen original.
+
+\section{Aproximación a polígonos (Douglas-Peucker)}
+Los contornos de los que se parte para este paso son colecciones de puntos. Todos y cada uno de los pixels que forman parte de ellos, ya que no se guardaron sólo las esquinas, sino cada pixel individual encontrado. Esto permite tomar algunas decisiones tempranas, como por ejemplo descartar los contornos que no tengan un mínimo de puntos. Es decir, los más pequeños. ArUco descarta aquellos que no tengan al menos un 20\% del ancho de la imagen. 
+
+ArUco utiliza la función \textit{approxPolyDP} de OpenCV para convertir una colección de puntos en un polígono mediante el algoritmo de Douglas-Peucker. El algoritmo admite como entrada una lista de puntos y una distancia máxima permitida. Define un segmento que va desde el primer punto de la lista hasta el último, y calcula la distancia más corta que hay desde dicho segmento a todos y cada uno del resto de puntos de la lista. Si encuentra un punto a una distancia mayor que la máxima pasada como parámetro divide la lista y el segmento en dos, utilizando el punto encontrado como nuevo extremo. Y vuelve a empezar el proceso comprobando cada nueva lista contra cada nuevo segmento de forma individual, creando nuevas listas y segmentos si fuera necesario, de forma recursiva.
+
+\begin{lstlisting}[style=C++]
+approxPolyDP(contours2[i], approxCurve, double(contours2[i].size())*0.05, true);
+\end{lstlisting} 
+ 
+ArUco utiliza como distancia máxima para al algoritmo el 5\% del número de puntos que tiene cada contorno de forma individual. 
+
+Una vez convertidos los puntos a polígonos se descartan los que no tengan cuatro lados, después selecciona sólo los polígonos convexos y también a aquellos que tengan un tamaño de lado mínimo. ArUco concretamente descarta todos aquellos cuyo lado mínimo no supere los 10 pixels de largo. 
+
+Aún realizando todos estos descartes, ArUco incorpora un control adicional, ya que debido a que en el paso previo se detectan contornos tanto exteriores como interiores, puede ocurrir que se detecten dos cuadriláteros, uno dentro de otro, siendo necesario descartar el más interno. ArUco calcula la distancia media entre las esquinas de los polígonos y si encuentra dos que están muy cerca descarta el de menor perímetro, que necesariamente será el más interno. Entendiendo por "muy cerca" que se encuentren a menos de 10 pixels de distancia.
+
+Por último, indicar que para el cálculo de las distancias entre esquinas es necesario un paso previo en el que las esquinas tienen que estar ordenadas en el sentido contrario de las agujas del reloj  \textit{(anti-clockwise order)}.
+
+\section{Transformación de perspectiva (Homography)}
+Este paso admite como entrada la imagen en escala de grises creada en el primer paso, y los cuadriláteros candidatos encontrados en el último. Para cada cuadrilátero extrae la región de la imagen que cubre cada uno de ellos eliminando la transformación de perspectiva, es decir, la deformación que se produce en el marcador debido a la perspectiva.
+
+ArUco utiliza dos funciones de OpenCV para este paso: \textit{getPerspectiveTransform} y \textit{warpPerspective}. La primera calcula una matriz que multiplicada por un punto en el cuadrilátero origen devuelve un punto equivalente en el cuadrado destino. La segunda acepta una imagen, un cuadrilátero, una matriz de transformación, y retorna una nueva imagen del área cubierta por el cuadrilátero sobre la que se ha aplicado la matriz de transformación para eliminar la deformación debida a la perspectiva. 
+
+El resultado de este proceso es cada una de las figuras encontradas en la imagen. Una para cada cuadrilátero candidato. ArUco utiliza un tamaño de 56x56 pixels para los cuadrados destino.
+
+\section{Umbralización (Otsu)}
+Una vez obtenidas esas pequeñas imágenes del paso anterior hay que volver a comenzar el proceso de análisis por el principio. Es decir, aplicando un valor umbral que reduzca la cantidad de información a procesar. Por suerte, esta vez se pueden tomar decisiones de forma mucho menos subjetiva que al principio. El factor diferenciador está en el hecho de que los marcadores sólo tienen dos colores: blanco y negro, lo que permite automatizar el proceso de cálculo del valor umbral ideal.
+
+\begin{lstlisting}[style=C++]
+threshold(grey, grey,125, 255, THRESH_BINARY|THRESH_OTSU);
+\end{lstlisting} 
+
+El método de Otsu se basa en el análisis del histograma de una imagen dada. Es decir, en el número de veces que aparece cada tono de gris dentro de ella. Divide el histograma en dos grandes grupos, de forma que a un lado quedan los valores que representan el "fondo" de la imagen y al otro los que representan el "frente". Matemáticamente se dice que calcula un valor tal que la varianza (dispersión de los tonos de gris) es mínima dentro de cada grupo, pero que es máxima entre los dos grupos.
+
+\section{Detección de Marcadores}
+
+El último paso del proceso es tratar de identificar marcadores. Es decir, analizar una a una las imágenes que se han obtenido en el paso anterior, y comprobar si realmente su contenido se corresponde con una matriz reconocible y válida de cuadrados blancos y negros que identifican de forma inequívoca a un marcador.
+
+ArUco utiliza una matriz de cuadrados de dimensiones 7x7 para los marcadores, aunque en realidad sólo utiliza la matriz central de 5x5 para codificarlos, ya que impone que el borde exterior se componga sólo y exclusivamente de cuadrados negros. De igual forma, impone una serie de restricciones sobre las combinaciones válidas de cuadrados por fila mediante el uso de un código Hamming modificado. Lo que básicamente quiere decir que los cuadrados negros se identifican como "0", los cuadrados blancos como "1", y que se tratan como si fueran dígitos binarios (bits).
+
+Los bits se numeran de izquierda a derecha, siendo 0 la primera posición. Los bits 1 y 3 se utilizan para almacenar datos, y los bits 0, 2 y 4 para control de errores. Como sólo hay dos bits para datos, entonces sólo hay 4 combinaciones válidas por fila. Y como hay cinco filas por marcador, entonces hay un máximo de 1024 marcadores distintos.
+
+Las combinaciones válidas por fila están prefijadas, y son las siguientes:
+
+\begin{center}
+$[ [1,0,0,0,0], [1,0,1,1,1], [0,1,0,0,1], [0,1,1,1,0] ]$
+\end{center}
+
+
+El algoritmo de detección funciona tratando la imagen como si estuviera dividida en una matriz de 7x7, contando el número de pixels con valor 1 en cada una de las celdas de la matriz. Si el número de pixels con valor 1 es mayor que el 50\% del tamaño de la celda entonces se considera que la celda representa un bit con valor 1, y con valor 0 en caso contrario.
+
+Una vez obtenida la secuencia de bits que representa cada fila se comprueba si es correcta. Pero debido a que no se conoce la posición que ocupa la cámara con respecto al marcador, en realidad la comprobación se realiza 4 veces, rotando 90 grados cada vez la matriz de bits encontrados. Si la secuencia de bits es correcta entonces se considera que se ha detectado un marcador, por lo que se obtiene su valor identificador a partir de los bits de datos, y se rotan las esquinas del cuadrilátero para que casen con las rotaciones realizadas a la matriz. 
+
+ArUco realiza un paso más que consistente en comprobar si se ha identificado más de una vez un mismo marcador, y eliminando el de menor perímetro en ese caso. Con esto trata de resolver un problema que presenta la detección inicial de contornos, que retorna contornos exteriores e interiores, lo que puede provocar que un mismo cuadrilátero se detecte dos veces.
+
+
+\section{Cálculo de parámetros extrínsecos de la cámara}
+Una vez detectadas e identificadas las marcar del frame, se procede a calcular los parámetros extrínsecos de la cámara respecto a la marca. Para la mayoría de los cálculos basta con considerar a la lente como un agujero puntual a través del que pasa la luz a través de un centro de proyección común. 
+
+Digamos que vamos a visualizar un objeto que se encuentra a una distancia $x_{1}$ de la lente, y que la imagen proyectada por los rayos que salen de la lente se forma a una distancia $x_{2}$ tras la lente. Llamamos distancia focal a la relación que existe entre $x_{1}$ y $x_{2}$ :
+\begin{center}
+$\dfrac{1}{f} = \dfrac{1}{x_{1}} + \dfrac{1}{x_{2}}$
+\end{center}
+
+A la hora de representar los objetos del espacio observado (3D), los convertimos a un plano de visión (2D), y tenemos que definir cual es la correspondencia entre las coordenadas del espacio y las de la representación. Para facilitar esta conversión, se utiliza el sistema de coordenadas “homogéneo”. Este sistema de coordenadas tiene la particularidad de que permite pasar fácilmente coordenadas de un número de dimensiones a otro. Para ello, almacena las coordenadas con una dimensión adicional, de tal forma que para un espacio de 3D, utilizaríamos 4 coordenadas. El valor de la coordenada adicional indica entre otras cosas, si el punto se encuentra en el infinito, valor 0, o es un punto cualquiera, valor distinto de 0. En este sistema, si dos coordenadas son proporcionales, se refieren al mismo punto.
+
+Las matrices de transformación, utilizadas para pasar de unas dimensiones a otras, suelen incluir 3 tipos de transformaciones: Rotación, Translación y eScalado. Podemos representarlas así:
+\begin{center}
+$[R|t] = \begin{bmatrix} SR_{1,1} & SR_{1,2} & SR_{1,3} & T_{1}  \\
+                                 SR_{2,1} & SR_{2,2} & SR_{2,3} & T_{2}  \\
+                                 SR_{3,1} & SR_{3,2} & SR_{3,3} & T_{3}  \\
+                                     0    &     0    &     0    &  1 
+                  \end{bmatrix}
+$
+\end{center}
+
+Para convertir las coordenadas del mundo a coordenadas de pantalla, de espacio tridimensional a bidimensional, los sistemas de visión artificial utilizan la siguiente fórmula:
+
+\begin{center}
+$q=MQ$ donde $q=\begin{bmatrix} x \\ y \\ z \end{bmatrix}$, $M=\begin{bmatrix} f_{x} & 0 & c_{x} \\ 0 & f_{y} & c_{y} \\ 0 & 0 & 1 \end{bmatrix}$ y $Q=\begin{bmatrix} X \\ Y \\ Z \end{bmatrix}$
+\end{center}
+
+Por tanto, q representa el espacio bidimensional en coordenadas homogéneas, y Q el espacio tridimensional. $f_{x}$ es la distancia focal en el eje X, $f_{y}$ la distancia focal en el eje Y, ($c_{x},c_{y}$) marcan el punto principal, el punto donde el eje de visión corta el plano de visión (normalmente suele estar en el centro de la imagen, o muy cerca) 
+
+En AruCo se uriliza la función de OpenCV \textit{solvePnp (ObjPoints, ImagePoints, camMatrix, distCoeff,raux,taux)}.   Está, calcula la pose (rotación y traslación) de la marca dado un conjunto de puntos de objeto(ObjPoints), sus proyecciones en la imagen correspondiente(ImagePoints), así como la matriz de cámara (camMatrix) y los coeficientes de distorsión (distCoeff). Esta función encuentra una pose que minimiza el error de reproyección, es decir, la suma de los cuadrados de las distancias entre las proyecciones imagePoints observados y los objectPoints proyectados
+
+Se establece el centro de la marca como centro de coordenadas (0,0,0) relativo a la marca, por lo que las esquinas que se le proporcionan a la función son :
+\begin{center}
+ObjPoints $=\begin{bmatrix} -h/2 & -h/2 & 0 \\
+                 -h/2 &  h/2 & 0 \\
+                  h/2 &  h/2 & 0 \\
+                  h/2 & -h/2 & 0   
+\end{bmatrix}$
+Siendo \textbf{h} la longitud del lado de la marca
+\end{center}
+Los ImagePoints corresponden a los pixels que representan las esquinas de la marca detectada, camMatrix son los parametros intrinsecos de la cámara y distCoeff, el vector de coeficientes de distorsión. Estos ultimos parametros se obtienen  en un proceso previo de calibración de cámara y se mantienen fijos y conocidos durante todo el proceso.
+
+
+\begin{figure}
+  \centering
+    \includegraphics[width=0.7\textwidth]{marca}
+  \caption{Calculo de parametros extrinsecos}
+  \label{Figura 1}
+\end{figure}
+
+\section{Bibliografía}
+
+\textbf{ArUco}, A minimal library for Augmented Reality applications based on OpenCv, Rafael Muñoz Salinas
+
+\textbf{js-aruco},  A JavaScript library for Augmented Reality,  Juan Mellado
+
+\textbf{Learning OpenCV}, Gary Bradski and Adrian Kaehler, O’Reilly Media
+
+\textbf{OpenCV 2 Computer Vision Application Programming Cookbook}, Robert Laganière, Packt Publishing
+\end{document}
