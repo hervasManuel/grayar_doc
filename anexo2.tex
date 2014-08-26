@@ -1,0 +1,488 @@
+\chapter{Especificación de Requisitos Software}
+
+\section{Introducción}
+El objetivo de este proyecto es construir un sistema de ayuda a la gestión de documental que permita el tratamiento directo sobre documentos físicos impresos mediante el
+uso de técnicas de visión por computador, síntesis visual y auditiva y técnicas de realidad aumentada
+
+\subsection{Identificación}
+El sistema software considerado para el desarrollo de los objetivos se conoce como \textbf{ARgos}. Se trata de un proyecto experimental, por lo que el versionado se realizará según la siguiente nomenclatura:
+\begin{description}
+\item[\textit{mayor}] Se mantendrá a 0 durante toda la fase de desarrollo inicial, hasta que se libere la primera versión funcional completa.
+\item[\textit{minor}] Se utilizarán números pares para versiones ``estables'' e impares para las ``inestables'' o en fase de pruebas y depuración.
+\item[\textit{micro}] Para incluir correcciones de software que no impliquen grandes cambios.
+\item[\textit{fase}] Para definir si la versión se encuentra en alguna fase de liberación como \textit{alpha}, \textit{beta} o \textit{Release Candidate (RC)}. 
+\end{description}
+ \subsection{Propósito y Audiencia}
+
+El objetivo de este documento es recoger los requerimientos funcionales y técnicos que deben ser contemplados para la definición y desarrollo del proyecto ARgos. 
+
+Los requisitos para el sistema serán proporcionados por Carlos González Morcillo, creador e investigador principal del proyecto; la cátedra Indra-UCLM y la fundación Adecco, como financiadores del proyecto y la asociación ASPRONA, que con su experiencia en la atención a personas con discapacidad, propondrán escenarios y funcionalidades que son de utilidad para este colectivo. 
+
+El usuario final del sistema serán personas que necesiten soporte en la gestión documental debido a cualquier tipo de discapacidad.
+
+\subsection{Definiciones, acrónimos y abreviaturas}
+
+\begin{tabular}{|l|p{11cm}|}
+  \hline
+  \textbf{Término}      & \textbf{Definición} \\ \hline
+  Realidad aumentada    & Visión directa o indirecta de un entorno físico del mundo real, cuyos elementos se combinan con elementos virtuales en tiempo real \\ \hline
+  Visión por computador & Subcampo de la inteligencia artificial cuyo propósito procesar una escena o las características de una imagen                      \\ \hline
+  Lectura fácil         & Elaboración de textos siguiendo pautas y directivas que facilitan la lectura y el entendimiento de los mismos                      \\ \hline
+\end{tabular}
+
+\subsection{Referencias}
+Esta sección incluye una lista de citas bibliográficas de  los documentos a los que se hace referencia en el presente informe. En esta sección también incluiremos informes relacionados que forman parte de la documentación del proyecto y sean de utilidad como material de soporte a este documento.
+
+\begin{itemize}
+  \item \textbf{ Ref. 1:}  ARgos: Estado del Arte.pdf
+\end{itemize}
+
+\subsection{Organización del documento}
+Este documento se ha estructurado según las indicaciones del estándar IEEE 830-1998 para especificación de requisitos de software y contiene las siguientes secciones:
+
+\textbf{Sección 2.} Se describe el sistema en desarrollo desde un punto de vista holístico. Se definen funciones, características, limitaciones, supuestos, dependencias y requisitos generales desde una perspectiva general del sistema. 
+
+
+\textbf{Sección 3.} Se describen los requisitos específicos del sistema que se están desarrollando. Se enumeran y describen interfaces, características y requisitos específicos en un grado suficiente para iniciar la elaboración de una solución arquitectónica del sistema propuesto.
+
+
+\textbf{Sección 4.} Proporciona la información de trazabilidad de los requisitos del proyecto. Cada característica del sistema es indexada por el número de requisito y vinculada a su situación y pruebas. 
+
+\textbf{Sección 5 y sucesivas.} Apéndices con información adicional utilizada para crear este documento.
+
+\section{Descripción general}
+\subsection{Perspectiva del producto}
+El sistema final desarrollado será un producto independiente y autosuficiente. Cada uno de los subsistemas que lo componen, se encargarán de soportar y resolver las necesidades que existan. 
+
+\subsection{Funcionalidad del Producto}
+construcción de un sistema de ayuda a la gestión de documentos impresos mediante el uso de técnicas de visión por computador, síntesis visual y auditiva y técnicas de realidad
+aumentada con los siguientes componentes funcionales:
+\begin{itemize}
+\item \textbf{Cámara USB:} El sistema emplea una cámara de bajo coste o webcam como entrada al módulo de visión por computador.
+\item \textbf{Cañón de proyección:} Utilizaremos un cañón de proyección portátil para mostrar información visual directamente alineada sobre el documento del mundo físico. El sistema responderá a las peticiones que el usuario realice directamente sobre el espacio físico ampliando información relacionada que sea relevante a la acción que quiera realizar.
+\item \textbf{Unidad de proceso:} La unidad de proceso se encargará de tomar como entrada las imágenes obtenidas por la cámara USB y generar la salida para el cañón de proyección. Esta salida deberá tener en cuenta el posicionamiento 3D relativo entre el documento y el cañón para que el registro de la amplificación visual sea perfecto. El documento podrá moverse dentro de una región del escritorio y la amplificación deberá quedar perfectamente alineada en el espacio físico. El sistema de cómputo además deberá generar información auditiva relevante al documento que está siendo tratado (por ejemplo, sintetizando voz o generando alertas sonoras), así como mostrar información adicional en una pantalla. Se utilizará un computador en placa Raspberry Pi con arquitectura ARM.
+\end{itemize}
+
+\subsection{Características de los usuarios}
+El fin de esté proyecto es construir un sistema que permita la integración laboral a personas con discapacidad. El tipo de usuarios a los que está dirigido es por tanto personas dentro de un amplio espectro de discapacidades.
+Se debe proporcionar soporte a usuarios con discapacidades sensoriales (visuales y auditivas) e intelectuales.  
+
+\subsection{Restricciones}
+Debido a las características del sistema se deben tener en cuenta las siguiente restricciones:
+\begin{description}
+
+\item[Funcional en dispositivos móviles] El prototipo final se construirá sobre un dispositivos con arquitectura ARM con limitaciones de tanto en capacidad de computo como memoria. El sistema deberá estar optimizado para este tipo de dispositivos, obteniendo una respuesta fluida y en tiempo real.   
+
+\item[Se debe basar en componentes de bajo coste] Para facilitar la implantación real en el entorno de trabajo, deberá funcionar con componentes de bajo coste, incorporando mecanismos de corrección de distorsión y registro 3D totalmente software.
+\end{description}
+%\subsection{Suposiciones y dependencias}
+
+%-------------------------------------------
+\section{Requisitos específicos}
+\subsection{Requisitos comunes de los interfaces}
+\subsubsection{Interfaces Hardware}
+\begin{itemize}
+\item La implementación del sistema se realizará sobre una Raspberry Pi Modelo B de 512MB de RAM y arquitectura ARM 
+\item La visualización será a través de un pico-proyector mediante conexión HDMI
+\item El acceso al sistema y conexión a internet se establece por medio de cable ethernet durante el desarrollo y pruebas, siendo la conexión WiFi el tipo de conectividad final
+\end{itemize}
+
+\subsubsection{Interfaces Software }
+Versión preliminar. No definido
+
+\subsubsection{Interfaces de usuario}
+Versión preliminar. No definido
+
+\subsubsection{Interfaces de comunicación}
+Versión preliminar. No definido
+
+\subsection{Requisitos funcionales}
+\subsection*{Definidos en la línea base del proyecto}
+\subsubsection*{RF-001: Adquisición de imágenes mediante cámara USB}
+
+\begin{tabular}{|l|l|p{10cm}|}
+\hline
+\textbf{RF-001}& \multicolumn{2}{l|}{\textbf{Adquisición de imágenes mediante cámara USB}}                                                       \\ \hline
+\textbf{Versión}        & \multicolumn{2}{l|}{1.0 (03/02/2014)}                                                                                           \\ \hline
+\textbf{Dependencias}   & \multicolumn{2}{l|}{No tiene}                                                                                                   \\ \hline
+\textbf{Descripción}    & \multicolumn{2}{l|}{Se deben obtener imágenes mediante  una cámara USB}                                                         \\ \hline
+\textbf{Comportamiento} & \multicolumn{1}{c|}{\textit{\textbf{Orden}}} & \multicolumn{1}{c|}{\textit{\textbf{Acción}}}                                    \\ \hline
+                        & \multicolumn{1}{c|}{1}                       & Invocación a la cámara                                                           \\ \cline{2-3} 
+                        & \multicolumn{1}{c|}{2}                       & Obtención del fotograma actual                                                   \\ \hline 
+\textbf{Importancia}    & \multicolumn{2}{l|}{Esencial}                                                                                                   \\ \hline
+\textbf{Prioridad}      & \multicolumn{2}{l|}{Alta}                                                                                                       \\ \hline
+\textbf{Comentarios}    & \multicolumn{2}{l|}{}                                                                                                           \\ \hline
+\end{tabular}
+
+\subsubsection*{RF-002: Adquisición de imágenes mediante raspiCam}
+\begin{tabular}{|l|l|p{10cm}|}
+\hline
+\textbf{RF-001}         & \multicolumn{2}{l|}{\textbf{Adquisición de imágenes mediante raspiCam}}                                                         \\ \hline
+\textbf{Versión}        & \multicolumn{2}{l|}{1.0 (03/02/2014)}                                                                                           \\ \hline
+\textbf{Dependencias}   & \multicolumn{2}{l|}{No tiene}                                                                                                   \\ \hline
+\textbf{Descripción}    & \multicolumn{2}{l|}{Se deben obtener imágenes mediante raspiCam}                                                                \\ \hline
+\textbf{Comportamiento} & \multicolumn{1}{c|}{\textit{\textbf{Orden}}} & \multicolumn{1}{c|}{\textit{\textbf{Acción}}}                                    \\ \hline
+                        & \multicolumn{1}{c|}{1}                       & Invocación a la cámara                                                           \\ \cline{2-3} 
+                        & \multicolumn{1}{c|}{2}                       & Obtención del fotograma actual                                                   \\ \hline 
+\textbf{Importancia}    & \multicolumn{2}{l|}{Esencial}                                                                                                   \\ \hline
+\textbf{Prioridad}      & \multicolumn{2}{l|}{Alta}                                                                                                       \\ \hline
+\textbf{Comentarios}    & \multicolumn{2}{l|}{}                                                                                                           \\ \hline
+\end{tabular}
+\subsubsection*{RF-003: Sistema de calibrado de cámaras}
+\begin{tabular}{|l|l|p{10cm}|}
+\hline
+\textbf{RF-003}        & \multicolumn{2}{l|}{\textbf{Sistema de calibrado de cámaras}}                                                                    \\ \hline
+\textbf{Versión}        & \multicolumn{2}{l|}{1.0 (03/02/2014)}                                                                                           \\ \hline
+\textbf{Dependencias}   & \multicolumn{2}{l|}{\begin{tabular}[l]{@{}l@{}}RF-001 Adquisición de imágenes mediante cámara USB\\ RF-002 Adquisición de imágenes mediante raspiCam\end{tabular}}              \\ \hline
+\textbf{Descripción}    & \multicolumn{2}{l|}{El sistema debe proporcionar un método para el calibrado de las cámaras}                                    \\ \hline
+\textbf{Comportamiento} & \multicolumn{1}{c|}{\textit{\textbf{Orden}}} & \multicolumn{1}{c|}{\textit{\textbf{Acción}}}                                    \\ \hline
+                        & \multicolumn{1}{c|}{1}                       & Mediante un patrón de calibración se realizan varias tomas                       \\ \cline{2-3} 
+                        & \multicolumn{1}{c|}{2}                       & Cálculo de parámetros intrínsecos de la cámara                                   \\ \cline{2-3} 
+                        & \multicolumn{1}{c|}{3}                       & Cálculo de los coeficientes de distorsión                                        \\ \cline{2-3} 
+                        & \multicolumn{1}{c|}{4}                       & Devolución de resultados mediante fichero XML                                    \\ \hline
+\textbf{Importancia}    & \multicolumn{2}{l|}{Esencial}                                                                                                   \\ \hline
+\textbf{Prioridad}      & \multicolumn{2}{l|}{Alta}                                                                                                       \\ \hline
+\textbf{Comentarios}    & \multicolumn{2}{l|}{}                                                                                                           \\ \hline
+\end{tabular}
+
+\subsubsection*{RF-004: Sistema de calibrado de proyectores}
+\begin{tabular}{|l|l|p{10cm}|}
+\hline
+\textbf{RF-003}        & \multicolumn{2}{l|}{\textbf{Sistema de calibrado de proyectores}}                                                                \\ \hline
+\textbf{Versión}        & \multicolumn{2}{l|}{1.0 (03/02/2014)}                                                                                           \\ \hline
+\textbf{Dependencias}   & \multicolumn{2}{l|}{\begin{tabular}[l]{@{}l@{}}RF-001 Adquisición de imágenes mediante cámara USB\\ RF-002 Adquisición de imágenes mediante raspiCam\end{tabular}}              \\ \hline
+\textbf{Descripción}    & \multicolumn{2}{l|}{El sistema debe proporcionar un método para el calibrado de las cámaras}                                    \\ \hline
+\textbf{Comportamiento} & \multicolumn{1}{c|}{\textit{\textbf{Orden}}} & \multicolumn{1}{c|}{\textit{\textbf{Acción}}}                                    \\ \hline
+                        & \multicolumn{1}{c|}{1}                       & Se proyecta el patrón de calibración y la cámara realiza varias tomas            \\ \cline{2-3} 
+                        & \multicolumn{1}{c|}{2}                       & Cálculo de parámetros intrínsecos del proyector                                  \\ \cline{2-3} 
+                        & \multicolumn{1}{c|}{3}                       & Cálculo de los coeficientes de distorsión                                        \\ \cline{2-3} 
+                        & \multicolumn{1}{c|}{4}                       & Devolución de resultados mediante fichero XML                                    \\ \hline
+\textbf{Importancia}    & \multicolumn{2}{l|}{Esencial}                                                                                                   \\ \hline
+\textbf{Prioridad}      & \multicolumn{2}{l|}{Alta}                                                                                                       \\ \hline
+\textbf{Comentarios}    & \multicolumn{2}{l|}{}                                                                                                           \\ \hline
+\end{tabular}
+
+\subsubsection*{RF-005: Configuración del sistema mediante argumentos por terminal}
+\begin{tabular}{|p{3cm}|p{11.5cm}|}
+\hline
+\textbf{RF-005}         & \textbf{Configuración del sistema mediante argumentos por terminal}                                       \\ \hline
+\textbf{Versión}        & 1.0 (03/02/2014)                                                                                           \\ \hline
+\textbf{Dependencias}   & No tiene                                                                                                   \\ \hline
+\textbf{Descripción}    & Parametrizar la configuración completa del sistema mediante argumentos                                     \\ \hline
+\textbf{Importancia}    & Deseable                                                                                                   \\ \hline
+\textbf{Prioridad}      & Media                                                                                                      \\ \hline
+\textbf{Comentarios}    &                                                                                                            \\ \hline
+\end{tabular}
+
+\subsubsection*{RF-006: Captura de imágenes a distintas resoluciones}
+\begin{tabular}{|p{3cm}|p{11.5cm}|}
+\hline
+\textbf{RF-006}         & \textbf{Captura de imágenes a distintas resoluciones}                                                      \\ \hline
+\textbf{Versión}        & 1.0 (03/02/2014)                                                                                           \\ \hline
+\textbf{Dependencias}   & \begin{tabular}[l]{@{}l@{}}RF-001 Adquisición de imágenes mediante cámara USB\\ 
+                                                     RF-002 Adquisición de imágenes mediante raspiCam \end{tabular}                  \\ \hline
+\textbf{Descripción}    & En un momento determinado se debe realizar la captura en la mayor resolución posible                       \\ \hline
+\textbf{Importancia}    & Deseable                                                                                                   \\ \hline
+\textbf{Prioridad}      & Media                                                                                                      \\ \hline
+\textbf{Comentarios}    &                                                                                                            \\ \hline
+\end{tabular} 
+
+\subsubsection*{RF-007: Utilización de un fichero de vídeo como fuente de entrada}
+\begin{tabular}{|p{3cm}|p{11.5cm}|}
+\hline
+\textbf{RF-007}         & \textbf{Utilización de un fichero de vídeo como fuente de entrada}                                           \\ \hline
+\textbf{Versión}        & 1.0 (03/02/2014)                                                                                             \\ \hline
+\textbf{Dependencias}   & No tiene                                                                                                     \\ \hline
+\textbf{Descripción}    & El sistema podrá obtener los frames de entrada a partir de un fichero de vídeo                               \\ \hline
+\textbf{Importancia}    & Deseable                                                                                                     \\ \hline
+\textbf{Prioridad}      & Media                                                                                                        \\ \hline
+\textbf{Comentarios}    &                                                                                                              \\ \hline
+\end{tabular}
+
+\subsubsection*{RF-008: Grabación de vídeo}
+\begin{tabular}{|p{3cm}|p{11.5cm}|}
+\hline
+\textbf{RF-008}         & \textbf{Grabación de vídeo}                                                                                \\ \hline
+\textbf{Versión}        & 1.0 (03/02/2014)                                                                                           \\ \hline
+\textbf{Dependencias}   & \begin{tabular}[l]{@{}l@{}}RF-001 Adquisición de imágenes mediante cámara USB\\ 
+                                                     RF-002 Adquisición de imágenes mediante raspiCam \end{tabular}                  \\ \hline 
+\textbf{Descripción}    & El sistema debe poder grabar en vídeo lo que se captura por la cámara                                      \\ \hline
+\textbf{Importancia}    & Deseable                                                                                                   \\ \hline
+\textbf{Prioridad}      & Media                                                                                                      \\ \hline
+\textbf{Comentarios}    &                                                                                                            \\ \hline
+\end{tabular}
+
+\subsubsection*{RF-009: Sistema de cálculo de homografías}
+\begin{tabular}{|p{3cm}|p{11.5cm}|}
+\hline
+\textbf{RF-009}         & \textbf{Sistema de cálculo de homografías}                                                                  \\ \hline
+\textbf{Versión}        & 1.0 (03/02/2014)                                                                                            \\ \hline
+\textbf{Dependencias}   & \begin{tabular}[l]{@{}l@{}}RF-001 Adquisición de imágenes mediante cámara USB\\ 
+                                                     RF-002 Adquisición de imágenes mediante raspiCam \end{tabular}                   \\ \hline
+\textbf{Descripción}    & Debe existir un módulo de cálculo de homografías para la correcta representación debido a la proyección de perspectiva en el proyector    \\ \hline 
+\textbf{Importancia}    & Esencial                                                                                                    \\ \hline
+\textbf{Prioridad}      & Alta                                                                                                        \\ \hline
+\textbf{Comentarios}    &                                                                                                             \\ \hline
+\end{tabular}
+
+\subsubsection*{RF-010: Estimación de Pose 3D de documentos}
+\begin{tabular}{|p{3cm}|p{11.5cm}|}
+\hline
+\textbf{RF-010}         & \textbf{Estimación de Pose 3D de documentos}                                                                \\ \hline
+\textbf{Versión}        & 1.0 (03/02/2014)                                                                                            \\ \hline
+\textbf{Dependencias}   & \begin{tabular}[l]{@{}l@{}}RF-002 Adquisición de imágenes mediante raspiCam\\ 
+                                                     RF-003: Sistema de calibrado de cámaras\end{tabular}                             \\ \hline
+\textbf{Descripción}    & Debe existir un módulo de cálculo estimación de la pose del documento en tiempo real                        \\ \hline 
+\textbf{Importancia}    & Esencial                                                                                                    \\ \hline
+\textbf{Prioridad}      & Alta                                                                                                        \\ \hline
+\textbf{Comentarios}    &                                                                                                             \\ \hline
+\end{tabular}
+
+\subsubsection*{RF-011: Implementación de tracking visual}
+\begin{tabular}{|p{3cm}|p{11.5cm}|}
+\hline
+\textbf{RF-011}         & \textbf{Implementación de tracking visual}                                                                 \\ \hline
+\textbf{Versión}        & 1.0 (03/02/2014)                                                                                           \\ \hline
+\textbf{Dependencias}   & \begin{tabular}[l]{@{}l@{}}RF-001 Adquisición de imágenes mediante cámara USB\\ 
+                                                     RF-002 Adquisición de imágenes mediante raspiCam\end{tabular}                   \\ \hline
+\textbf{Descripción}    & Sistema de tracking visual mediante Optical Flow u otras técnicas                                          \\ \hline 
+\textbf{Importancia}    & Esencial                                                                                                   \\ \hline
+\textbf{Prioridad}      & Alta                                                                                                       \\ \hline
+\textbf{Comentarios}    &                                                                                                            \\ \hline
+\end{tabular}
+
+\subsubsection*{RF-012: Sistema de representación mediante OpenGL ES}
+\begin{tabular}{|p{3cm}|p{11.5cm}|}
+\hline
+\textbf{RF-012}         & \textbf{Sistema de representación mediante OpenGL ES}                                                      \\ \hline
+\textbf{Versión}        & 1.0 (03/02/2014)                                                                                           \\ \hline
+\textbf{Dependencias}   & No tiene                                                                                                   \\ \hline
+\textbf{Descripción}    & Sistema de representación 3D mediante OpenGL ES de polígonos y texto                                       \\ \hline 
+\textbf{Importancia}    & Esencial                                                                                                   \\ \hline
+\textbf{Prioridad}      & Alta                                                                                                       \\ \hline
+\textbf{Comentarios}    &                                                                                                            \\ \hline
+\end{tabular}
+
+\subsubsection*{RF-013: Sistema de identificación rápida de documentos}
+\begin{tabular}{|p{3cm}|p{11.5cm}|}
+\hline
+\textbf{RF-013}         & \textbf{Sistema de identificación rápida de documentos}                                                    \\ \hline
+\textbf{Versión}        & 1.0 (03/02/2014)                                                                                           \\ \hline
+\textbf{Dependencias}   & \begin{tabular}[l]{@{}l@{}}RF-001 Adquisición de imágenes mediante cámara USB\\ 
+                                                     RF-002 Adquisición de imágenes mediante raspiCam\end{tabular}                   \\ \hline
+\textbf{Descripción}    & El sistema debe poder identificar un documento capturado mediante la cámara  entre todos los almacenados en el sistema previamente  \\ \hline
+\textbf{Importancia}    & Esencial                                                                                                   \\ \hline
+\textbf{Prioridad}      & Alta                                                                                                       \\ \hline
+\textbf{Comentarios}    &                                                                                                            \\ \hline
+\end{tabular}
+
+\subsubsection*{RF-014: Extracción de documentos digitales almacenados}
+\begin{tabular}{|p{3cm}|p{11.5cm}|}
+\hline
+\textbf{RF-014}         & \textbf{Extracción de documentos digitales almacenados}                                                     \\ \hline
+\textbf{Versión}        & 1.0 (03/02/2014)                                                                                            \\ \hline
+\textbf{Dependencias}   & \begin{tabular}[l]{@{}l@{}}RF-001 Adquisición de imágenes mediante cámara USB\\
+                                                     RF-002 Adquisición de imágenes mediante raspiCam\end{tabular}                    \\ \hline
+\textbf{Descripción}    & El sistema debe poder devolver la versión digital del documento  identificado en  la fase anterior           \\ \hline
+\textbf{Importancia}    & Esencial                                                                                                    \\ \hline
+\textbf{Prioridad}      & Alta                                                                                                        \\ \hline
+\textbf{Comentarios}    &                                                                                                             \\ \hline
+\end{tabular}
+
+\subsubsection*{RF-015: Interacción mediante paradigmas naturales con el usuario (NUI)}
+\begin{tabular}{|p{3cm}|p{11.5cm}|}
+\hline
+\textbf{RF-015}         & \textbf{Interacción mediante paradigmas naturales con el usuario (NUI)}                                     \\ \hline
+\textbf{Versión}        & 1.0 (03/02/2014)                                                                                            \\ \hline
+\textbf{Dependencias}   & \begin{tabular}[l]{@{}l@{}}RF-001 Adquisición de imágenes mediante cámara USB\\ 
+                                                     RF-002 Adquisición de imágenes mediante raspiCam\end{tabular}                    \\ \hline
+\textbf{Descripción}    & La interacción con el sistema debe ser realizada mediante gestos realizados sobre el documento              \\ \hline
+\textbf{Importancia}    & Esencial                                                                                                    \\ \hline
+\textbf{Prioridad}      & Alta                                                                                                        \\ \hline
+\textbf{Comentarios}    &                                                                                                             \\ \hline
+\end{tabular}
+
+\subsubsection*{RF-016: Amplificación multimodal}
+\begin{tabular}{|l|l|p{8.5cm}|}
+\hline
+\textbf{RF-016}         & \multicolumn{2}{l|}{\textbf{Amplificación multimodal}}                                                                          \\ \hline
+\textbf{Versión}        & \multicolumn{2}{l|}{1.0 (03/02/2014)}                                                                                           \\ \hline
+\textbf{Dependencias}   & \multicolumn{2}{l|}{No tiene}                                                                                                   \\ \hline
+\textbf{Descripción}    & \multicolumn{2}{p{11.5cm}|}{Contará con diferentes modos de amplificación de la información del mundo real}                     \\ \hline
+\textbf{Comportamiento} & \multicolumn{1}{c|}{\textit{\textbf{Elementos}}} & \multicolumn{1}{c|}{\textit{\textbf{Acción}}}                                \\ \hline
+                        & \multicolumn{1}{c|}{1}                       & La información visual se amplificará empleando el cañón de proyección            \\ \cline{2-3} 
+                        & \multicolumn{1}{c|}{2}                       & El sistema generará información auditiva relevante a la operación realizada      \\ \cline{2-3} 
+\textbf{Importancia}    & \multicolumn{2}{l|}{Esencial}                                                                                                   \\ \hline
+\textbf{Prioridad}      & \multicolumn{2}{l|}{Alta}                                                                                                       \\ \hline
+\textbf{Comentarios}    & \multicolumn{2}{l|}{}                                                                                                           \\ \hline
+\end{tabular}
+\subsubsection*{RF-017: Soporte de audio en streaming}
+\begin{tabular}{|p{3cm}|p{11.5cm}|}
+\hline
+\textbf{RF-017}         & \textbf{Soporte de audio en streaming}                                                                     \\ \hline
+\textbf{Versión}        & 1.0 (03/02/2014)                                                                                           \\ \hline
+\textbf{Dependencias}   & No tiene                                                                                                   \\ \hline
+\textbf{Descripción}    & El sistema tendrá la capacidad para reproducir audio en streaming                                          \\ \hline
+\textbf{Importancia}    & Esencial                                                                                                   \\ \hline
+\textbf{Prioridad}      & Alta                                                                                                       \\ \hline
+\textbf{Comentarios}    &                                                                                                            \\ \hline
+\end{tabular}
+
+\subsubsection*{RF-018: Soporte de vídeo en streaming}
+\begin{tabular}{|p{3cm}|p{11.5cm}|}
+\hline
+\textbf{RF-018}         & \textbf{Soporte de vídeo en streaming}                                                                     \\ \hline
+\textbf{Versión}        & 1.0 (03/02/2014)                                                                                           \\ \hline
+\textbf{Dependencias}   & No tiene                                                                                                   \\ \hline
+\textbf{Descripción}    & El sistema tendrá la capacidad para reproducir vídeo en streaming                                          \\ \hline
+\textbf{Importancia}    & Esencial                                                                                                   \\ \hline
+\textbf{Prioridad}      & Alta                                                                                                       \\ \hline
+\textbf{Comentarios}    &                                                                                                            \\ \hline
+\end{tabular}
+
+\bigskip
+\subsection*{Definidos por ASPRONA}
+\subsubsection*{RFa-001: Realización de Videoconferencias}
+\begin{tabular}{|l|l|p{10cm}|}
+\hline
+\textbf{RFa-001}        & \multicolumn{2}{l|}{\textbf{Realización de Videoconferencias}}                                                                  \\ \hline
+\textbf{Versión}        & \multicolumn{2}{l|}{1.0 (03/02/2014)}                                                                                           \\ \hline
+\textbf{Dependencias}   & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}c@{}}RF-017 Soporte de vídeo en streaming\\ 
+                                                                         RF-018 soporte de audio en streaming\end{tabular}}                               \\ \hline
+\textbf{Descripción}    & \multicolumn{2}{l|}{El sistema debe soportar la conexión por videoconferencia}                                                  \\ \hline
+\textbf{Comportamiento} & \multicolumn{1}{c|}{\textit{\textbf{Orden}}} & \multicolumn{1}{c|}{\textit{\textbf{Acción}}}                                    \\ \hline
+                        & \multicolumn{1}{c|}{1}                       & El usuario solicita la asistencia por videoconferencia                           \\ \cline{2-3} 
+                        & \multicolumn{1}{c|}{2}                       & Se establece contacto con el personal de soporte                                 \\ \cline{2-3} 
+                        & \multicolumn{1}{c|}{3}                       & Conversación                                                                     \\ \cline{2-3} 
+                        & \multicolumn{1}{c|}{4}                       & Finalización de la  conexión                                                     \\ \hline
+\textbf{Importancia}    & \multicolumn{2}{l|}{Esencial}                                                                                                   \\ \hline
+\textbf{Prioridad}      & \multicolumn{2}{l|}{Alta}                                                                                                       \\ \hline
+\textbf{Comentarios}    & \multicolumn{2}{l|}{}                                                                                                           \\ \hline
+\end{tabular}
+
+\subsubsection*{RFa-002: Mensajes en Lectura Fácil}
+\begin{tabular}{|p{3cm}|p{11.5cm}|}
+\hline
+\textbf{RFa-002}        & \textbf{Mensajes en lectura fácil}                                                                         \\ \hline
+\textbf{Versión}        & 1.0 (03/02/2014)                                                                                           \\ \hline
+\textbf{Dependencias}   & No tiene                                                                                                   \\ \hline
+\textbf{Descripción}    & Todos los textos y mensajes del sistema deben aparecer escritos en lectura fácil                           \\ \hline
+\textbf{Importancia}    & Esencial                                                                                                   \\ \hline
+\textbf{Prioridad}      & Alta                                                                                                       \\ \hline
+\textbf{Comentarios}    &                                                                                                            \\ \hline
+\end{tabular}
+
+\subsubsection*{RFa-003: Soporte para completar partes de trabajo}
+\begin{tabular}{|p{3cm}|p{11.5cm}|}
+\hline
+\textbf{RFa-003}        & \textbf{Soporte para completar partes de trabajo}                                                          \\ \hline
+\textbf{Versión}        & 1.0 (03/02/2014)                                                                                           \\ \hline
+\textbf{Dependencias}   & No tiene                                                                                                   \\ \hline
+\textbf{Descripción}    & Debe proporcionar el soporte necesario para rellenar un formulario de un parte de trabajo                  \\ \hline
+\textbf{Importancia}    & Deseable                                                                                                   \\ \hline
+\textbf{Prioridad}      & Media                                                                                                      \\ \hline
+\textbf{Comentarios}    &                                                                                                            \\ \hline
+\end{tabular}
+
+\subsubsection*{RFa-004: Soporte para completar formularios de protocolos de calidad}
+\begin{tabular}{|p{3cm}|p{11.5cm}|}
+\hline
+\textbf{RFa-004}        & \textbf{Soporte para completar formularios de protocolos de calidad}                                       \\ \hline
+\textbf{Versión}        & 1.0 (03/02/2014)                                                                                           \\ \hline
+\textbf{Dependencias}   & No tiene                                                                                                   \\ \hline
+\textbf{Descripción}    & El sistema debe proporcionar el soporte necesario para completar un informe de calidad                     \\ \hline
+\textbf{Importancia}    & Deseable                                                                                                   \\ \hline
+\textbf{Prioridad}      & Media                                                                                                      \\ \hline
+\textbf{Comentarios}    &                                                                                                            \\ \hline
+\end{tabular}
+
+\subsubsection*{RFa-005: Guiado para clasificación y archivado de facturas}
+\begin{tabular}{|p{3cm}|p{11.5cm}|}
+\hline
+\textbf{RFa-005}        & \textbf{Guiado para clasificación y archivado de facturas}                                                \\ \hline
+\textbf{Versión}        & 1.0 (03/02/2014)                                                                                           \\ \hline
+\textbf{Dependencias}   & No tiene                                                                                                   \\ \hline
+\textbf{Descripción}    & El sistema debe proporcionar soporte para la tarea de clasificación y archivado de facturas                \\ \hline
+\textbf{Importancia}    & Esencial                                                                                                   \\ \hline
+\textbf{Prioridad}      & Alta                                                                                                       \\ \hline
+\textbf{Comentarios}    &                                                                                                            \\ \hline
+\end{tabular}
+
+\subsubsection*{RFa-006: Entorno configurable por el usuario}
+\begin{tabular}{|p{3cm}|p{11.5cm}|}
+\hline
+\textbf{RFa-006}        & \textbf{Entorno configurable}                                                                              \\ \hline
+\textbf{Versión}        & 1.0 (03/02/2014)                                                                                           \\ \hline
+\textbf{Dependencias}   & No tiene                                                                                                   \\ \hline
+\textbf{Descripción}    & El sistema debe contar opción de personalización ``amigable'' para el usuario                              \\ \hline
+\textbf{Importancia}    & Opcional                                                                                                   \\ \hline
+\textbf{Prioridad}      & Baja                                                                                                       \\ \hline
+\textbf{Comentarios}    &                                                                                                            \\ \hline
+\end{tabular}
+
+
+\subsection*{Definidos por Indra/Adecco}
+\subsubsection*{RFi-001: Reconocimiento de Firmas}
+\begin{tabular}{|p{3cm}|p{11.5cm}|}
+\hline
+\textbf{RFi-001}        & \textbf{Reconocimiento de Firmas}                                                                          \\ \hline
+\textbf{Versión}        & 1.0 (03/02/2014)                                                                                           \\ \hline
+\textbf{Dependencias}   & No tiene                                                                                                   \\ \hline
+\textbf{Descripción}    & Debe reconocer una firma manuscrita entre un conjunto de firmas almacenadas previamente                    \\ \hline
+\textbf{Importancia}    & Esencial                                                                                                   \\ \hline
+\textbf{Prioridad}      & Alta                                                                                                       \\ \hline
+\textbf{Comentarios}    &                                                                                                            \\ \hline
+\end{tabular}
+
+
+\subsection{Requisitos no funcionales}
+\subsubsection{Requisitos de rendimiento}
+El sistema debe funcionar de manera fluida y en tiempo real en dispositivos móviles basados en arquitectura ARM. Sólo existirá un único usuario del sistema simultáneamente y los documentos a tratar también se tratarán de uno en uno.
+\subsubsection{Seguridad}
+A parte de la información que se proporcione al usuario directamente, se mantendrá un log donde se registrará toda la actividad realizada en el sistema.
+Debido al carácter experimental del proyecto, no se tendrán en cuenta la aplicación, por lo menos en la primera fases de desarrollo, de técnicas criptográficas para ficheros, bases de datos o comunicaciones.
+\subsubsection{Fiabilidad}
+Todo tipo de incidente producido en el sistema debe ser controlado y tratado. 
+\subsubsection{Disponibilidad}
+La disponibilidad del sistema debe ser de al menos un 99\% del tiempo que esté en ejecución. En caso de caída del sistema se deben proporcionar mecanismos automáticos para que la maquina y el sistema se reinicien y sean nuevamente operativos sin la necesidad de intervención directa del usuario,
+\subsubsection{Mantenibilidad}
+El desarrollo en un dispositivo tan reciente implica que se liberen con relativa frecuencia bibliotecas o controladores, en los que se corrigen bugs y/o mejoran su rendimiento. Seria recomendable hacer una revisión de los módulos actualizados antes de la instalación del sistema para valorar si es relevante el beneficio que aportan y no comprometer el la estabilidad del sistema.  
+\subsubsection{Portabilidad}
+El desarrollo se  realizará siguiendo estándares, tecnologías y bibliotecas libres multiplataforma, con el objetivo de que pueda ser utilizado en el mayor número de plataformas posibles tanto software (GNU/Linux, Windows y Mac), como hardware (x86, ARM,. . . )
+
+\subsection{Otros requisitos}
+La distribución del proyecto se realizará mediante alguna licencia libre como GPLv3, para ello se utilizarán bibliotecas compatibles con dicha licencia.
+
+%-------------------------------------------------------------------------------------------
+\clearpage\section{Trazabilidad de los requisitos}
+\begin{center}
+\begin{tabular}{|l|l|c|l|l|l|}
+  \hline
+  \textbf{Requisito}  &\textbf{Descripción corta}  &\textbf{Prioridad}  &\textbf{Desarrollo}  &\textbf{alpha release}  &\textbf{beta release}           \\ \hline
+  RF-001              & Cámara USB                 & Alta               &                     &                        &                                \\ \hline
+  RF-002              & raspiCam                   & Alta               &                     &                        &                                \\ \hline
+  RF-003              & Calibrado cámara           & Alta               &                     &                        &                                \\ \hline
+  RF-004              & Calibrado proyector        & Alta               &                     &                        &                                \\ \hline
+  RF-005              & Configuración argumentos   & Media              &                     &                        &                                \\ \hline
+  RF-006              & Captura distinta resolución& Media              &                     &                        &                                \\ \hline
+  RF-007              & Vídeo como entrada         & Media              &                     &                        &                                \\ \hline
+  RF-008              & Grabación vídeo            & Media              &                     &                        &                                \\ \hline
+  RF-009              & Cálculo homografías        & Alta               &                     &                        &                                \\ \hline
+  RF-010              & Pose 3D                    & Alta               &                     &                        &                                \\ \hline
+  RF-011              & Tracking visual            & Alta               &                     &                        &                                \\ \hline
+  RF-012              & Representación OpenGL ES   & Alta               &                     &                        &                                \\ \hline
+  RF-013              & Identificación documentos  & Alta               &                     &                        &                                \\ \hline
+  RF-014              & Recuperación documentos    & Alta               &                     &                        &                                \\ \hline
+  RF-015              & Interacción natural (NUI)  & Alta               &                     &                        &                                \\ \hline
+  RF-016              & Amplificación multimodal   & Alta               &                     &                        &                                \\ \hline
+  RF-017              & Audio streaming            & Alta               &                     &                        &                                \\ \hline
+  RF-018              & Vídeo streaming            & Alta               &                     &                        &                                \\ \hline
+  RFa-001             & Videoconferencias          & Alta               &                     &                        &                                \\ \hline
+  RFa-002             & Lectura fácil              & Alta               &                     &                        &                                \\ \hline
+  RFa-003             & Partes de trabajo          & Media              &                     &                        &                                \\ \hline
+  RFa-004             & Protocolos de calidad      & Media              &                     &                        &                                \\ \hline
+  RFa-005             & Clasificación facturas     & Alta               &                     &                        &                                \\ \hline
+  RFa-006             & Entorno configurable       & Baja               &                     &                        &                                \\ \hline
+  RFi-001             & Reconocimiento firmas      & Alta               &                     &                        &                                \\ \hline
+\end{tabular}
+\end{center}

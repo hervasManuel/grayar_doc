@@ -2,26 +2,36 @@
 \label{chap:resultados}
 
 
-
-
 En este capítulo se mostrarán los resultados obtenidos al aplicar la metodología descrita en la sección \ref{chap:metodo} a través de un enfoque top-down, comenzando con una descripción general, continuando con las decisiones
 de diseño y terminando con los detalles de implementación. 
 
 \section{Descripción general}
 \section{Módulo de captura}
 El módulo de captura de vídeo se encarga de crear y proporcionar fuentes de vídeo de diversa naturaleza para dar soporte al submódulo de registro (ver Sección 5.5), y al submódulo de representación 2D (ver Sección 5.3.4).
-Es capaz de dar soporte multicámara. Se pueden crear tantas fuentes de vídeo como se disponga en el sistema, y el submódulo de vídeo las clasificará como: 
+Es capaz de dar soporte multicámara. Se pueden crear tantas fuentes de vídeo como se disponga en el sistema, que será de alguno de los siguientes tipos: 
 \begin{itemize}
-\item RaspiCam: es necesaria esta fuente de vídeo para ejecutar una aplicación Minerva. Realiza el registro de la realidad y se dibuja de fondo.
-\item Cámara USB: no es necesario que exista ninguna. Sirven de soporte para realizar registro sobre ellas, pero a priori no se visualiza al usuario.
+\item RaspiCam: Para un redimiento óptimo en la raspberry pi, al menos la cámara principal debería ser de este tipo.
+\item Cámara USB: En caso de no disponer de una raspicam o si se quieren incluir cámara adicionales para obtener capturas desde otra posición (videoconferencia,...).
 \end{itemize}
 
 El submódulo de vídeo se implementa en dos componentes: el VideoFactory, que proporciona la interfaz de creación y gestión de fuentes de vídeo, y el VideoSource, que implementa una única fuente de vídeo basáda en la biblioteca de visión artificial OpenCV.
 
 OpenCV utiliza la clase cv::VideoCapture como abstracción de las de fuentes de vídeo a las que da soporte.
 Para la realización de este proyecto se ha compilado una versión de OpenCV con soporte de archivos de vídeo basado en FFMPEG y con soporte de dispositivos de vídeo basado en Video4Linux 2. Así, la idea inicial de utilizar OpenCV para encapsular el acceso a cualquier tipo de fuente de vídeo 
-\subsection{Biblioteca RaspiCam}
 
+\subsection{Biblioteca RaspiCam}
+La raspicam no es compatible con \emph{video4linux} y se debe utilizar la API MMAL (Multi-Media Abstraction Layer) sobre OpenMAX, para acceder a los datos de la cámara y transferirlos a la pantalla o codificarlo como imágenes o vídeos.
+El grupo de investigación "Aplicaciones de la Visión Artificial" de la Universidad de Córdoba ha liberado una biblioteca en C++, que haciendo uso de la API anterior, porporciona una interfaz sencilla, sin necesidad de dependencias y compatible con los objetos de OpenCV.
+
+El rendimiento que ofrece en el uso de la cámara es de hasta 30 fps para los modos YUV420, RGB y en escala de grises con imágenes de hasta 1280x960 pixeles. En modo BGR y con un tamaño de 1280x960 el rendimiento cae hasta los 14 fps, ya que el proceso de conversión del espacio de color consume bastantes recursos. 
+
+Por defecto, cuando se utiliza esta biblioteca con OpenCV las imágenes obtenidas estan en el espacio de color BGR, con lo que el desempeño es menor. Al utilizar una arquitectura cliente-servidor, se decide que la tarea de conversión sea delegada, y sea el servidor el encargado de cambiar al espacio de color de OpenCV cuando la imagen es recibida.
+
+\subsection{Patrones utilizados}
+El diseño de este subsistema corresponde con el patrón «factoría abstracta» [GHJV95], donde VideoCapture desempeña el papel de fábrica abstracta, VideoCaptureUEye y VideoCaptureOpenCV de fábricas concretas, y VideoFile y VideoDevice harían de productos.
+
+
+La instanciación de un VideoCapture se realiza con una fachada (patrón facade), que se corresponde con la clase VideoCaptureFactory. Esta fachada sirve además para mantener una lista de objetos VideoCapture, que serán destruidos al finalizar la ejecución de forma transparente.
 
 
 \section{Módulo de calibración}
@@ -88,21 +98,13 @@ El proceso de calibrado del proyector se divide en dos fases
 
 el proyector proyecta una rejilla de círculos (primero en una posición fija, a continuación, como la calibración logra cierta exactitud, la parrilla de salida siguiendo el patrón impreso). Este paso es el siguiente: 
 
-El funcionamiento del algoritmo de calibración se basa en encontrar las esquinas de los
-cuadrados en el patrón de calibración y realizar una asociación entre ellos. Además, habrá
-que proporcionar un valor de la medida real del mundo. Se proporciona la medida del lado
-de un cuadrado del tablero de ajedrez para ello y se utiliza un vector con la medida de las
-esquinas partiendo de esta base.
-Los puntos detectados en las imágenes se almacenan en un vector de objetos cv::Point2f.
-Para el programa se utilizará una matriz que contendrá dos vectores, uno por cada conjunto
-de puntos en una de las imágenes. Los puntos 3D que miden las distancias de las esquinas del
-tablero en unidades del mundo se almacenan en un vector de objetos cv::Point3f.
-Para detectar las esquinas en las imágenes se utiliza la función cv::findChessboardCor-
-ners(...). Adicionalmente, para mejorar esta detección se emplea cv::cornerSubPix, que se
+El funcionamiento del algoritmo de calibración se basa en encontrar las esquinas de los cuadrados en el patrón de calibración y realizar una asociación entre ellos. Además, habrá que proporcionar un valor de la medida real del mundo. Se proporciona la medida del lado de un cuadrado del tablero de ajedrez para ello y se utiliza un vector con la medida de las esquinas partiendo de esta base.
+
+Los puntos detectados en las imágenes se almacenan en un vector de objetos cv::Point2f. Para el programa se utilizará una matriz que contendrá dos vectores, uno por cada conjunto de puntos en una de las imágenes. Los puntos 3D que miden las distancias de las esquinas del tablero en unidades del mundo se almacenan en un vector de objetos cv::Point3f. Para detectar las esquinas en las imágenes se utiliza la función cv::findChessboardCorners(...). Adicionalmente, para mejorar esta detección se emplea cv::cornerSubPix, que se
 encargará de ubicar estas esquinas en medidas de subpíxels 1 .
 
 
-We use a pattern of alternating black and white squares (see Figure 11-9),
+We use a pattern of alternating black and white squares (see Figure 11-9), 
 which ensures that there is no bias toward one side or the other in measurement. Also,
 the resulting grid corners lend themselves naturally to the subpixel localization func-
 tion discussed in Chapter 10.
@@ -127,112 +129,104 @@ Download pictures to compute and select ones that are in focus
 
 
 \section{Módulo de tracking y registro}
+El cálculo del registro requiere posicionar el sistema cámara-proyector, mediante su posición y rotación, relativo a las hojas de papel que se encuentren en la escena capturada. Los métodos de tracking, en general, son los encargados de obtener una estimación de la trayectoria que realiza un objeto. En GrayAR, se ha optado por implementar un sistema de tracking visual mediante una aproximación \textit{bottom-up}\cite{marimon}, en la que se cálculan los seis grados de libertad de la cámara (ver sección Pose) a partir de lo que se está percibiendo en la imagen. 
+
+Vamos a aprovechar que conocemos la estructura de formato normalizado (según ISO 120/DIN 476) de una hoja de papel, para identificarlo, localizarlo en la escena capturada y establecer sus relaciones geometricas respecto a la cámara.
+
+El enfoque utilizado es similar al de ARToolKit, mediante un algoritmo de detección de bordes y un método  de estimación de la orientación. La figura 3.7 resume el principio básico de funcionamiento de ARToolKit. Sobre la la imagen obtenida se inicia el primer paso de búsqueda de hojas de paperl. La imagen se convierte a blanco y negro para facilitar la detección de cuadrilateros; primero se convierte a escala de grises (b), y después se binariza (c) eligiendo un parámetro de umbral “threshold” que elige a partir de qué valor de gris (de entre 256 valores distintos) se considera blanco o negro (ver Figura 3.9). A continuación el algoritmo de visión por computador extrae componentes conectados de la imagen previamente binarizada, Figura 3.8 (d), cuya area es suficientemente grande como para detectar una marca. A estas regiones se les aplica un  algoritmo de detección de contornos (e), obteniendo a continuación los vértices y aristas que definen la región de la marca en 2D (f).
+
+Conociendo las posiciones 2D de las aristas y vértices que definen el marcador 2D, y el modelo de proyección de la cámara es posible estimar la posición y rotación 3D de la cámara relativamente a la marca. El uso de marcas cuadradas de un tamaño previamente conocido nos permite definir un sistema de coordenadas local a cada marca, de modo que empleando métodos de visión por computador obtengamos la matriz de transformación 4x4 del sistema de coordenadas de la marca al sistema de coordenadas de la cámara.
 
 \subsection{Conversión a escala de grises (Grayscale)}
-El primer paso en el proceso de detección consiste en convertir el frame capturado por la webcam a escala de grises. ArUco utiliza la función \textit{cv::cvtColor} para convertir una imagen de un espacio de color a otro.  La constante \textit{CV\_BGR2GRAY} sirve para indicar que queremos pasar de una imagen RGB a otra en escala de grises.
+El primer paso en el proceso de detección consiste en convertir el frame capturado por la cámara a escala de grises mediante la función \texttt{cv::cvtColor}. Esta función convierte una imagen de un espacio de color a otro. La constante \texttt{CV\_BGR2GRAY} sirve para indicar que queremos pasar de una imagen BGR (estandar de OpenCV) a otra en escala de grises.
 
-\begin{listing}[style=C++]
- //it must be a 3 channel image
-    if ( input.type() ==CV_8UC3 )   cv::cvtColor ( input,grey,CV_BGR2GRAY );
-    else     grey=input;
+\begin{listing}[
+  float=ht,
+  language = C++,
+  caption  = {Conversión a escala de grises (256 niveles)},
+  label    = code:cvtColor()]
+  //it must be a 3 channel image
+  if ( input.type() == CV_8UC3 )   
+     cv::cvtColor ( input,grey,CV_BGR2GRAY );
+  else 
+     grey=input;
 \end{listing}
 
 \subsection{Umbralización o binarización (Thresholding)}
 La umbralización consiste en definir un valor umbral y compararlo con cada uno de los pixels de la imagen. A los pixels que estén por debajo del umbral se les asigna un valor, y a los que estén por encima otro. De esta forma se divide toda la población de valores en tan sólo dos grupos, reduciendo considerablemente la complejidad de la información a analizar.
 
-En ArUco, se han desarrollado tres soluciones distintas para tratar de resolver este problema del thresholding básico (fijo, adaptativo y el método Canny). El método de Canny normalmente debería ser el que mejor resultado ofreciera, pero después de probarlo se han encontrado con problemas debidos a que se generaban huecos no deseados en los contornos de los cuadriláteros que hacían imposible su correcta detección posterior.
+En GrayAR, se han desarrollado tres soluciones distintas para tratar de resolver este problema del thresholding básico (fijo, adaptativo y el método Canny). En un principio, solo se implementarion los metodos fijos y adaptativo, pero en una fase de optimzación realizada posteriormente, se incluyo el método Canny. Este algoritmo proporcionaba bordes mas precisos, y es mas torante a las variaciones de iluminación produciendo menores indices de ruido en la imagen binarizada. 
 
-\begin{listing}[style=C++]
-  ///Do threshold the image and detect contours
-    thresHold ( _thresMethod,imgToBeThresHolded,thres,ThresParam1,ThresParam2 );
-\end{listing} 
-
-\begin{listing}[style=C++]
-void MarkerDetector::thresHold ( int method,const Mat &grey,Mat &out,double param1,double param2 ) throw ( cv::Exception )
-{
-
-    if (param1==-1) param1=_thresParam1;
-    if (param2==-1) param2=_thresParam2;
-
-    if ( grey.type() !=CV_8UC1 )     throw cv::Exception ( 9001,"grey.type()!=CV_8UC1","MarkerDetector::thresHold",__FILE__,__LINE__ );
-    switch ( method )
-    {
+\begin{listing}[
+  float=ht,
+  language = C++,
+  caption  = {Función PaperDetector::thresHold},
+  label    = code:thresHold]
+  void PaperDetector::thresHold(int method, const Mat &grey, Mat &out, double param1, double param2) throw (cv::Exception){
+    if (param1 == -1) param1 = thresParam1;
+    if (param2 == -1) param2 = thresParam2;
+    
+    if (grey.type() != CV_8UC1)     
+      throw cv::Exception (9001,"grey.type() != CV_8UC1", "thresHold", __FILE__, __LINE__);
+    
+    switch (method){
     case FIXED_THRES:
-        cv::threshold ( grey, out, param1,255, CV_THRESH_BINARY_INV );
-        break;
+      cv::threshold (grey, out, param1, 255, CV_THRESH_BINARY_INV);
+      break;
     case ADPT_THRES://currently, this is the best method
-//ensure that _thresParam1%2==1
-        if ( param1<3 ) param1=3;
-        else if ( ( ( int ) param1 ) %2 !=1 ) param1= ( int ) ( param1+1 );
-
-        cv::adaptiveThreshold ( grey,out,255,ADAPTIVE_THRESH_MEAN_C,THRESH_BINARY_INV,param1,param2 );
-        break;
+      //ensure that _thresParam1%2==1
+      if (param1 < 3) param1 = 3;
+      else if (((int) param1) %2 != 1) param1 = (int)(param1 + 1);
+      cv::adaptiveThreshold(grey, out, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY_INV, param1, param2);
+      break;
     case CANNY:
-    {
-        //this should be the best method, and generally it is.
-        //However, some times there are small holes in the marker contour that makes
-        //the contour detector not to find it properly
-        //if there is a missing pixel
-        cv::Canny ( grey, out, 10, 220 );
-        //I've tried a closing but it add many more points that some
-        //times makes this even worse
-// 			  Mat aux;
-// 			  cv::morphologyEx(thres,aux,MORPH_CLOSE,Mat());
-// 			  out=aux;
+      cv::Canny (grey, out, param1, param2);
+      break;
     }
-    break;
-    }
+  }
 }
 \end{listing}  
 \subsection{Extracción de contornos (Suzuki)}
 El siguiente paso del proceso es la detección de contornos, una operación un tanto distinta a las anteriores por dos motivos principales. El primero es que no consiste en iterar aplicando una misma función de forma monótona sobre todos los pixels de la imagen. Y el segundo es que el resultado que se obtiene no es una nueva imagen, sino un colección de conjuntos de puntos sobre la imagen.
 
-Para este paso se parte de la imagen resultante del Adaptive Thresholding del paso anterior. Es decir, de una imagen que tan solo consta de pixels con valor cero o uno. Sobre ella se aplica un algoritmo que la barre, empezando por su esquina superior izquierda, a la busca de un primer pixel a uno, y que cuando lo encuentra es capaz de seguir la cadena de pixels con valor uno que se encuentran unidos a él hasta volver al pixel de partida. Esa cadena de pixels a uno encontrados se denomina contorno. Y es más, el algoritmo es capaz de encontrar todos los contornos presentes en la imagen, ya que cuando termina con uno empieza de nuevo el proceso hasta asegurarse de haber barrido la imagen por completo.
+Para este paso se parte de la imagen resultante del paso anterior. Es decir, de una imagen que tan solo consta de pixels con valor cero o uno. Sobre ella se aplica un algoritmo que la barre, empezando por su esquina superior izquierda, a la busca de un primer pixel a uno, y que cuando lo encuentra es capaz de seguir la cadena de pixels con valor uno que se encuentran unidos a él hasta volver al pixel de partida. Esa cadena de pixels a uno encontrados se denomina contorno. Y es más, el algoritmo es capaz de encontrar todos los contornos presentes en la imagen, ya que cuando termina con uno empieza de nuevo el proceso hasta asegurarse de haber barrido la imagen por completo.
 
-El algoritmo es bastante potente, ya que no sólo es capaz de encontrar los contornos exteriores, sino también los interiores a otros, y retornarlos clasificados jerárquicamente. ArUco utiliza la función \textit{findContours} de OpenCV que implementa este algoritmo. En la documentación, así como la referencia de implementación, se refiere al \textit{paper} original ``Topological structural analysis of digitized binary images by border following''  Satoshi Suzuki and Keiichi Abe.
+El algoritmo es bastante potente, ya que no sólo es capaz de encontrar los contornos exteriores, sino también los interiores a otros, y retornarlos clasificados jerárquicamente. GrayAR utiliza la función \texttt{cv::findContours} que implementa este algoritmo. En la documentación, así como la referencia de implementación, se refiere al \textit{paper} original ``Topological structural analysis of digitized binary images by border following''  Satoshi Suzuki and Keiichi Abe.
 
-\begin{listing}[style=C++]
+\begin{listing}[]
 cv::findContours ( thres2 , contours2, hierarchy2,CV_RETR_TREE, CV_CHAIN_APPROX_NONE );
 \end{listing} 
 
-\begin{listing}[style=C++]
-CV_IMPL int
-cvFindContours( void*  img,  CvMemStorage*  storage,
-                CvSeq**  firstContour, int  cntHeaderSize,
-                int  mode,
-                int  method, CvPoint offset )
-{
-\end{listing} 
 Básicamente hay un contador de contornos encontrados y un buffer de pixels recorridos. El contador se inicializa a cero y el buffer con una copia de la imagen original. Se barre el buffer de arriba abajo y de izquierda a derecha. Una transición de un pixel 0 a otro 1 indica que se ha detectado un borde exterior, momento en que se suma uno al contador de contornos encontrados y se buscan todos los pixels 1 vecinos del encontrado. Si el pixel no tiene vecinos a 1 se cambia el valor del pixel por el del contador con signo contrario y se empieza otra vez con el siguiente pixel. En caso contrario se cambia el valor del pixel por el del contador, excepto que su valor sea mayor que 1, lo que significa que ya ha sido visitado, y se continúa buscando vecinos a 1 hasta retornar al pixel inicial. Una transición de un pixel con valor igual o mayor que 1 a otro 0 indica que se ha detectado un borde interior, momento en que se repite el mismo proceso usado para los contornos exteriores.
 
-El algoritmo presenta una pequeña dificultad en los bordes de la imagen, y para solventarlo presupone que la imagen está rodeada por los cuatro costados de pixels con valor 0. Es decir, que el buffer que utiliza tiene una fila más por encima y por debajo, y una columna más a derecha e izquierda, que la imagen original.
+El algoritmo presenta una pequeña dificultad en los bordes de la imagen, y para solventarlo presupone que la imagen está rodeada por los cuatro lados de pixels con valor 0. Es decir, que el buffer que utiliza tiene una fila más por encima y por debajo, y una columna más a derecha e izquierda, que la imagen original.
 
 \subsection{Aproximación a polígonos (Douglas-Peucker)}
-Los contornos de los que se parte para este paso son colecciones de puntos. Todos y cada uno de los pixels que forman parte de ellos, ya que no se guardaron sólo las esquinas, sino cada pixel individual encontrado. Esto permite tomar algunas decisiones tempranas, como por ejemplo descartar los contornos que no tengan un mínimo de puntos. Es decir, los más pequeños. ArUco descarta aquellos que no tengan al menos un 20\% del ancho de la imagen. 
+Los contornos de los que se parte para este paso son colecciones de puntos. Todos y cada uno de los pixels que forman parte de ellos, ya que no se guardaron sólo las esquinas, sino cada pixel individual encontrado. Esto permite tomar algunas decisiones tempranas, como por ejemplo descartar los contornos que no tengan un mínimo de puntos. Es decir, los más pequeños. GrayAR descarta aquellos que no tengan al menos un 20\% del ancho de la imagen. 
 
-ArUco utiliza la función \textit{approxPolyDP} de OpenCV para convertir una colección de puntos en un polígono mediante el algoritmo de Douglas-Peucker. El algoritmo admite como entrada una lista de puntos y una distancia máxima permitida. Define un segmento que va desde el primer punto de la lista hasta el último, y calcula la distancia más corta que hay desde dicho segmento a todos y cada uno del resto de puntos de la lista. Si encuentra un punto a una distancia mayor que la máxima pasada como parámetro divide la lista y el segmento en dos, utilizando el punto encontrado como nuevo extremo. Y vuelve a empezar el proceso comprobando cada nueva lista contra cada nuevo segmento de forma individual, creando nuevas listas y segmentos si fuera necesario, de forma recursiva.
+GrayAR utiliza la función \texttt{cv::approxPolyDP}  para convertir una colección de puntos en un polígono mediante el algoritmo de Douglas-Peucker. El algoritmo admite como entrada una lista de puntos y una distancia máxima permitida. Define un segmento que va desde el primer punto de la lista hasta el último, y calcula la distancia más corta que hay desde dicho segmento a todos y cada uno del resto de puntos de la lista. Si encuentra un punto a una distancia mayor que la máxima pasada como parámetro divide la lista y el segmento en dos, utilizando el punto encontrado como nuevo extremo. Y vuelve a empezar el proceso comprobando cada nueva lista contra cada nuevo segmento de forma individual, creando nuevas listas y segmentos si fuera necesario, de forma recursiva.
 
-\begin{listing}[style=C++]
+\begin{listing}[]
 approxPolyDP(contours2[i], approxCurve, double(contours2[i].size())*0.05, true);
 \end{listing} 
  
-ArUco utiliza como distancia máxima para al algoritmo el 5\% del número de puntos que tiene cada contorno de forma individual. 
+GrayAR utiliza como distancia máxima para al algoritmo el 5\% del número de puntos que tiene cada contorno de forma individual. 
 
-Una vez convertidos los puntos a polígonos se descartan los que no tengan cuatro lados, después selecciona sólo los polígonos convexos y también a aquellos que tengan un tamaño de lado mínimo. ArUco concretamente descarta todos aquellos cuyo lado mínimo no supere los 10 pixels de largo. 
+Una vez convertidos los puntos a polígonos se descartan los que no tengan cuatro lados, después selecciona sólo los polígonos convexos y también a aquellos que tengan un tamaño de lado mínimo. GrayAR concretamente descarta todos aquellos cuyo lado mínimo no supere los 10 pixels de largo. 
 
-Aún realizando todos estos descartes, ArUco incorpora un control adicional, ya que debido a que en el paso previo se detectan contornos tanto exteriores como interiores, puede ocurrir que se detecten dos cuadriláteros, uno dentro de otro, siendo necesario descartar el más interno. ArUco calcula la distancia media entre las esquinas de los polígonos y si encuentra dos que están muy cerca descarta el de menor perímetro, que necesariamente será el más interno. Entendiendo por "muy cerca" que se encuentren a menos de 10 pixels de distancia.
+Aún realizando todos estos descartes, ArUco incorpora un control adicional, ya que debido a que en el paso previo se detectan contornos tanto exteriores como interiores, puede ocurrir que se detecten dos cuadriláteros, uno dentro de otro, siendo necesario descartar el más interno. GrayAR calcula la distancia media entre las esquinas de los polígonos y si encuentra dos que están muy cerca descarta el de menor perímetro, que necesariamente será el más interno. Entendiendo por ``muy cerca'' que se encuentren a menos de 10 pixels de distancia.
 
 Por último, indicar que para el cálculo de las distancias entre esquinas es necesario un paso previo en el que las esquinas tienen que estar ordenadas en el sentido contrario de las agujas del reloj  \textit{(anti-clockwise order)}.
 
 \subsection{Cálculo de parámetros extrínsecos de la cámara}
-Una vez detectadas e identificadas las marcar del frame, se procede a calcular los parámetros extrínsecos de la cámara respecto a la marca. Para la mayoría de los cálculos basta con considerar a la lente como un agujero puntual a través del que pasa la luz a través de un centro de proyección común. 
+Una vez detectadas e identificadas las hojas de papel de la imagen, se procede a calcular los parámetros extrínsecos de la cámara respecto a cada una de ellas. Para la mayoría de los cálculos basta con considerar a la lente como un agujero puntual a través del que pasa la luz a través de un centro de proyección común. 
 
 Digamos que vamos a visualizar un objeto que se encuentra a una distancia $x_{1}$ de la lente, y que la imagen proyectada por los rayos que salen de la lente se forma a una distancia $x_{2}$ tras la lente. Llamamos distancia focal a la relación que existe entre $x_{1}$ y $x_{2}$ :
 \begin{center}
 $\dfrac{1}{f} = \dfrac{1}{x_{1}} + \dfrac{1}{x_{2}}$
 \end{center}
 
-A la hora de representar los objetos del espacio observado (3D), los convertimos a un plano de visión (2D), y tenemos que definir cual es la correspondencia entre las coordenadas del espacio y las de la representación. Para facilitar esta conversión, se utiliza el sistema de coordenadas “homogéneo”. Este sistema de coordenadas tiene la particularidad de que permite pasar fácilmente coordenadas de un número de dimensiones a otro. Para ello, almacena las coordenadas con una dimensión adicional, de tal forma que para un espacio de 3D, utilizaríamos 4 coordenadas. El valor de la coordenada adicional indica entre otras cosas, si el punto se encuentra en el infinito, valor 0, o es un punto cualquiera, valor distinto de 0. En este sistema, si dos coordenadas son proporcionales, se refieren al mismo punto.
+A la hora de representar los objetos del espacio observado (3D), los convertimos a un plano de visión (2D), y tenemos que definir cual es la correspondencia entre las coordenadas del espacio y las de la representación. Para facilitar esta conversión, se utiliza el sistema de coordenadas «homogéneo». Este sistema de coordenadas tiene la particularidad de que permite pasar fácilmente coordenadas de un número de dimensiones a otro. Para ello, almacena las coordenadas con una dimensión adicional, de tal forma que para un espacio de 3D, utilizaríamos 4 coordenadas. El valor de la coordenada adicional indica entre otras cosas, si el punto se encuentra en el infinito, valor 0, o es un punto cualquiera, valor distinto de 0. En este sistema, si dos coordenadas son proporcionales, se refieren al mismo punto.
 
 Las matrices de transformación, utilizadas para pasar de unas dimensiones a otras, suelen incluir 3 tipos de transformaciones: Rotación, Translación y eScalado. Podemos representarlas así:
 \begin{center}
@@ -250,11 +244,11 @@ Para convertir las coordenadas del mundo a coordenadas de pantalla, de espacio t
 $q=MQ$ donde $q=\begin{bmatrix} x \\ y \\ z \end{bmatrix}$, $M=\begin{bmatrix} f_{x} & 0 & c_{x} \\ 0 & f_{y} & c_{y} \\ 0 & 0 & 1 \end{bmatrix}$ y $Q=\begin{bmatrix} X \\ Y \\ Z \end{bmatrix}$
 \end{center}
 
-Por tanto, q representa el espacio bidimensional en coordenadas homogéneas, y Q el espacio tridimensional. $f_{x}$ es la distancia focal en el eje X, $f_{y}$ la distancia focal en el eje Y, ($c_{x},c_{y}$) marcan el punto principal, el punto donde el eje de visión corta el plano de visión (normalmente suele estar en el centro de la imagen, o muy cerca) 
+Por tanto, $q$ representa el espacio bidimensional en coordenadas homogéneas, y $Q$ el espacio tridimensional. $f_{x}$ es la distancia focal en el eje $X$, $f_{y}$ la distancia focal en el eje $Y$, ($c_{x},c_{y}$) marcan el punto principal, el punto donde el eje de visión corta el plano de visión (normalmente suele estar en el centro de la imagen, o muy cerca) 
 
-En AruCo se uriliza la función de OpenCV \textit{solvePnp (ObjPoints, ImagePoints, camMatrix, distCoeff,raux,taux)}.   Está, calcula la pose (rotación y traslación) de la marca dado un conjunto de puntos de objeto(ObjPoints), sus proyecciones en la imagen correspondiente(ImagePoints), así como la matriz de cámara (camMatrix) y los coeficientes de distorsión (distCoeff). Esta función encuentra una pose que minimiza el error de reproyección, es decir, la suma de los cuadrados de las distancias entre las proyecciones imagePoints observados y los objectPoints proyectados
+En GrayAR se uriliza la función de OpenCV \textit{solvePnp (ObjPoints, ImagePoints, camMatrix, distCoeff,raux,taux)}.   Está, calcula la pose (rotación y traslación) de la marca dado un conjunto de puntos de objeto(ObjPoints), sus proyecciones en la imagen correspondiente(ImagePoints), así como la matriz de cámara (camMatrix) y los coeficientes de distorsión (distCoeff). Esta función encuentra una pose que minimiza el error de reproyección, es decir, la suma de los cuadrados de las distancias entre las proyecciones imagePoints observados y los objectPoints proyectados
 
-Se establece el centro de la marca como centro de coordenadas (0,0,0) relativo a la marca, por lo que las esquinas que se le proporcionan a la función son :
+Se establece el centro del papel como centro de coordenadas (0,0,0), por lo que las esquinas que se le proporcionan a la función son :
 \begin{center}
 ObjPoints $=\begin{bmatrix} -h/2 & -h/2 & 0 \\
                  -h/2 &  h/2 & 0 \\
@@ -278,9 +272,9 @@ Los ImagePoints corresponden a los pixels que representan las esquinas de la mar
 \subsection{Transformación de perspectiva (Homography)}
 Este paso admite como entrada la imagen en escala de grises creada en el primer paso, y los cuadriláteros candidatos encontrados en el último. Para cada cuadrilátero extrae la región de la imagen que cubre cada uno de ellos eliminando la transformación de perspectiva, es decir, la deformación que se produce en el marcador debido a la perspectiva.
 
-ArUco utiliza dos funciones de OpenCV para este paso: \textit{getPerspectiveTransform} y \textit{warpPerspective}. La primera calcula una matriz que multiplicada por un punto en el cuadrilátero origen devuelve un punto equivalente en el cuadrado destino. La segunda acepta una imagen, un cuadrilátero, una matriz de transformación, y retorna una nueva imagen del área cubierta por el cuadrilátero sobre la que se ha aplicado la matriz de transformación para eliminar la deformación debida a la perspectiva. 
+GrayAR utiliza dos funciones de OpenCV para este paso: \texttt{cv::getPerspectiveTransform} y \texttt{cv::warpPerspective}. La primera calcula una matriz que multiplicada por un punto en el cuadrilátero origen devuelve un punto equivalente en el cuadrado destino. La segunda acepta una imagen, un cuadrilátero, una matriz de transformación, y retorna una nueva imagen del área cubierta por el cuadrilátero sobre la que se ha aplicado la matriz de transformación para eliminar la deformación debida a la perspectiva. 
 
-El resultado de este proceso es cada una de las figuras encontradas en la imagen. Una para cada cuadrilátero candidato. ArUco utiliza un tamaño de 56x56 pixels para los cuadrados destino.
+El resultado de este proceso es cada una de las figuras encontradas en la imagen. Una para cada cuadrilátero candidato. GrayAR utiliza un tamaño de 56x56 pixels para los cuadrados destino.
 
 
 \section{Módulo de interaccion natural}
@@ -288,19 +282,22 @@ El resultado de este proceso es cada una de las figuras encontradas en la imagen
 \subsection{Gestor de configuración}
 Existen muchos parametros configurables en GrayAR. En las primeras versiones del proyecto estos parametros estaban implementados en variables dentro del programa y cada vez que era necesario modificar estos parametros, por ejemplo para la realizacion de pruebas, era necesario recompilar el código. Para los archivos que se encuentran en la raspberry, el tiempo de compilación al modificar el valor de uno de esto parametros podia incluso a tardar varios minutos. Otro problema que surgió al crecer el proyecto esra que estos parametros estaban repartidos entre varios ficheros, lo que suponia tener que recordar donde estaba localizado cada parametro y el consecuente riesgo de dejarse alguno sin actualizar que invalidaria las pruebas realizadas.
 
-Lo primero que se realizo fue sacar todos los parametros configurables a un fichero XML que es leido al inicio del programa permitiendo que todos los parametros sean accesibles por cualquier módulo dentro del programa.
+Lo primero que se realizo fue sacar todos los parametros configurables a un fichero \acs{XML} que es leido al inicio del programa permitiendo que todos los parametros sean accesibles por cualquier módulo dentro del programa.
 
-Las ventajas son apreciables a instante, el proceso de pruebas es mucho más rápido, ya que no es necesario volver a compilar cada vez que se realiza un cambio en la configuración. Todos los parametros se encuentran en un único fichero, que al ser XML, tiene una estructura clara y legible para las personas, y que permite una edicion y modificacion sencilla. Tambien permite tener varios ficheros con distintas configuraciones y que se cargue en el programa uno u otro en funcion de las necesidades del momento.
+Las ventajas son apreciables a instante, el proceso de pruebas es mucho más rápido, ya que no es necesario volver a compilar cada vez que se realiza un cambio en la configuración. Todos los parametros se encuentran en un único fichero, que al ser \acs{XML}, tiene una estructura clara y legible para las personas, y que permite una edicion y modificacion sencilla. Tambien permite tener varios ficheros con distintas configuraciones y que se cargue en el programa uno u otro en funcion de las necesidades del momento.
  
-La necesidad es la de tener una clase centralizada y accesible desde cualquier parte del programa que sea capaz de leer un fichero de configuración en XML y almacene aquellas variables parametrizables de
+La necesidad es la de tener una clase centralizada y accesible desde cualquier parte del programa que sea capaz de leer un fichero de configuración en \acs{XML} y almacene aquellas variables parametrizables de
 
-Para implementar el gestor de configuración se ha creado la clase ConfigManager. Esta tiene la funcion loadConfiguration a la que se le indica el fichero xml con la configuración a cargar 
+Para implementar el gestor de configuración se ha creado la clase  \texttt{ConfigManager}. Esta tiene la funcion  \texttt{loadConfiguration} a la que se le indica el fichero \acs{XML} con la configuración a cargar 
 
-Se ha optado por seguir el principio de diseño KISS que establece que la mayoría de sistemas funcionan mejor si se mantienen simplesen lugar de hacerlos complejos; por ello, la simplicidad debe ser mantenida como un objetivo clave del diseño, y cualquier complejidad innecesaria debe ser evitada. Las ventajas genéricas que ofrece un patron Singleton frente a la implementación de un clase estática como puede ser que las funciones se puedan sobreescribir en las clases herederas, que la inicialización asincrona mientras que una clase estática generalmente se inicializa cuando se carga por primera vez o que el singleton pueda ser manejado polimorficamente sin forzar a los usuarios a asumir que solo existe una instancia, no suponen un mejora para la funcionalidad que necesitamos implementar. 
+Se ha optado por seguir el principio de diseño \acs{KISS} que establece que la mayoría de sistemas funcionan mejor si se mantienen simplesen lugar de hacerlos complejos; por ello, la simplicidad debe ser mantenida como un objetivo clave del diseño, y cualquier complejidad innecesaria debe ser evitada. Las ventajas genéricas que ofrece un patron Singleton frente a la implementación de un clase estática como puede ser que las funciones se puedan sobreescribir en las clases herederas, que la inicialización asincrona mientras que una clase estática generalmente se inicializa cuando se carga por primera vez o que el singleton pueda ser manejado polimorficamente sin forzar a los usuarios a asumir que solo existe una instancia, no suponen un mejora para la funcionalidad que necesitamos implementar. 
 
 \subsection{Funciones de representación para depuración}
 Aunque la creación de funciones para la representación gráfica están fuera del alcance de este proyecto, a la hora de probar y depurar los distintos algoritmos implementados resulta muy practico disponer de algunas funciones de dibujado ya implementadas para corregir errores y tener una vision preeliminar de como puede quedar finalmente.
 
-A partir de las primitivas de dibujado que ofrece OpenCV se han implementado una serie de funciones para facilitar la representación de contornos, esquinas, y una vez obtenidos los parametros extrinsecos de las camara y el proyector, dibujado de ejes, cubos o cajas 3D que permiten validar si los cálculos se han realizado correctamente.
+A partir de las primitivas de dibujado que ofrece OpenCV se han implementado una serie de funciones para facilitar la representación de contornos, esquinas, y una vez obtenidos los parametros extrinsecos de las camara y el proyector, dibujado de ejes, cubos u ortoedros que permiten validar si los cálculos se han realizado correctamente.
+
+
+
 
 

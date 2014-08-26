@@ -110,11 +110,22 @@ J.~Ehnes, K.~Hirota, y M.~Hirose.
   Mixed and Augmented Reality}, ISMAR '04, páginas 26--35, Washington, DC,
   USA, 2004. IEEE Computer Society.
 
+\bibitem[GEHL03]{Graham}
+Jamey Graham, Berna Erol, Jonathan~J. Hull, y Dar-Shyang Lee.
+\newblock The Video Paper Multimedia Playback System.
+\newblock En {\em Proceedings of the Eleventh ACM International Conference on
+  Multimedia}, MULTIMEDIA '03, páginas 94--95, New York, NY, USA, 2003. ACM.
+
 \bibitem[HBESB11]{Hagbi}
 Nate Hagbi, Oriel Bergig, Jihad El-Sana, y Mark Billinghurst.
 \newblock Shape Recognition and Pose Estimation for Mobile Augmented Reality.
 \newblock {\em IEEE Transactions on Visualization and Computer Graphics},
   17(10):1369--1379, 2011.
+
+\bibitem[Hec01]{Hecht}
+David~L. Hecht.
+\newblock Printed Embedded Data Graphical User Interfaces.
+\newblock {\em Computer}, 34(3):47--55, Marzo 2001.
 
 \bibitem[HS81]{Horn}
 Berthold K.~P. Horn y Brian~G. Schunck.
@@ -231,6 +242,13 @@ Jorge Moraleda.
 \newblock Large Scalability in Document Image Matching Using Text Retrieval.
 \newblock {\em Pattern Recogn. Lett.}, 33(7):863--871, Mayo 2012.
 
+\bibitem[MT12]{Moreno}
+Daniel Moreno y Gabriel Taubin.
+\newblock Simple, Accurate, and Robust Projector-Camera Calibration.
+\newblock En {\em Proceedings of the 2012 Second International Conference on 3D
+  Imaging, Modeling, Processing, Visualization \& Transmission}, 3DIMPVT '12,
+  páginas 464--471, Washington, DC, USA, 2012. IEEE Computer Society.
+
 \bibitem[NKI06]{Nakai0}
 Tomohiro Nakai, Koichi Kise, y Masakazu Iwamura.
 \newblock Use of Affine Invariants in Locally Likely Arrangement Hashing for
@@ -295,6 +313,13 @@ Youngmin Park, Vincent Lepetit, y Woontack Woo.
 \newblock En {\em Proceedings of the 2009 8th IEEE International Symposium on
   Mixed and Augmented Reality}, ISMAR '09, páginas 163--166, Washington, DC,
   USA, 2009. IEEE Computer Society.
+
+\bibitem[PS10]{Pilet}
+Julien Pilet y Hideo Saito.
+\newblock Virtually Augmenting Hundreds of Real Pictures: An Approach Based on
+  Learning, Retrieval, and Tracking.
+\newblock En {\em Proceedings of the 2010 IEEE Virtual Reality Conference}, VR
+  '10, páginas 71--78, Washington, DC, USA, 2010. IEEE Computer Society.
 
 \bibitem[PYN99]{Park3}
 Jun Park, Suya You, y Ulrich Neumann.

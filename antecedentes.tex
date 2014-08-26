@@ -31,16 +31,17 @@ Las aplicaciones de Realidad Aumentada deben cumplir las siguientes característ
 \subsection{Componentes de un sistema de realidad aumentada}
 Un sistema de realidad aumentada depende de cuatro componentes físicos:
 
-\begin{description}
+\begin{itemize}
 
-\item[Elementos de entrada y sensores de orientación] Proporciona al sistema la información visual, la entrada del usuario y, potencialmente, ayudar a la orientación.
+\item \textbf{Elementos de entrada y sensores de orientación.} Proporciona al sistema la información visual, la entrada del usuario y, potencialmente, ayudar a la orientación.
 
-\item[Fuente de datos] Proporciona información aplicable al medio ambiente para que el sistema aumente la visión del usuario.
+\item \textbf{Fuente de datos.} Proporciona información aplicable al medio ambiente para que el sistema aumente la visión del usuario.
 
-\item[Periféricos de retroalimentación de los usuarios] Principalmente en la forma de producción visual, pero también pueden incluir audio y otras interfaces de usuario.
+\item \textbf{Periféricos de retroalimentación de los usuarios.} Principalmente en la forma de producción visual, pero también pueden incluir audio y otras interfaces de usuario.
 
-\item[Unidad de procesamiento] Combina los datos de los sensores de entrada para determinar la orientación y aumentar la visión del usuario con información de la fuente de datos. Envía el resultado a los periféricos de retroalimentación del usuario.
-\end{description}
+\item \textbf{Unidad de procesamiento.} Combina los datos de los sensores de entrada para determinar la orientación y aumentar la visión del usuario con información de la fuente de datos. Envía el resultado a los periféricos de retroalimentación del usuario.
+
+\end{itemize}
 
 \subsubsection{Elementos de entrada y sensores de orientación}
 Un sistema de realidad aumentada debe ser capaz de conocer su orientación y posición dentro del entorno circundante con el fin de ofrecer una experiencia ``aumentada'' satisfactoria. La combinación de la orientación y la posición de un observador que se conoce como \emph{pose}. La estimación de la \emph{pose} se definirá con más detalle en la sección 4. La orientación y posición se pueden determinar mediante técnicas de visión por computador, pero hay métodos alternativos para estimar la \emph{pose}  utilizando  sensores diseñados específicamente para medir alguno o todos los parámetros de los seis grados de libertad que componen la \emph{pose}.
@@ -724,18 +725,18 @@ En general, podemos considerar que cualquier escena o imagen que tenga un conten
 
 En el caso de documentos estructurados, que es el del dominio de este trabajo, las imágenes suelen ser documentos impresos como artículos, cartas, formularios o páginas de libros, donde gran parte de la imagen se asume que es texto, pero también puede contener figuras, diagramas e incluso algunos autores han tratado con anotaciones escritas a mano \cite{Chen}
 
-%\subsection{Identificación y recuperación de documentos}
-%Aunque hoy en día la mayor parte de la producción de información en forma de documentos se realiza por medio de herramientas informáticas (procesadores de texto, correo electrónico, etc.), puede ocurrir, y de hecho será un caso muy habitual, que la información no se restrinja a documentos actuales, ya automatizados, sino que se encuentre impresa. Incluso puede ocurrir que nos interese disponer sólo de la información antigua (archivos y manuscritos).
+\subsection{Identificación y recuperación de documentos}
+Aunque hoy en día la mayor parte de la producción de información en forma de documentos se realiza por medio de herramientas informáticas (procesadores de texto, correo electrónico, etc.), puede ocurrir, y de hecho será un caso muy habitual, que la información no se restrinja a documentos actuales, ya automatizados, sino que se encuentre impresa. Incluso puede ocurrir que nos interese disponer sólo de la información antigua (archivos y manuscritos).
 
-%En estos casos para conseguir una gestión eficaz y ágil, es necesario digitalizar previamente estos documentos para incorporarlos al sistema que tenga implementado la organización.
+En estos casos para conseguir una gestión eficaz y ágil, es necesario digitalizar previamente estos documentos para incorporarlos al sistema que tenga implementado la organización.
 
-%Las primeras aplicaciones se basaban en el paradigma de reconocimiento de caracteres (OCR), donde se utilizaban estas técnicas para realizar un análisis del contenido informativo de los documentos y utilizarlo para su clasificación y almacenamiento. 
+Las primeras aplicaciones se basaban en el paradigma de reconocimiento de caracteres (OCR), donde se utilizaban estas técnicas para realizar un análisis del contenido informativo de los documentos y utilizarlo para su clasificación y almacenamiento. 
 
-%La recuperación de objetos (también nombrada por otros autores reconocimiento o identificación) se incorpora recientemente en la detección de tal manera que un objeto es capturado en una imagen, recuperado de una base de datos y su pose inicial se calcula simultáneamente \cite{Pilet}
+La recuperación de objetos (también nombrada por otros autores reconocimiento o identificación) se incorpora recientemente en la detección de tal manera que un objeto es capturado en una imagen, recuperado de una base de datos y su pose inicial se calcula simultáneamente \cite{Pilet}
 
-%El desarrollo de la investigación realizada en este ámbito se inició con los métodos que utilizaban marcas especiales en el documento, como códigos de barras \cite{Graham} o glifos para vincular contenido electrónico con las imágenes capturadas \cite{Hecht}. Los inconvenientes de estos enfoques es que es necesario modificar el formato y la apariencia del documento para introducir las marcas, que en algunos casos pueden distraer al usuario del contenido del documento. Por otro lado, un documento válido para el sistema al que no se le hayan incluido previamente estas marcas, no será detectado y vinculado con la información a recuperar.
+El desarrollo de la investigación realizada en este ámbito se inició con los métodos que utilizaban marcas especiales en el documento, como códigos de barras \cite{Graham} o glifos para vincular contenido electrónico con las imágenes capturadas \cite{Hecht}. Los inconvenientes de estos enfoques es que es necesario modificar el formato y la apariencia del documento para introducir las marcas, que en algunos casos pueden distraer al usuario del contenido del documento. Por otro lado, un documento válido para el sistema al que no se le hayan incluido previamente estas marcas, no será detectado y vinculado con la información a recuperar.
 
-%La utilización del teléfono móvil y otros dispositivos portátiles para la identificación de documentos ha hecho que publiquen diversos artículos con algoritmos y métodos que parten de las propias limitaciones de estos dispositivos como es la baja capacidad de computo, la calidad de las imágenes capturadas, en muchos casos borrosas, y la captura parcial del documento.
+La utilización del teléfono móvil y otros dispositivos portátiles para la identificación de documentos ha hecho que publiquen diversos artículos con algoritmos y métodos que parten de las propias limitaciones de estos dispositivos como es la baja capacidad de computo, la calidad de las imágenes capturadas, en muchos casos borrosas, y la captura parcial del documento.
 
 Las técnicas de identificación y recuperación de documentos se pueden dividir en dos categorías \cite{Peng}: basados en la búsqueda de coincidencias de características locales y las que, además de lo anterior, utilizan la distribución del contenido dentro de la página.
 

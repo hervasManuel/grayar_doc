@@ -1,8 +1,5 @@
 \documentclass[twoside]{esi-tfg}
 \usepackage{custom}
-\lstdefinestyle{C++}
-   {language=C++,
-   }
 \lstset{ 
   frame=Ltb,
   framerule=0pt,
@@ -29,6 +26,11 @@
 }
 
 
+\lstdefinestyle{consola}
+   {basicstyle=\scriptsize\bf\ttfamily,
+    backgroundcolor=\color{gray75},
+   }
+   
 \input{metadata.tex}
 
 
@@ -66,6 +68,7 @@
 \appendix
 \appendixtitle
 \input{anexo1.tex}
+\input{anexo2.tex}
 {\scriptsize \input{GFDL.tex}}
 
 

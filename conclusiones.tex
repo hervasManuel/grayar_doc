@@ -3,12 +3,67 @@
 En este capítulo se muestran los objetivos alcanzados durante el desarrollo de este Proyecto Fin de Carrera y se realizan una serie de propuestas futuras en relación con el mismo. También se da una conclusión final y personal de lo que ha supuesto llevarlo a cabo.
 
 
-
 \section{Objetivos alcanzados}
 
+GrayAR, el Trabajo Fin de Grado propuesto, abordará el desarrollo de los sistemas de captura, tracking y registro, e identificación de documentos dentro del proyecto ARgos, mientras que la parte de representación, delegación de tareas y scripting se realizará por Santiago Sánchez Sobrino en su TFG ``BelfegAR: Plataforma para el despliegue gráfico 3D y delegación de tareas en gestión documental con realidad aumentada''. Los objetivos específicos a desarrollar se resumen a continuación.   
+
+El sistema emplea una cámara de bajo coste como entrada al módulo de visión por computador y un cañón de proyección portátil para mostrar información visual, directamente alineada sobre el documento del mundo físico. Responderá a las peticiones que el usuario realice sobre el espacio físico, ampliando información relacionada que sea relevante a la acción que quiera realizar.
+
+La unidad de proceso se encargará de tomar como entrada las imágenes obtenidas por la cámara y generar la salida para el cañón de proyección. Esta salida deberá tener en cuenta el posicionamiento 3D relativo entre el documento y el cañón para que el registro de la amplificación visual sea perfecto. El documento podrá moverse dentro de una región del escritorio y la amplificación deberá quedar perfectamente alineada en el espacio físico. Se utilizará un computador en placa Raspberry Pi con arquitectura ARM.
+
+\subsection{Captura y preprocesado de imágenes}
+Deberemos proveer al sistema de un módulo para obtener las imágenes y aplicarle el procesado previo necesario, como puede ser el escalado, umbralización, detección de bordes o detección de características \cite{Ortiz} \cite{Bay}. Otra tarea a realizar es calcular la distorsión debida a la proyección en perspectiva mediante los parámetros extrínsecos e intrínsecos de la cámara.
+
+\subsection{Sistema de identificación de documentos}
+GrayAR contará con un sistema de identificación rápida empleando algoritmos de recuperación de imágenes y comparará el documento que está siendo analizado con una base de datos de documentos conocidos por el sistema.
+
+\subsection{Implementación de técnicas de tracking y registro}
+Para el correcto alineado de la información mostrada, el módulo de tracking y registro contará con funciones de cálculo de \emph{pose} (rotación y translación del objeto en el espacio 3D) en tiempo real y algoritmos para la estimación y descripción del movimiento como Optical Flow \cite{LKanade}.   
+
+\subsection{Utilización de paradigmas de interacción natural con el usuario  (NUI)}
+El usuario podrá interactuar directamente en el espacio físico sin utilizar sistemas de mando o dispositivos de entrada tradicionales como sería un ratón, teclado, etc. siendo sustituidos por funciones más naturales como el uso de movimientos gestuales con las manos.
+
+\subsection{Facilitar la gestión documental a personas con necesidades especiales mediante amplificación de información} 
+Contará con diferentes modos de amplificación de la información del mundo real. Por un lado, la información visual se amplificará empleando el cañón de proyección que mostrará información relevante al contexto directamente sobre el espacio del papel, así como otras fuentes de información visual adicionales. 
+
+\subsection{Se debe basar en componentes de bajo coste}
+Para facilitar la implantación real en el entorno de trabajo, deberá funcionar con componentes de bajo coste, incorporando mecanismos de corrección de distorsión y registro 3D totalmente software.
+
+\subsection{Dispositivo multiplataforma (hardware y software)}
+El desarrollo de GrayAR se realizará siguiendo estándares, tecnologías y bibliotecas libres multiplataforma, con el objetivo de que pueda ser utilizado en el mayor número de plataformas posibles tanto hardware (x86, x86-64 y ARM) como software (GNU/Linux, Windows y Mac).
+
 \section{Propuestas de trabajo futuro}
+
 Como trabajo futuro, se realizan las siguientes propuestas de ampliación y mejora:
 \begin{itemize}
-\item Predicción de las esquinas del papel
+\item \textbf{Tracking mediante aproximaciones \emph{top-down}} Estas técnicas se basan en la estimación mediante modelos de movimiento basados en filtros bayesianos para predecir la posición de la cámara. A partir de la posición obtenida, se buscan referencias en la imagen que puedan corregir y ajustar la predicción.
+  
+  Los filtros Bayesianos a utilizar pueden calsificar en dos tipos. Aquellos que trabajan con modelos de movimiento gausianos, se denominan Filtros de Kalman, y los que, por las características del ruido no pueden ser modelados mediante modelos gausianos y se implementan mejor mediante Filtros de Partículas.
+  
+  Estos métodos proporcionan robustez al proceso de tracking, ya que permite seguir detectando la hoja de papel, aun cuando existe una gran oclusión de la misma. 
+
+\item \textbf{Detección de paginas de texto mediante LLAH o similares}
+  
+\item \textbf{Ajuste inteligente automático de parametros de según la iluminación}
+
+\item \textbf{Calibrado del sistema cámara-proyector mediante luz estructurada} Otra técnica para el calibrado de proyectores es el propuesto por Daniel Moreno y Gabriel Taubin, basado luz estructurada, en el paper ``Simple, Accurate, and Robust Projector-Camera Calibration'' \cite{Moreno}. Este método no requiere ningún equipamiento especial y, según sus autores, es mas preciso que otras técnicas de calibrado, ya que utilizan el modelo pinhole completo con distorsión radial. 
+
+La implementación consistiria en los siguientes pasos a realizar:
+\begin{itemize}
+\item Detect checkerboard corner locations for each plane orientation
+\item Estimate global and direct light components
+\item Decode structured-light patterns
+\item Compute a local homography for each checkerboard corner
+\item Translate corner locations into projector coordinates using local homographies
+\item Calibrate camera intrinsics using image corner locations
+\item Calibrate projector intrinsics using projector corner locations
+\item Fix projector and camera intrinsics and calibrate system extrinsic parameters
+\item Optionally, all the parameters, intrinsic and extrinsic, can be optimized together
 \end{itemize}
+ 
+\item \textbf{Utilización de cámaras con sensor de profundidad} Mayor precision y variedad de gestos reconocidos. Reconocimiento de click con los dedos
+\end{itemize}
+
+El proyecto ARgos no ha finalizado aún. GrayAR comprende las funciones de realidad aumentada y vision por computador que se han construido hasta el día de hoy en el proyecto ARgos. Algunas de la propuestas aquí reflejadas serán desarrolladas para la versión final de ARgos y serviran de contexto para la realización de la tesis del Master en Tecnologias Informáticas Avanzadas prevista para el próximo curso académico.
+
 \section{Conclusiones personales}
