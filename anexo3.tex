@@ -1,0 +1,45 @@
+\chapter{Código fuente}
+\label{chap:anexo_codigo_fuente}
+
+Dada la extensión del código fuente, éste no ha sido incluido en la documentación. Se incluye por
+tanto de forma digital en el CD adjunto a este documento.
+
+\section{Cliente}
+Para la aplicación cliente, es decir, aquella que se ejecuta en la Raspberry Pi, proyecto presenta
+la siguiente estructura de directorios
+
+\begin{itemize}
+\item \textbf{include:} Contiene los archivo de cabecera o \textit{headers} C++ del proyecto.
+\item \textbf{libs:} Contiene las biblioteca externas \texttt{freetypeGlesRpi} y \texttt{glm}.
+\item \textbf{media:} Contiene los recursos del sistema categorizados en subdirectorios:
+  \begin{itemize}
+    \item \textbf{fonts:} Contiene las fuentes \textit{true-type} a usar por el sistema.
+    \item \textbf{images:} Contiene todas las imágenes del sistema.
+    \item \textbf{sounds:} Contiene todos los archivos de audio del sistema.
+  \end{itemize}
+\item \textbf{shaders:} Contiene todos los programas \textit{vertex shader} y \textit{fragment
+    shader} usados por OpenGL ES 2.0.
+\item \textbf{src:} Contiene los archivos de código fuente C++ del proyecto.
+\item El directorio raíz contiene los archivos de calibración de la cámara y el \textit{Makefile}
+  necesario para la construcción del proyecto.
+\end{itemize}
+
+\section{Servidor}
+Por otra parte, la aplicación servidora o aquella que se ejecuta en el computador externo presenta
+la siguiente estructura de directorios
+
+\begin{itemize}
+\item \textbf{data:} Contiene los archivos de configuración \acs{XML} y \textit{scripts} del sistema.
+\item \textbf{include:} Contiene los archivo de cabecera o \textit{headers} C++ del proyecto.
+\item \textbf{src:} Contiene los archivos de código fuente C++ del proyecto.
+\item El directorio raíz contiene el \textit{Makefile} necesario para la construcción del proyecto y
+  el archivo de descriptores empleado para el reconocimiento de documentos.
+\end{itemize}
+
+% Local Variables:
+% TeX-master: "main.tex"
+%  coding: utf-8
+%  mode: latex
+%  mode: flyspell
+%  ispell-local-dictionary: "castellano8"
+% End:

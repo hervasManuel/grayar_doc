@@ -1,11 +1,13 @@
 \chapter{Conclusiones y propuestas}
 \label{chap:conclusiones}
-En este capítulo se muestran los objetivos alcanzados durante el desarrollo de este Proyecto Fin de Carrera y se realizan una serie de propuestas futuras en relación con el mismo. También se da una conclusión final y personal de lo que ha supuesto llevarlo a cabo.
-
+\drop{E}{n} este capítulo se realiza un análisis sobre los objetivos alcanzados durante el desarrollo del presente Trabajo Fin de Grado, aportando en cada caso, las ventajas que ha supuesto la utilización o la elección de una determinada implementación respecto a otras opciones disponibles.  En segundo lugar, se exponen nuevos puntos de vista, que se pueden tratar en futuros trabajos para mejora y ampliación del sistema, indicando una posible implementación y una estimación del coste temporal en caso de realizarlos. Finalmente, se da una valoración personal en base a la experiencia adquirida en la elaboración del proyecto.
 
 \section{Objetivos alcanzados}
 
-GrayAR, el Trabajo Fin de Grado propuesto, abordará el desarrollo de los sistemas de captura, tracking y registro, e identificación de documentos dentro del proyecto ARgos, mientras que la parte de representación, delegación de tareas y scripting se realizará por Santiago Sánchez Sobrino en su TFG ``BelfegAR: Plataforma para el despliegue gráfico 3D y delegación de tareas en gestión documental con realidad aumentada''. Los objetivos específicos a desarrollar se resumen a continuación.   
+GrayAR, el Trabajo Fin de Grado propuesto, aborda el desarrollo de los sistemas de captura, tracking, registro, e identificación de documentos dentro del proyecto ARgos, 
+
+
+Los objetivos específicos a desarrollar se resumen a continuación.   
 
 El sistema emplea una cámara de bajo coste como entrada al módulo de visión por computador y un cañón de proyección portátil para mostrar información visual, directamente alineada sobre el documento del mundo físico. Responderá a las peticiones que el usuario realice sobre el espacio físico, ampliando información relacionada que sea relevante a la acción que quiera realizar.
 
@@ -33,37 +35,41 @@ Para facilitar la implantación real en el entorno de trabajo, deberá funcionar
 El desarrollo de GrayAR se realizará siguiendo estándares, tecnologías y bibliotecas libres multiplataforma, con el objetivo de que pueda ser utilizado en el mayor número de plataformas posibles tanto hardware (x86, x86-64 y ARM) como software (GNU/Linux, Windows y Mac).
 
 \section{Propuestas de trabajo futuro}
+El proyecto ARgos no ha finalizado aún. GrayAR comprende las funciones de realidad aumentada y vision por computador que se han construido hasta el día de hoy en el proyecto ARgos. Algunas de la propuestas aquí reflejadas serán desarrolladas para la versión final de ARgos y serviran de contexto para la realización de la tesis del Master en Tecnologias Informáticas Avanzadas prevista para el próximo curso académico.
 
 Como trabajo futuro, se realizan las siguientes propuestas de ampliación y mejora:
-\begin{itemize}
-\item \textbf{Tracking mediante aproximaciones \emph{top-down}} Estas técnicas se basan en la estimación mediante modelos de movimiento basados en filtros bayesianos para predecir la posición de la cámara. A partir de la posición obtenida, se buscan referencias en la imagen que puedan corregir y ajustar la predicción.
+
+\subsection{Tracking mediante aproximaciones \emph{top-down}} 
+
+Estas técnicas se basan en la estimación mediante modelos de movimiento basados en filtros bayesianos para predecir la posición de la cámara. A partir de la posición obtenida, se buscan referencias en la imagen que puedan corregir y ajustar la predicción.
   
   Los filtros Bayesianos a utilizar pueden calsificar en dos tipos. Aquellos que trabajan con modelos de movimiento gausianos, se denominan Filtros de Kalman, y los que, por las características del ruido no pueden ser modelados mediante modelos gausianos y se implementan mejor mediante Filtros de Partículas.
   
   Estos métodos proporcionan robustez al proceso de tracking, ya que permite seguir detectando la hoja de papel, aun cuando existe una gran oclusión de la misma. 
 
-\item \textbf{Detección de paginas de texto mediante LLAH o similares}
+\subsection{Detección de paginas de texto mediante LLAH o similares}
   
-\item \textbf{Ajuste inteligente automático de parametros de según la iluminación}
+\subsection{Ajuste inteligente automático de parametros de según la iluminación}
 
-\item \textbf{Calibrado del sistema cámara-proyector mediante luz estructurada} Otra técnica para el calibrado de proyectores es el propuesto por Daniel Moreno y Gabriel Taubin, basado luz estructurada, en el paper ``Simple, Accurate, and Robust Projector-Camera Calibration'' \cite{Moreno}. Este método no requiere ningún equipamiento especial y, según sus autores, es mas preciso que otras técnicas de calibrado, ya que utilizan el modelo pinhole completo con distorsión radial. 
+\subsection{Calibrado del sistema cámara-proyector mediante luz estructurada:} 
 
-La implementación consistiria en los siguientes pasos a realizar:
+Otra técnica para el calibrado de proyectores es el propuesto por Daniel Moreno y Gabriel Taubin, basado luz estructurada, en el paper \textit{``Simple, Accurate, and Robust Projector-Camera Calibration''}. Este método no requiere ningún equipamiento especial y, según sus autores, es mas preciso que otras técnicas de calibrado, ya que utilizan el modelo pinhole completo con distorsión radial. En base a la experiencia del desarrollo del proceso de calibrado en GrayAR, esta historia se podria plantear para realizarla en un sprint de 3 ó 4 semanas de duración.  
+
+La implementación, consistiria en los siguientes pasos a realizar \cite{Moreno}:
 \begin{itemize}
-\item Detect checkerboard corner locations for each plane orientation
-\item Estimate global and direct light components
-\item Decode structured-light patterns
-\item Compute a local homography for each checkerboard corner
-\item Translate corner locations into projector coordinates using local homographies
-\item Calibrate camera intrinsics using image corner locations
-\item Calibrate projector intrinsics using projector corner locations
-\item Fix projector and camera intrinsics and calibrate system extrinsic parameters
-\item Optionally, all the parameters, intrinsic and extrinsic, can be optimized together
-\end{itemize}
- 
-\item \textbf{Utilización de cámaras con sensor de profundidad} Mayor precision y variedad de gestos reconocidos. Reconocimiento de click con los dedos
+\item Detectar la localización de las esquinas de un patron de tablero de ajedrez en cada una las orientaciones capturados.
+\item Estimar los componentes de luz directa y global.
+\item Decodificar los patrones de luz estructurada.
+\item Calcula una homografia local para cada una de las esquinas del patron detectado.
+\item Transladar las posiciones de las esquinas a coordenadas del proyector mediante homografias locales.
+\item Obtener los parametros intrinsecos de la cámara utilizando las posiciones de las esquinas en la imagen.
+\item Obtener los parametros intrinsecos del proyector con las posiciones trasladadas al sistema de referencia del proyector.
+\item Ajustar los parametros intrinseco de la cámara y el proyector y obtener los parametros extrínsecos del sistema en conjunto.
+\item Opcionalmente, se puede realizar una optimización conjunta de todos los parametros (intrinsecos y extrínsecos).
 \end{itemize}
 
-El proyecto ARgos no ha finalizado aún. GrayAR comprende las funciones de realidad aumentada y vision por computador que se han construido hasta el día de hoy en el proyecto ARgos. Algunas de la propuestas aquí reflejadas serán desarrolladas para la versión final de ARgos y serviran de contexto para la realización de la tesis del Master en Tecnologias Informáticas Avanzadas prevista para el próximo curso académico.
+\subsection{Utilización de cámaras con sensor de profundidad} 
+
+Aunque uno de los objetivos del proyecto es la utilización de componentes de bajo coste para obtener un sistema económico y que la adaptación del puesto de trabajo no suponga un desembolso excesivo, sustituyendo la cámara principal actual, por otra equipada con sensores IR (con un coste mayor) capaz de medir la profundidad de la escena, obtendriamos una mayor precision y la posibilidad de aumentar la variedad de gestos reconocidos. Por ejemplo, la realización de la acción de click o doble click con los dedos sobre la superficie de la mesa o la simulación de una superfice multitáctil.
 
 \section{Conclusiones personales}
