@@ -343,6 +343,12 @@ Ethan Rublee, Vincent Rabaud, Kurt Konolige, y Gary Bradski.
   Vision}, ICCV '11, páginas 2564--2571, Washington, DC, USA, 2011. IEEE
   Computer Society.
 
+\bibitem[San07]{Marimon}
+David~Marimón Sanjuan.
+\newblock {\em Advances in Top-Down and Bottom-Up Approaches to Video-Based
+  Camera Tracking}.
+\newblock PhD thesis, École Polytechnique Fédérale de Lausanne, 2007.
+
 \bibitem[SKR99]{Stricker}
 Didier Stricker, Gundrun Klinker, y Dirk Reiners.
 \newblock A Fast and Robust Line-based Optical Tracker for Augmented Reality

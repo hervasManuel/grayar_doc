@@ -1,75 +1,105 @@
 \chapter{Conclusiones y propuestas}
 \label{chap:conclusiones}
-\drop{E}{n} este capítulo se realiza un análisis sobre los objetivos alcanzados durante el desarrollo del presente Trabajo Fin de Grado, aportando en cada caso, las ventajas que ha supuesto la utilización o la elección de una determinada implementación respecto a otras opciones disponibles.  En segundo lugar, se exponen nuevos puntos de vista, que se pueden tratar en futuros trabajos para mejora y ampliación del sistema, indicando una posible implementación y una estimación del coste temporal en caso de realizarlos. Finalmente, se da una valoración personal en base a la experiencia adquirida en la elaboración del proyecto.
+\drop{E}{n} este capítulo se realiza un análisis sobre los objetivos alcanzados durante el desarrollo del presente Trabajo Fin de Grado, aportando en cada caso, las ventajas que ha supuesto la utilización o la elección de una determinada implementación respecto a otras opciones disponibles. A continuación, se exponen nuevos puntos de vista, que se pueden tratar en futuros trabajos para mejora ó ampliación del sistema, indicando una posible implementación y una estimación del coste temporal en caso de realizarlos. 
 
 \section{Objetivos alcanzados}
 
-GrayAR, el Trabajo Fin de Grado propuesto, aborda el desarrollo de los sistemas de captura, tracking, registro, e identificación de documentos dentro del proyecto ARgos, 
+El objetivo principal de GrayAR es el desarrollo de los sistemas de captura, tracking, registro e identificación de documentos dentro del proyecto ARgos. Con tal fin, se ha construido un prototipo real basado en una Raspberry Pi, con una cámara de bajo coste y un proyector portátil, que montado sobre un trípode, muestra información visual alineada sobre un documento que se encuentre dentro de la zona de proyección. Para efectuar esta visualización, se tiene en cuenta el posicionamiento 3D relativo entre el documento y el sistema cámara-proyector, para que el registro de la amplificación visual sea perfecto.
 
+Además, el sistema responde a distintas acciones que el usuario pueda efectuar sobre el espacio físico, ampliando la información relacionada que sea relevante a la acción realizada.
 
-Los objetivos específicos a desarrollar se resumen a continuación.   
-
-El sistema emplea una cámara de bajo coste como entrada al módulo de visión por computador y un cañón de proyección portátil para mostrar información visual, directamente alineada sobre el documento del mundo físico. Responderá a las peticiones que el usuario realice sobre el espacio físico, ampliando información relacionada que sea relevante a la acción que quiera realizar.
-
-La unidad de proceso se encargará de tomar como entrada las imágenes obtenidas por la cámara y generar la salida para el cañón de proyección. Esta salida deberá tener en cuenta el posicionamiento 3D relativo entre el documento y el cañón para que el registro de la amplificación visual sea perfecto. El documento podrá moverse dentro de una región del escritorio y la amplificación deberá quedar perfectamente alineada en el espacio físico. Se utilizará un computador en placa Raspberry Pi con arquitectura ARM.
+Por tanto, el objetivo principal queda satisfecho, como así ocurre también con aquellos objetivos específicos, definidos en el capítulo \ref{chap:objetivos} y detallada su solución entre los capítulos \ref{chap:metodo} y  \ref{chap:resultados}, que exponemos a continuación a modo de resumen.   
 
 \subsection{Captura y preprocesado de imágenes}
-Deberemos proveer al sistema de un módulo para obtener las imágenes y aplicarle el procesado previo necesario, como puede ser el escalado, umbralización, detección de bordes o detección de características \cite{Ortiz} \cite{Bay}. Otra tarea a realizar es calcular la distorsión debida a la proyección en perspectiva mediante los parámetros extrínsecos e intrínsecos de la cámara.
+El sistema cuenta con un módulo capaz de obtener imágenes de los distintos tipos de cámaras que se le pueden acoplar, ofreciendo una interfaz común, a pesar de disponer de drivers y APIs diferentes. Se ha provisto de los filtros necesarios para el tratamiento de las imágenes, contando con funciones de escalado, umbralización, detección de bordes y detección de características.
+
+Para el calculo de los parámetros intrínsecos y extrínsecos tanto de la cámara como del proyector, se ha desarrollado una aplicación externa que permite un calibrado rápido y sencillo del sistema, mediante un patrón de tipo tablero de ajedrez, cada vez que sea necesario. Una vez realizada la calibración, obtenemos tres ficheros XML que son lo necesarios para poder realizar los cálculos de registro en el prototipo. 
 
 \subsection{Sistema de identificación de documentos}
-GrayAR contará con un sistema de identificación rápida empleando algoritmos de recuperación de imágenes y comparará el documento que está siendo analizado con una base de datos de documentos conocidos por el sistema.
+La identificación de documentos en GrayAR se ha realizado mediante un algoritmo de recuperación de imágenes basado en descriptores y comparará el documento que está siendo analizado con una base de datos de documentos conocidos por el sistema.
+
+Estos documentos se proporcionan en el fichero de configuración, así como las acciones posibles que se pueden realizar sobre él. Este tipo de configuración permite un sistema adaptable y personalizable a cada organización y usuario. 
 
 \subsection{Implementación de técnicas de tracking y registro}
-Para el correcto alineado de la información mostrada, el módulo de tracking y registro contará con funciones de cálculo de \emph{pose} (rotación y translación del objeto en el espacio 3D) en tiempo real y algoritmos para la estimación y descripción del movimiento como Optical Flow \cite{LKanade}.   
+Para conseguir una experiencia totalmente inmersiva, se han desarrollado técnicas de tracking y registro que permiten el cálculo de la \emph{pose} (rotación y translación del documento en el espacio 3D) en tiempo real. Esto nos permite, que podamos ofrecer al usuario la información proyectada sobre la hoja de papel, independiente de su posición, rotación o plano en el que se encuentre. Siempre y cuando, no se salga de los límites de la zona de proyección.
 
-\subsection{Utilización de paradigmas de interacción natural con el usuario  (NUI)}
-El usuario podrá interactuar directamente en el espacio físico sin utilizar sistemas de mando o dispositivos de entrada tradicionales como sería un ratón, teclado, etc. siendo sustituidos por funciones más naturales como el uso de movimientos gestuales con las manos.
+\subsection{Utilización de paradigmas de interacción natural con el usuario  (NI)}
+El usuario puede interactuar directamente en el espacio físico sin utilizar sistemas de mando tradicionales, como ratones o teclados. Sólo es necesario encender el prototipo, y según el usuario vaya colocando documentos, los desplace por la zona de proyección, realice interacciones señalándolo ó girándolo para mostrar la cara posterior, el sistema responderá automáticamente a la acción realizada. 
+
+La respuesta se le ofrece al usuario amplificada de varias formas (visual y/o auditiva) y siempre adaptada a la escena que se esté produciendo en ese mismo instante.
 
 \subsection{Facilitar la gestión documental a personas con necesidades especiales mediante amplificación de información} 
-Contará con diferentes modos de amplificación de la información del mundo real. Por un lado, la información visual se amplificará empleando el cañón de proyección que mostrará información relevante al contexto directamente sobre el espacio del papel, así como otras fuentes de información visual adicionales. 
+GrayAR proporciona toda la información necesaria al sistema de representación (BelfegAR), para que realice el dibujado de la información visual relevante al contexto directamente sobre el espacio del papel.
 
+Para complementar a la representación visual, se ha añadido a la Raspberry Pi un amplificador de audio LM386 montado sobre una placa de test con un altavoz de 1W, que hace las funciones de ``tarjeta de sonido'', permitiendo la reproducción de avisos, alertas o lecturas de texto para aquellas personas que necesiten de amplificación auditiva para la utilización del sistema.
+  
 \subsection{Se debe basar en componentes de bajo coste}
-Para facilitar la implantación real en el entorno de trabajo, deberá funcionar con componentes de bajo coste, incorporando mecanismos de corrección de distorsión y registro 3D totalmente software.
+Para la construcción del prototipo se han seleccionado aquellos componentes, que dentro unas prestaciones mínimas requeridas, fuesen lo mas económicos posibles. El coste final (ver Sección 4.4) es muy reducido respecto a otros sistemas que puedan realizan funciones parecidas. El proyector, la parte más cara del sistema con un valor de 325\euro, lo podemos considerar económico, teniendo en cuenta que el precio medio de otros modelos es de 1000\euro.
+
+Respecto al software empleado, todos los recursos y bibliotecas utilizadas son de licencia libre, y por tanto no están sujetos a pagos de licencias. 
 
 \subsection{Dispositivo multiplataforma (hardware y software)}
-El desarrollo de GrayAR se realizará siguiendo estándares, tecnologías y bibliotecas libres multiplataforma, con el objetivo de que pueda ser utilizado en el mayor número de plataformas posibles tanto hardware (x86, x86-64 y ARM) como software (GNU/Linux, Windows y Mac).
+El desarrollo de GrayAR se ha realizado exclusivamente en C++, siguiendo el estándar C++11. Los fichero de configuración y de calibrado están en XML. El uso de bibliotecas externas ha sido mínimo, eligiendo las que no poseían dependencias de terceros, y siempre con licencias libres multiplataforma. Estas decisiones garantizan la portabilidad del sistema, tanto hardware como software (sistemas operativos), en forma de paquete único.
+
+
 
 \section{Propuestas de trabajo futuro}
-El proyecto ARgos no ha finalizado aún. GrayAR comprende las funciones de realidad aumentada y vision por computador que se han construido hasta el día de hoy en el proyecto ARgos. Algunas de la propuestas aquí reflejadas serán desarrolladas para la versión final de ARgos y serviran de contexto para la realización de la tesis del Master en Tecnologias Informáticas Avanzadas prevista para el próximo curso académico.
+El proyecto ARgos no ha finalizado aún. GrayAR comprende las funciones de realidad aumentada y visión por computador que se han construido hasta el día de hoy en el proyecto ARgos. Algunas de la propuestas aquí reflejadas serán desarrolladas en la versión final de ARgos y servirán de contexto para la realización de la tesis del Máster en Tecnologías Informáticas Avanzadas prevista para el próximo curso académico. 
 
-Como trabajo futuro, se realizan las siguientes propuestas de ampliación y mejora:
+Debido a la construcción modular y desacoplada del sistema, las ampliaciones o mejoras aquí planteadas son de ámbito local y solo afectarán al subsistema o módulo referido, siendo transparente los cambios realizados para el resto de la aplicación.
 
+\subsection{Ampliación del catálogo de gestos reconocidos} 
+Para un satisfactoria experiencia de usuario es necesario contar con un amplio abanico de acciones que pueda realizar para interaccionar con el sistema. Completando a las acciones que actualmente están implementadas podemos   
+
+ 
 \subsection{Tracking mediante aproximaciones \emph{top-down}} 
-
 Estas técnicas se basan en la estimación mediante modelos de movimiento basados en filtros bayesianos para predecir la posición de la cámara. A partir de la posición obtenida, se buscan referencias en la imagen que puedan corregir y ajustar la predicción.
-  
-  Los filtros Bayesianos a utilizar pueden calsificar en dos tipos. Aquellos que trabajan con modelos de movimiento gausianos, se denominan Filtros de Kalman, y los que, por las características del ruido no pueden ser modelados mediante modelos gausianos y se implementan mejor mediante Filtros de Partículas.
-  
-  Estos métodos proporcionan robustez al proceso de tracking, ya que permite seguir detectando la hoja de papel, aun cuando existe una gran oclusión de la misma. 
+
+Los filtros bayesianos a utilizar pueden clasificarse en dos tipos. Aquellos que trabajan con modelos de movimiento gausianos, se denominan Filtros de Kalman, y los que, por las características del ruido no pueden ser modelados mediante modelos gausianos, y se implementan mejor mediante Filtros de Partículas.
+
+Estos métodos proporcionan robustez al proceso de tracking, ya que permite seguir detectando la hoja de papel, aun cuando exista una gran oclusión de la misma. 
+
+Para la implementación de esta mejora, habría que valorar, además, el tiempo para analizar ambos enfoques y determinar cual de ellos se adapta mejor a las características de su desplazamiento por la zona de proyección. 
 
 \subsection{Detección de paginas de texto mediante LLAH o similares}
-  
-\subsection{Ajuste inteligente automático de parametros de según la iluminación}
+La implementación actual de detección de documentos en GrayAR está basado en la búsqueda de coincidencias de características locales, ya que estos métodos obtienen mayor precisión de acierto en la detección de documentos con información semiestructurada, como es el caso de facturas o formularios. 
+
+Sería interesante, como ampliación al sistema de detección, que se pudiesen reconocer documentos con alto contenido textual sin una estructura predeterminada de antemano. Para ello, es necesario la implementación de algún algoritmo de detección basado en las características inherentes de la estructura del documento y el texto que contiene. 
+
+LLAH \cite{Nakai} tiene una alta escalabilidad y el esquema de indexación y recuperación empleado es extremadamente rápido. Los autores han confirmado que LLAH tiene una tasa de acierto del 99\% y con un tiempo de procesamiento de 50 más en una base de datos de 20 millones de páginas. 
+
+Existen varias implementaciones optimizadas sobre LLAH para salvar las limitaciones iniciales del algoritmo. Sería un trabajo futuro la tarea de buscar sólo las publicaciones que se hayan hecho sobre LLAH e intentar crear una implementación conjunta con todas las optimizaciones.
+
+\subsection{Estimación inteligente de parámetros en algoritmos de filtrado según la iluminación existente}
+Los algoritmos de filtrado (suavizado de imágenes, detección de bordes,...) se definen a través de parámetros que determinan su comportamiento y el resultado de la imagen obtenida. Normalmente se determinan por decisión humana y permanecen estáticos durante toda la ejecución del programa. Elegidos en función de los mejores resultados obtenidos en unas circunstancias determinadas, las variaciones en la iluminación de la escena provocan que un parámetro que en un principio se pudo considerar óptimo, al instante no sea válido. También nos encontramos el caso de que exista un rango de valores que nos satisfagan.
+
+Se propone por tanto la creación de un sistema mediante técnicas de softcomputing que analice la escena actual y determine que valores son los mas adecuados para obtener un resultado conocido o esperado, en una serie de filtros utilizados en GrayAR.
+
+Las ventajas de realizar esta implementación, proporcionaría que los métodos de detección fuesen mas robustos y tolerantes a los cambios de iluminación que se puedan producir durante la utilización del sistema.    
 
 \subsection{Calibrado del sistema cámara-proyector mediante luz estructurada:} 
+Otra técnica para el calibrado de proyectores es el propuesto por Daniel Moreno y Gabriel Taubin, basado luz estructurada, en el paper \textit{``Simple, Accurate, and Robust Projector-Camera Calibration''}. 
 
-Otra técnica para el calibrado de proyectores es el propuesto por Daniel Moreno y Gabriel Taubin, basado luz estructurada, en el paper \textit{``Simple, Accurate, and Robust Projector-Camera Calibration''}. Este método no requiere ningún equipamiento especial y, según sus autores, es mas preciso que otras técnicas de calibrado, ya que utilizan el modelo pinhole completo con distorsión radial. En base a la experiencia del desarrollo del proceso de calibrado en GrayAR, esta historia se podria plantear para realizarla en un sprint de 3 ó 4 semanas de duración.  
-
-La implementación, consistiria en los siguientes pasos a realizar \cite{Moreno}:
+La implementación, consistiría en los siguientes pasos a realizar \cite{Moreno}:
 \begin{itemize}
-\item Detectar la localización de las esquinas de un patron de tablero de ajedrez en cada una las orientaciones capturados.
+\item Detectar la localización de las esquinas de un patrón de tablero de ajedrez en cada una las orientaciones capturados.
 \item Estimar los componentes de luz directa y global.
 \item Decodificar los patrones de luz estructurada.
-\item Calcula una homografia local para cada una de las esquinas del patron detectado.
-\item Transladar las posiciones de las esquinas a coordenadas del proyector mediante homografias locales.
-\item Obtener los parametros intrinsecos de la cámara utilizando las posiciones de las esquinas en la imagen.
-\item Obtener los parametros intrinsecos del proyector con las posiciones trasladadas al sistema de referencia del proyector.
-\item Ajustar los parametros intrinseco de la cámara y el proyector y obtener los parametros extrínsecos del sistema en conjunto.
-\item Opcionalmente, se puede realizar una optimización conjunta de todos los parametros (intrinsecos y extrínsecos).
+\item Calcula una homografía local para cada una de las esquinas del patrón detectado.
+\item Trasladar las posiciones de las esquinas a coordenadas del proyector mediante homografías locales.
+\item Obtener los parámetros intrínsecos de la cámara utilizando las posiciones de las esquinas en la imagen.
+\item Obtener los parámetros intrínsecos del proyector con las posiciones trasladadas al sistema de referencia del proyector.
+\item Ajustar los parámetros intrínseco de la cámara y el proyector y obtener los parámetros extrínsecos del sistema en conjunto.
+\item Opcionalmente, se puede realizar una optimización conjunta de todos los parámetros (intrínsecos y extrínsecos).
 \end{itemize}
+
+Este método no requiere ningún equipamiento especial y, según sus autores, es mas preciso que otras técnicas de calibrado, ya que utilizan el modelo pinhole completo con distorsión radial. 
+
+En base a la experiencia en el desarrollo del proceso de calibrado en GrayAR, esta historia se podría plantear para realizarse en un sprint de 3 ó 4 semanas de duración.  
 
 \subsection{Utilización de cámaras con sensor de profundidad} 
 
-Aunque uno de los objetivos del proyecto es la utilización de componentes de bajo coste para obtener un sistema económico y que la adaptación del puesto de trabajo no suponga un desembolso excesivo, sustituyendo la cámara principal actual, por otra equipada con sensores IR (con un coste mayor) capaz de medir la profundidad de la escena, obtendriamos una mayor precision y la posibilidad de aumentar la variedad de gestos reconocidos. Por ejemplo, la realización de la acción de click o doble click con los dedos sobre la superficie de la mesa o la simulación de una superfice multitáctil.
+Aunque uno de los objetivos del proyecto es la utilización de componentes de bajo coste para obtener un sistema económico, sustituyendo la cámara principal actual, por otra equipada con sensores IR capaces de medir la profundidad de la escena, obtendríamos una mayor precisión y la posibilidad de aumentar la variedad de gestos reconocidos. Por ejemplo, la realización de la acción de click o doble click con los dedos sobre la superficie de la mesa o la simulación de una superficie multitáctil.
 
-\section{Conclusiones personales}
+El coste temporal de esta propuesta puede ser mayor que las anteriores, ya que habría que estudiar varias bibliotecas existentes para la utilización del dispositivo (por ejemplo, kinect) y proporcionar nuevos sistemas de calibrado para la cámara IR. También seria necesaria la modificación de los métodos de reconocimiento gestual que tendrían un enfoque distinto, al incorporar la información adicional de la cámara de profundidad, en el proceso de detección.  
+
