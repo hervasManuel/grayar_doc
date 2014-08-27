@@ -47,10 +47,6 @@ El desarrollo de GrayAR se ha realizado exclusivamente en C++, siguiendo el est�
 El proyecto ARgos no ha finalizado aún. GrayAR comprende las funciones de realidad aumentada y visión por computador que se han construido hasta el día de hoy en el proyecto ARgos. Algunas de la propuestas aquí reflejadas serán desarrolladas en la versión final de ARgos y servirán de contexto para la realización de la tesis del Máster en Tecnologías Informáticas Avanzadas prevista para el próximo curso académico. 
 
 Debido a la construcción modular y desacoplada del sistema, las ampliaciones o mejoras aquí planteadas son de ámbito local y solo afectarán al subsistema o módulo referido, siendo transparente los cambios realizados para el resto de la aplicación.
-
-\subsection{Ampliación del catálogo de gestos reconocidos} 
-Para un satisfactoria experiencia de usuario es necesario contar con un amplio abanico de acciones que pueda realizar para interaccionar con el sistema. Completando a las acciones que actualmente están implementadas podemos   
-
  
 \subsection{Tracking mediante aproximaciones \emph{top-down}} 
 Estas técnicas se basan en la estimación mediante modelos de movimiento basados en filtros bayesianos para predecir la posición de la cámara. A partir de la posición obtenida, se buscan referencias en la imagen que puedan corregir y ajustar la predicción.
@@ -101,5 +97,4 @@ En base a la experiencia en el desarrollo del proceso de calibrado en GrayAR, es
 
 Aunque uno de los objetivos del proyecto es la utilización de componentes de bajo coste para obtener un sistema económico, sustituyendo la cámara principal actual, por otra equipada con sensores IR capaces de medir la profundidad de la escena, obtendríamos una mayor precisión y la posibilidad de aumentar la variedad de gestos reconocidos. Por ejemplo, la realización de la acción de click o doble click con los dedos sobre la superficie de la mesa o la simulación de una superficie multitáctil.
 
-El coste temporal de esta propuesta puede ser mayor que las anteriores, ya que habría que estudiar varias bibliotecas existentes para la utilización del dispositivo (por ejemplo, kinect) y proporcionar nuevos sistemas de calibrado para la cámara IR. También seria necesaria la modificación de los métodos de reconocimiento gestual que tendrían un enfoque distinto, al incorporar la información adicional de la cámara de profundidad, en el proceso de detección.  
-
+El coste temporal de esta propuesta puede ser mayor que las anteriores, ya que habría que estudiar las bibliotecas existentes para la utilización del dispositivo (por ejemplo, kinect) y proporcionar un nuevo sistema de calibrado para la cámara IR. También seria necesaria la modificación de los métodos de reconocimiento gestual, que tendrían un enfoque distinto, al incorporar la información adicional de la cámara de profundidad.

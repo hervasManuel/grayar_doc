@@ -7,28 +7,28 @@ arte de los sistemas existentes.
 
 \begin{figure}[h!] 
   \centering
-  \includegraphics[width=1.0\textwidth]{antecedentes.png}
+  \includegraphics[width=1.0\textwidth]{conceptual_map.png}
   \caption{Antecedentes de GrayAR}
   \label{fig:antecedentes}
 \end{figure}
 
-\section{Realidad Aumentada}
-La realidad aumentada es una tecnología mediante la cual la percepción del mundo real se complementa con información adicional generada por ordenador en tiempo real. Esta información adicional puede ser desde etiquetas virtuales, representaciones de modelos tridimensionales, o incluso cambios de iluminación. 
+%\section{Realidad Aumentada}
+%La realidad aumentada es una tecnología mediante la cual la percepción del mundo real se complementa con información adicional generada por ordenador en tiempo real. Esta información adicional puede ser desde etiquetas virtuales, representaciones de modelos tridimensionales, o incluso cambios de iluminación. 
 
-El término Realidad Aumentada fue acuñado en 1990 por Tom Caudell durante el desarrollo de un sistema de Boeing para ayudar a los trabajadores en el ensamblaje de aviones mediante la ayuda de pantallas que mostraban información del montaje. 
+%El término Realidad Aumentada fue acuñado en 1990 por Tom Caudell durante el desarrollo de un sistema de Boeing para ayudar a los trabajadores en el ensamblaje de aviones mediante la ayuda de pantallas que mostraban información del montaje. 
 
-La realidad aumentada se puede aplicar a prácticamente todos los campos. En el sector industrial, para la reparación y mantenimiento de maquinas e instalaciones complejas, visualización de datos o simulación.  En aplicaciones médicas, mostrarían la situación de órganos no visibles durante una cirugía. También se han realizado aplicaciones para diseño de interiores (IKEA), presentaciones de productos, educación, publicidad, turismo, arte y ocio. 
+%La realidad aumentada se puede aplicar a prácticamente todos los campos. En el sector industrial, para la reparación y mantenimiento de maquinas e instalaciones complejas, visualización de datos o simulación.  En aplicaciones médicas, mostrarían la situación de órganos no visibles durante una cirugía. También se han realizado aplicaciones para diseño de interiores (IKEA), presentaciones de productos, educación, publicidad, turismo, arte y ocio. 
 
-Uno de los principales problemas a resolver es denominado registro. Los objetos del mundo real y virtual deben estar correctamente alineados o la sensación de integración se verá seriamente afectada. Sin un registro preciso, la realidad aumentada no podría ser soportada por muchas aplicaciones, por ejemplo, en medicina para el guiado de una aguja en la realización de una biopsia. 
+%Uno de los principales problemas a resolver es denominado registro. Los objetos del mundo real y virtual deben estar correctamente alineados o la sensación de integración se verá seriamente afectada. Sin un registro preciso, la realidad aumentada no podría ser soportada por muchas aplicaciones, por ejemplo, en medicina para el guiado de una aguja en la realización de una biopsia. 
 
-Las aplicaciones de Realidad Aumentada deben cumplir las siguientes características definidas por Ronald T. Azuma \cite{Azuma}:
-\begin{description}
-\item[Combinar el mundo real con el virtual.] El resultado final debe mostrar la información sintética sobre las imágenes percibidas del mundo real.
-\item[Debe ser interactivo en tiempo real.] La integración debe ser realizada \emph{en el momento}, por lo que el cálculo necesario debe realizarse en el menor tiempo posible.
-\item[La alineación de los elementos virtuales debe realizarse en 3D.] Los objetos sintéticos deben de estar en el espacio tridimensional.
-\end{description}
+%Las aplicaciones de Realidad Aumentada deben cumplir las siguientes características definidas por Ronald T. Azuma \cite{Azuma}:
+%\begin{description}
+%\item[Combinar el mundo real con el virtual.] El resultado final debe mostrar la información sintética sobre las imágenes percibidas del mundo real.
+%\item[Debe ser interactivo en tiempo real.] La integración debe ser realizada \emph{en el momento}, por lo que el cálculo necesario debe realizarse en el menor tiempo posible.
+%\item[La alineación de los elementos virtuales debe realizarse en 3D.] Los objetos sintéticos deben de estar en el espacio tridimensional.
+%\end{description}
 
-\subsection{Componentes de un sistema de realidad aumentada}
+\section{Componentes de un sistema de realidad aumentada}
 Un sistema de realidad aumentada depende de cuatro componentes físicos:
 
 \begin{itemize}
@@ -43,39 +43,39 @@ Un sistema de realidad aumentada depende de cuatro componentes físicos:
 
 \end{itemize}
 
-\subsubsection{Elementos de entrada y sensores de orientación}
+\subsection{Elementos de entrada y sensores de orientación}
 Un sistema de realidad aumentada debe ser capaz de conocer su orientación y posición dentro del entorno circundante con el fin de ofrecer una experiencia ``aumentada'' satisfactoria. La combinación de la orientación y la posición de un observador que se conoce como \emph{pose}. La estimación de la \emph{pose} se definirá con más detalle en la sección 4. La orientación y posición se pueden determinar mediante técnicas de visión por computador, pero hay métodos alternativos para estimar la \emph{pose}  utilizando  sensores diseñados específicamente para medir alguno o todos los parámetros de los seis grados de libertad que componen la \emph{pose}.
 
-\paragraph{Localización}
+\subsubsection{Localización}
 La manera más popular para determinar la posición es mediante la utilización del Sistema de Posicionamiento Global (GPS), desarrollado por el ejército de Estados Unidos y totalmente operativo desde 1994. 
 Un receptor GPS es lo suficientemente preciso para determinar la ubicación en las aplicaciones de realidad aumentada, además, debido a su bajo coste, los sensores de GPS se llevan incluido en los teléfonos móviles desde 2005.
 
-\paragraph{Orientación}
+\subsubsection{Orientación}
 En el espacio 3D, la orientación de un cuerpo rígido puede ser determinado de forma única por tres ángulos o grados de libertad (3DOF): \emph{pitch, roll y yaw}. La figura \ref{fig:ángulos}  se puede observar una representación de estos tres ángulos como rotaciones alrededor de sus ejes correspondientes. 
 
 Para facilitar la tarea de orientación los dispositivos móviles, sobre todo smartphones y tablets, están equipados una serie de sensores como:
+
 \begin{itemize}
 \item Sensores magneto-resistivos, o magnetómetros, que son utilizados como una ``brújula electrónica'' y se utilizan para determinar el \emph{yaw} y la dirección. Las nuevas generaciones de brújulas electrónicas utilizan tres ejes para asegurar una lectura correcta sin importar la inclinación del sensor.
- 
 \item Acelerómetros para medir la aceleración aceleración experimentada por un objeto con respecto a un marco de referencia. Los acelerómetros no pueden determinar el \emph{yaw}, pero pueden ser utilizados para determinar el \emph{pitch} y el \emph{roll}. 
 \item Giroscopios electrónicos que son utilizados para determinar los tres grados de libertad de orientación a la vez.
 \end{itemize}
 
 Un problema común en los sistemas de seguimiento visual es que los movimientos bruscos de la cámara pueden ocasionar que la imagen salga borrosa y verse afectado el seguimiento visual. Un dispositivo híbrido equipado con un giroscopio y un acelerómetro será capaz de determinar rápidamente y con precisión tres de los seis grados de libertad de la \emph{pose} y ayudar al sistema de seguimiento visual a recuperarse cuando se experimentan imágenes borrosas. 
 
-\paragraph{Fuentes de Vídeo}
+\subsection{Fuentes de Vídeo}
 La realidad aumentada superpone información sobre lo que el usuario está viendo. Para los sistemas dinámicos en los que la información virtual debe ser mezclada con la imagen real, se requiere un dispositivo de captura, como una cámara digital. Para los propósitos de las aplicaciones de realidad aumentada es preferible una cámara de vídeo. La mayoría de las aplicaciones utilizan una única cámara y se conocen como sistemas monoculares. También existen sistemas estereoscópicos, que  utilizan dos cámaras para determinar la profundidad.
 
 El desarrollo tecnológico en el ámbito de la captura de imagen digital que han mantenido los principales fabricantes en los últimos 10 años, conocido como la batalla del mega-píxel, ha supuesto un gran avance para disponer de sensores con una gran calidad de imagen y un coste reducido. Actualmente es normal encontrar cámaras de alta resolución en prácticamente todos los dispositivos móviles, permitiendo grabar vídeo en una resolución de 1920x1080 (FullHD) y obtener imágenes fijas de hasta 7136x5360px.
 
-\paragraph{Entrada táctil}
+\subsubsection{Entrada táctil}
 En sistemas de realidad aumentada portátiles tales como teléfonos inteligentes o tablets, la pantalla funciona al mismo tiempo como una entrada para manipular objetos directamente en la pantalla y un dispositivo de salida.
 
-\subsubsection{Fuente de datos}
+\subsection{Fuente de datos}
 Un sistema de realidad aumentada requiere una fuente de datos e información con la que aumentar la realidad de un usuario. La fuente de datos puede ser desde una base de datos directamente disponible en el sistema, o puede ser información agregada a partir de fuentes disponibles a través de una conexión de red. Actualmente existe un gran desarrollo para el uso de Internet como fuente de datos para aplicaciones de realidad aumentada. Aplicaciones como Wikitude y Layar son ejemplos de las sistemas que utilizan los datos disponibles en el Internet como fuente de datos.
 
-\subsubsection{Periféricos de retroalimentación de los usuarios}
-\paragraph{Dispositivos  de Visualización}
+\subsection{Periféricos de retroalimentación de los usuarios}
+\subsubsection{Dispositivos  de Visualización}
 Existen  muchos métodos y dispositivos para mostrar la información o imágenes generadas para su combinación y alineación con la realidad: 
 \begin{description}
 \item[Monitores y pantallas tradicionales]
@@ -96,13 +96,13 @@ Existen  muchos métodos y dispositivos para mostrar la información o imágenes
   Hoy en día el dispositivo portátil por excelencia es el smartphone. Es mínimamente invasivo, muy portable y ampliamente extendido. Según el informe de comScore \footnote{http://www.comscore.com/esl/Insights/Presentations-and-Whitepapers/2013/2013-Spain-Digital-Future-in-Focus} el 66\% de los españoles tienen un teléfono inteligente, por lo que son una gran alternativa para la visualización de aplicaciones de realidad aumentada.
 \end{description}
 
-\paragraph{Audio}
+\subsubsection{Audio}
 El audio se utiliza principalmente de dos formas diferentes en los sistemas de realidad aumentada: como una modalidad de la interfaz de usuario multimodal o para ofrecer una experiencia aural aumentada. 
 
 Por ejemplo, el usuario pueda ser capaz de dar comandos de voz y el sistema devuelva retroalimentación con señales de audio (pitidos). Este tipo de audio no direccional es trivial desde el punto de vista tecnológico aportando una nueva dimensión a las aplicaciones móviles. El audio aumentado puede servir a personas con discapacidad visual para ayudar a comprender el entorno. Mediante unos altavoces o un par de auriculares, es bastante simple proporcionar al usuario la información en forma de audio. La síntesis de voz también se puede utilizar para leer información, por ejemplo, leer palabras en voz alta desde un sistema de reconocimiento de texto.
 
-\subsubsection{Unidad de procesamiento}
-\paragraph{Dispositivos móviles: Smartphones,  tablets y SBCs (Single Board Computer)}
+\subsection{Unidad de procesamiento}
+\subsubsection{Dispositivos móviles: Smartphones,  tablets y SBCs (Single Board Computer)}
 
 El teléfono móvil ha evolucionado hacia una plataforma informática móvil (smartphone), en la que desarrollar las actividades habituales de un ordenador personal. El principal inconveniente de estos era la pantalla reducida que disponen (hasta 5”) lo que ha derivado en el desarrollo de un nuevo dispositivo denominado tablet. 
 
@@ -216,6 +216,205 @@ Los elementos que forman este modelo se definen de la siguiente forma:
 \item[Punto principal] Es el punto de intersección del eje principal con el plano imagen. Coincide con el centro de la imagen.
 \item[Plano principal] Es el plano paralelo al plano imagen y que contiene al centro de proyección. Además, este plano está formado por todos los puntos cuyas proyecciones se corresponden con puntos en el infinito en la imagen.
 \end{description}
+
+
+\subsection{¿Qué suposiciones hemos hecho hasta ahora?}
+
+Todas las ecuaciones que hemos derivado hasta el momento están escritas en los marcos de referencia de la cámara.
+
+Estas ecuaciones solo son válidas cuando:
+\begin{itemize}
+    \item (1) todas las distancias se miden en el marco de referencia de la cámara.
+    \item(2) las coordenadas de la imagen tienen su orígen en el punto principal.
+\end{itemize}
+
+  (imagen 1, ejes de coordenadas y plano)
+
+En general, el mundo y los sistemas de coordenadas píxel están relacionados por un conjunto de parámetros físicos como:
+\begin{itemize}
+     \item la longitud focal de las lentes
+     \item el tamaño de los píxeles
+     \item la posición del punto  principal
+     \item la posición y orientación de la cámara
+\end{itemize}
+\subsection{Tipos de parámetros (Trucco 2.4)}
+
+Hay dos tipos de parámetros que deben ser recuperados para poder reconstruir la estructura 3D de una escena, a partir de las coordenadas píxel de sus puntos de imagen:
+\begin{description}
+\item[Parámetros extrínsecos de la cámara:] Son los parámetros que definen la localización y orientación de los marcos de referencia de la cámara con respecto a el marco de referencia real.
+  \item[Parámetros intrínsecos de la cámara:] Son los parámetros necesarios para vincular las coordenadas de píxeles de un punto de una imagen con las coordenadas correspondientes en el marco de referencia de la cámara.
+  \end{description}
+  Coordenadas del objeto (3D)
+                                                   !
+                                       Coordenadas reales conociadas (3D)         parámetros extrínsecos de la cámara 
+(esquema)
+                                                   !
+                                       Coordenadas de la cámara (3D)
+                                                   !
+                                       Coordenadas de la imagen plana (2D)         parámetros intrínsecos de la cámara 
+                                                   !
+                                       Coordenadas píxel (2D, int)                                            
+
+\subsection{Parámetros extrínsecos de la cámara}
+
+Son parámetros que identifican de forma exclusiva la transformación entre el marco de referencia desconocido de la camra y el marco de referencia mundialmenteconocido.
+Comúnmente, la determinación de estos parámetros significa:
+\begin{itemize}
+   \item (1) encontrar el vector de translación entre las posiciones relativas al origen de dos marcos de referencia.
+   \item (2) encontrar la matriz de rotación que provocan los ejes correspondientes a los dos marcos alineados ( ej.: uno sobre otro)
+\end{itemize}
+
+(imagen 3, R,T)
+
+usando los parámetros extrínsecos de la cámara, podemos encontrar la relación entre las coordenadas de un punto $P$ en el mundo $\left(P_w\right)$ y las coodenadas de la cámara $\left(P_c\right)$:
+\begin{equation}
+		P_c=R\left(P_w-T\right)where R=\begin{pmatrix}
+ 		r_{11} & r_{12} & r_{13}\\ 
+ 		r_{21} & r_{22} & r_{23}\\ 
+ 		r_{31} & r_{32} & r_{33}
+ 		\end{pmatrix}
+\end{equation}
+
+Si $P_c=\begin{pmatrix}{X_c} \\ {Y_c} \\ {Z_c} \end{pmatrix}$ Y $P_w=\begin{pmatrix}{X_w} \\ {Y_w} \\ {Z_w} \end{pmatrix}$, entonces
+\begin{equation}
+  \begin{pmatrix} X_{c}\\ Y_{c}\\ z_{c}\end{pmatrix} =\begin{pmatrix}r_{11} & r_{12} & r_{13}\\r_{21} & r_{22} & r_{23}\\r_{31} & r_{32} & r_{33}
+  \end{pmatrix}\begin{pmatrix}X_{w} - T_{x}\\Y_{w} - T_{y}\\Z_{w} - T_{z}\end{pmatrix}
+\end{equation}
+o 
+\begin{equation}
+  X_c=R^{T}_1\left(P_w-T\right)\\ 
+  Y_c=R^{T}_2\left(P_w-T\right)\\ 
+  Z_c=R^{T}_3\left(P_w-T\right) 
+  \end{equation}
+donde $R^{T}_i$ corresponde a la fila $i-th$ de la matriz de rotación.
+
+\subsection{Parámetros intrínsecos de la cámara}
+
+Parametrizan las caracteristicas ópticas, geométricas y digitales propias de la cámara:
+\begin{itemize}
+   \item (1) la proyección en perspectiva (longitud focal {f})
+   \item (2) la tranformación entre las coordenadas del plano de la imagen y las coordenadas píxel.
+   \item (3) la distorsión geométrica introducida por las ópticas
+\end{itemize}
+
+\subsubsection{De las coordenadas de la cámara a las coordenadas del plano de la imagen}
+
+Aplicar proyección en perspectiva
+
+\begin{equation}
+x={f}\frac{X_c}{Zc}={f}\frac{R^T_1\left(P_w-T\right)}{R^T_3\left(P_w-T\right)},\
+y={f}\frac{Y_c}{Zc}={f}\frac{R^T_2\left(P_w-T\right)}{R^T_3\left(P_w-T\right)}
+\end{equation}
+\subsubsection{De las coordenadas del plano de la imagen a las coordenadas píxel}
+
+(imagen 4, camera frame)
+
+%\begin{equation}
+%x=-\left(x_{im}-0{x}\right)s_x ó x_{im}=-{\frac{x}{s_x}+0_x}
+
+%y=-\left(y_{im}-0{y}\right)s_y ó y_{im}=-{\frac{y}{s_y}+0_y}
+%\end{equation}
+
+donde $({0_x}, {0_y})$ son las coordenadas del punto principal (en píxeles, ej.: $0_{x}={\frac{N}{2}}, 0_{y}={\frac{M}{2}}$ si el punto principal esta en el centro de la imagen) y $S_x$, $S_y$ corresponden al tamaño efectivo de los píxeles en horizontal y vertical (en milimetros).
+
+Usando la notación de la matriz:
+\begin{equation}
+  \begin{pmatrix}x_{im}\\y_{im}\\1\end{pmatrix}=\begin{pmatrix}{\frac{-1}{S_x}} & 0 & 0\\0 & {\frac{-1}{S_y}} & 0_{y}\\0 & 0 & 1\end{pmatrix}\begin{pmatrix}x\\y\\1\end{pmatrix}
+\end{equation}
+\subsubsection{Relacionar coordenadas píxel en coordenadas reales}
+
+\begin{equation}
+-\left(x_{im}-0_x\right)s_x={f}\frac{R^T_1\left(P_{w}-T\right)}{R^T_3\left(P_{w}-T\right)},\ -\left(y_{im}-0_y\right)s_y={f}\frac{R^T_2\left(P_{w}-T\right)}{R^T_3\left(P_{w}-T\right)}
+\end{equation}
+ó
+\begin{equation}
+x_{im}=-fs_x\frac{R^T_1\left(P_{w}-T\right)}{R^T_3\left(P_{w}-T\right)}+o_x\ ,\ y_{im}=-fs_y\frac{R^T_1\left(P_{w}-T\right)}{R^T_3\left(P_{w}-T\right)}+0_y
+\end{equation}
+
+\subsubsection{Distorsión de la imagen debido a la óptica}
+
+Suponiendo distorsión radial:
+\begin{equation}
+  x=x_d\left(1+k_1r^2+k_2r^4\right)
+  y=y_d\left(1+k_1r^2+k_2r^4\right)
+\end{equation}
+donde $({X_d}, {y_d})$ son las coordenadas de los puntos de distorsión $(r^2=x_d^2+y_d^2)$. $
+{k_1}$ y ${k_2}$ son parámetros intrínsecos también pero no seran considerados aquí...
+
+\subsection{Combinación de parámetros extrínsecos e intrínsecos de la cámara}
+
+La matriz que contiene los parámetros intrínsecos de la cámara:
+\begin{equation}
+M_{in}=\begin{pmatrix}-\frac{f}{s_x} & 0 & 0_{x}\\0 & -\frac{f}{s_y} & o_y\\0 & 0 & 1\end{pmatrix}
+\end{equation}
+- La matriz que contiene los parámetros extrínsecos de la cámara:
+\begin{equation}
+M_{ex}=\begin{pmatrix}r_{11} & r_{12} & r_{13} & -R_1^TT\\r_{21} & r_{22} & r_{23} & -R_2^TT\\r_{31} & r_{32} & r_{33} & -R_3^TT\end{pmatrix}M_{ex}=\begin{pmatrix}r_{11} & r_{12} & r_{13} & -R_1^TT\\r_{21} & r_{22} & r_{23} & -R_2^TT\\r_{31} & r_{32} & r_{33} & -R_3^TT\end{pmatrix}
+\end{equation}
+
+Usar coordenadas homogéneas:
+\begin{equation}
+\begin{pmatrix}x_{h}\\y_{h}\\w \end{pmatrix}=M_{in}M_{ex}\begin{pmatrix}x_{w}\\y_{w}\\z_{w}\\1 \end{pmatrix}=M\begin{pmatrix}x_{w}\\y_{w}\\z_{w}\\1 \end{pmatrix}=\begin{pmatrix}m_{11} &m_{12} & m_{13} & m_{14}\\m_{21} & m_{22} & m_{23} & m_{24}\\m_{31} & m_{32} & m_{33} & m_{34}\\m_{41} & m_{42} & m_{43} & m_{44}\end{pmatrix}\begin{pmatrix}x_{w}\\y_{w}\\z_{w}\\1 \end{pmatrix}
+\end{equation}
+
+La homogeneización es necesaria pra obtener las coordenadas píxel:
+\begin{equation}
+x_{im}=\frac{x_h}{w}=\frac{m_{11}X_w+m_{12}Y_w+m_{13}Z-w+m_{14}}{m_{31}X_w+m_{32}Y_w+m_{33}Z-w+m_{34}}
+y_{im}=\frac{y_h}{w}=\frac{m_{21}X_w+m_{22}Y_w+m_{23}Z-w+m_{24}}{m_{31}X_w+m_{32}Y_w+m_{33}Z-w+m_{34}}
+\end{equation}
+
+Llamamos M a la proyección de la matriz (es una matriz 3x4)
+
+Nota: la relación de los puntos 3D y sus proyecciones 2D pueden ser vistas como una transformación lineal de la proyección espacial $({X_w}, {Y_w}, {Z_x}, 1)^T$ a la proyección del plano $({X_h}, {Y_h}, w)^T$.
+
+\subsection{El modelo de la perspectiva de la cámara (usando la matriz de notación)}
+
+Suponiendo  $O_x=O_y=0$ y $S_x=S_y=1$
+\begin{equation}
+M_p=\begin{pmatrix}-fr_{11} & -fr_{12} & -fr_{13} & -fr_{14}\\-fr_{21} & -fr_{22} & -fr_{23} & -fr_{24}\\ -fr_{31} & -fr_{32} & -fr_{33} & -fr_{34}\end{pmatrix}
+\end{equation}
+
+Vamos a verificar la corrección de la matriz anterior:
+
+%\begin{equation}
+%p=Mr_1^T_pPw=\begin{pmatrix}-fR_1^T & fR_1^TT \\-fR_2^T & fR_2^TT \\R_3^T & -R_3^TT\end{pmatrix}\begin{pmatrix}PW\\1\end{pmatrix}=\begin{pmatrix}-fR_1^T\left(P_w-T\right)\\ -fR_2^T\left(P_w-T\right)\\R_3^T\left(P_w-T\right)\end{pmatrix}
+%\end{equation}
+
+Después homogeneización:
+\begin{equation}
+x=-f\frac{R_1^T\left(P_w-T\right)}{R_3^T\left(P_w-T\right)}
+y=-f\frac{R_2^T\left(P_w-T\right)}{R_3^T\left(P_w-T\right)}
+\end{equation}
+
+\subsection{El modelo de la cámara perspectiva débil(usando la matriz de notación)}
+
+\begin{equation}
+M_{wp}=\begin{pmatrix}-fr_{11} & -fr_{12} & -fr_{13} & fR_1^TT\\-fr_{21} & -fr_{22} & -fr_{23} & fR_2^TT\\0 & 0 & 0 & R_3^T\left(\overline{P}-T\right) \end{pmatrix}
+\end{equation}
+donde $\overline{P}$ es el centro  del objeto (es decir, la distancia promedio del objetivo desde la cámara)
+
+Nosotros podemos verificar las correcciones de la matriz anterior:
+\begin{equation}
+p=M_{wp}P_w=\begin{pmatrix} -fR_1^T  & fR_1^T \\-fR_2^T & fR_2^T \\0  0  0  & R_3^T\left(P-T\right)\end{pmatrix}\begin{pmatrix}P_w \\1 \end{pmatrix}=\begin{pmatrix} -fR_1^T\left(P_w-T\right)  \\-fR_2^T\left(P_w-T\right) \\R_3^T\left(P-T\right)\end{pmatrix}
+\end{equation}
+Después de la homogeneización:
+\begin{equation}
+x=-f\frac{R_1^T\left(P_w-T\right)}{R_3^T\left(\overline{P}_w-T\right)}
+y=-f\frac{R_2^T\left(P_w-T\right)}{R_3^T\left(\overline{P}_w-T\right)}
+\end{equation}
+
+\subsection{El modelo de cámara afín}
+\begin{itemize}
+\item Las entradas de la matriz de proyección carecen de restricciones:
+  
+  $M_a=\begin{pmatrix}a_{11} & a_{12} & a_{13} & a_{14}\\a_{21} & a_{22} & a_{23} & a_{24}\\0 & 0 & 0 & a_{34}\end{pmatrix}$
+  
+\item El modelo afín no parece corresponder a ninguna cámara física.
+
+\item Conduce a ecuaciones simples y propiedades geométricas recurrentes.
+
+\item No conserva los ángulos pero conserva el paralelismo.
+\end{itemize}
 
 \subsection{Matriz de proyección}
 El modelo \emph{pinhole} fija un sistema de coordenadas proyectivas en el centro óptico. El eje $Z$ de este sistema coincide con el eje principal de la cámara. A partir de ahora nos referiremos a este sistema de coordenadas como sistema de referencia de la cámara. Además, el plano imagen se fija en el plano $Z = f$.
@@ -581,6 +780,7 @@ Al mismo tiempo se realiza la suma de los valores absolutos de las respuestas $|
 y por lo tanto, englobando las 4x4 subregiones, resulta un descriptor SURF con una longitud de 64 valores para cada uno de los puntos de interés identificados.
 
 \begin{figure}
+  \centering
   \includegraphics[width=0.5\textwidth]{SURF2.png}
   \caption{Respuestas de Haar en las sub-regiones alrededor del punto de interés. (Bay)}
   \label{fig:surf2}
