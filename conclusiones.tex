@@ -13,7 +13,7 @@ Por tanto, el objetivo principal queda satisfecho, como así ocurre también con
 \subsection{Captura y preprocesado de imágenes}
 El sistema cuenta con un módulo capaz de obtener imágenes de los distintos tipos de cámaras que se le pueden acoplar, ofreciendo una interfaz común, a pesar de disponer de drivers y APIs diferentes. Se ha provisto de los filtros necesarios para el tratamiento de las imágenes, contando con funciones de escalado, umbralización, detección de bordes y detección de características.
 
-Para el calculo de los parámetros intrínsecos y extrínsecos tanto de la cámara como del proyector, se ha desarrollado una aplicación externa que permite un calibrado rápido y sencillo del sistema, mediante un patrón de tipo tablero de ajedrez, cada vez que sea necesario. Una vez realizada la calibración, obtenemos tres ficheros XML que son lo necesarios para poder realizar los cálculos de registro en el prototipo. 
+Para el cálculo de los parámetros intrínsecos y extrínsecos tanto de la cámara como del proyector, se ha desarrollado una aplicación externa que permite un calibrado rápido y sencillo del sistema, mediante un patrón de tipo tablero de ajedrez, cada vez que sea necesario. Una vez realizada la calibración, obtenemos tres ficheros XML que son lo necesarios para poder realizar los cálculos de registro en el prototipo. 
 
 \subsection{Sistema de identificación de documentos}
 La identificación de documentos en GrayAR se ha realizado mediante un algoritmo de recuperación de imágenes basado en descriptores y comparará el documento que está siendo analizado con una base de datos de documentos conocidos por el sistema.
@@ -34,7 +34,7 @@ GrayAR proporciona toda la información necesaria al sistema de representación 
 Para complementar a la representación visual, se ha añadido a la Raspberry Pi un amplificador de audio LM386 montado sobre una placa de test con un altavoz de 1W, que hace las funciones de ``tarjeta de sonido'', permitiendo la reproducción de avisos, alertas o lecturas de texto para aquellas personas que necesiten de amplificación auditiva para la utilización del sistema.
   
 \subsection{Se debe basar en componentes de bajo coste}
-Para la construcción del prototipo se han seleccionado aquellos componentes, que dentro unas prestaciones mínimas requeridas, fuesen lo mas económicos posibles. El coste final (ver Sección 4.4) es muy reducido respecto a otros sistemas que puedan realizan funciones parecidas. El proyector, la parte más cara del sistema con un valor de 325\euro, lo podemos considerar económico, teniendo en cuenta que el precio medio de otros modelos es de 1000\euro.
+Para la construcción del prototipo se han seleccionado aquellos componentes, que dentro de unas prestaciones mínimas requeridas, fuesen lo mas económicos posibles. El coste final (ver Sección 4.4) es muy reducido respecto a otros sistemas que puedan realizan funciones parecidas. El proyector, la parte más cara del sistema con un valor de 325\euro, lo podemos considerar económico, teniendo en cuenta que el precio medio de otros modelos es de 1000\euro.
 
 Respecto al software empleado, todos los recursos y bibliotecas utilizadas son de licencia libre, y por tanto no están sujetos a pagos de licencias. 
 
@@ -57,21 +57,21 @@ Estos métodos proporcionan robustez al proceso de tracking, ya que permite segu
 
 Para la implementación de esta mejora, habría que valorar, además, el tiempo para analizar ambos enfoques y determinar cual de ellos se adapta mejor a las características de su desplazamiento por la zona de proyección. 
 
-\subsection{Detección de paginas de texto mediante LLAH o similares}
+\subsection{Detección de páginas de texto mediante LLAH o similares}
 La implementación actual de detección de documentos en GrayAR está basado en la búsqueda de coincidencias de características locales, ya que estos métodos obtienen mayor precisión de acierto en la detección de documentos con información semiestructurada, como es el caso de facturas o formularios. 
 
 Sería interesante, como ampliación al sistema de detección, que se pudiesen reconocer documentos con alto contenido textual sin una estructura predeterminada de antemano. Para ello, es necesario la implementación de algún algoritmo de detección basado en las características inherentes de la estructura del documento y el texto que contiene. 
 
-LLAH \cite{Nakai} tiene una alta escalabilidad y el esquema de indexación y recuperación empleado es extremadamente rápido. Los autores han confirmado que LLAH tiene una tasa de acierto del 99\% y con un tiempo de procesamiento de 50 más en una base de datos de 20 millones de páginas. 
+LLAH \cite{Nakai} tiene una alta escalabilidad y el esquema de indexación y recuperación empleado es extremadamente rápido. Los autores han confirmado que LLAH tiene una tasa de acierto del 99\% y con un tiempo de procesamiento de 50 ms en una base de datos de 20 millones de páginas. 
 
 Existen varias implementaciones optimizadas sobre LLAH para salvar las limitaciones iniciales del algoritmo. Sería un trabajo futuro la tarea de buscar sólo las publicaciones que se hayan hecho sobre LLAH e intentar crear una implementación conjunta con todas las optimizaciones.
 
 \subsection{Estimación inteligente de parámetros en algoritmos de filtrado según la iluminación existente}
 Los algoritmos de filtrado (suavizado de imágenes, detección de bordes,...) se definen a través de parámetros que determinan su comportamiento y el resultado de la imagen obtenida. Normalmente se determinan por decisión humana y permanecen estáticos durante toda la ejecución del programa. Elegidos en función de los mejores resultados obtenidos en unas circunstancias determinadas, las variaciones en la iluminación de la escena provocan que un parámetro que en un principio se pudo considerar óptimo, al instante no sea válido. También nos encontramos el caso de que exista un rango de valores que nos satisfagan.
 
-Se propone por tanto la creación de un sistema mediante técnicas de softcomputing que analice la escena actual y determine que valores son los mas adecuados para obtener un resultado conocido o esperado, en una serie de filtros utilizados en GrayAR.
+Se propone por tanto la creación de un sistema mediante técnicas de softcomputing que analice la escena actual y determine qué valores son los más adecuados para obtener un resultado conocido o esperado, en una serie de filtros utilizados en GrayAR.
 
-Las ventajas de realizar esta implementación, proporcionaría que los métodos de detección fuesen mas robustos y tolerantes a los cambios de iluminación que se puedan producir durante la utilización del sistema.    
+Las ventajas de realizar esta implementación proporcionaría, que los métodos de detección fuesen más robustos y tolerantes a los cambios de iluminación que se puedan producir durante la utilización del sistema.    
 
 \subsection{Calibrado del sistema cámara-proyector mediante luz estructurada:} 
 Otra técnica para el calibrado de proyectores es el propuesto por Daniel Moreno y Gabriel Taubin, basado luz estructurada, en el paper \textit{``Simple, Accurate, and Robust Projector-Camera Calibration''}. 

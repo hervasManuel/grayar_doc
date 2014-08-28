@@ -1,3 +1,39 @@
 \chapter{Manual de calibración}
 
+
+
+
+El proceso de calibrado del sistema se ha creado como una utilidad independiente del sistema principal de ARgos. Una vez calibrado el sistema, la aplicación proporciona los ficheros XML, con los parametros intrinsecos y extrinsecos, que necesita ARgos para el calculo del registro..
+
+
+El proceso de calibrado de la cámara esta basado esencialmente por el enfoque de [Zhang, 1999]. Se utiliza un patron tipo tablero de ajedrez, en la que se alternan cuadrados blancos y negros, de dimensiones conocidas. El patron se imprime y se pega sobre una superficie plana rígida. Se debe dejar una zona despejada a continuación del tablero de ajedrez, ya que en esta zona se proyectará el patrón que utiliza el proyector para su calibrado.  
+
+A continuación, colocamos la superficie bajo la cámara, en distintas orientaciones y distancias, para obtener una serie de imágenes en los que se encuentre visible el patrón.
+
+Cuando el proceso disponga de al menos 20 imagenes válidas, realizará los calculos para obtener los parametros instrinsecos de cámara y los grabará en el fichero \texttt{calibrationCamera.xml}
+
+El siguiente paso consiste en calibrar el proyector. Se proyecta un patron de circulos asimetrico, primero en una posición fija. Colocar la superficie
+
+
+
+ La cámara se utiliza para calcular la posición 3D de los círculos proyectados, primero según el sistema de coordenadas de la camara, y luego segun el sistema de coordenadas del patron proyectado. Con esto parametros se calculan los parametros instrinsecos del proyector porque tiene puntos 3D (los círculos proyectados) en coordenadas reales, y sus respectivas proyecciones en el plano de imagen del proyector. El procedimiento de cálculo de homografiás es el mismo que para las cámaras, ya que el modelo matématico del proyector, es el de una cámara invertida. 
+
+
+
+Se realiza el cálculo de las homografías entre el patrón y sus imágenes. Estas transformaciones proyectivas 2D producen un sistema de ecuaciones lineales que al resolverse obtiene los parámetros de la cámara. Esta fase generalmente es seguida por una etapa de refinamiento no lineal, basado en la minimización del error total de reproyección.
+
+
+
+Aunque la cámara y el proyector podrían ser calibrados de forma simultánea, es mejor comenzar primero por calibrar la cámara.
+
+
+
+
+
+Mientras que la cámara y el proyector mantengan su posición y rotacion entre ellos, no es necesario realizar una nueva calibración y es posible mover todo el sistema.
+
+
+En principio, cualquier objeto caracterizado apropiadamente podría ser utilizado para la calibración. Existen otros métodos que basan sus referencias en objetos tridimensionales (por ejemplo, una caja cubierta con marcadores).  
+La pricipal ventaja de la utilización de patrones planos, y que ha sido decisiva en la decisión del algoritmo a utilizar, es que son mucho más fáciles de tratar; resulta mucho más complicada la construcción y distribución de objetos 3D precisos para realizar una calibración.
+
 \blindtext
