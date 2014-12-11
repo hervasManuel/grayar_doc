@@ -417,6 +417,7 @@ y=-f\frac{R_2^T\left(P_w-T\right)}{R_3^T\left(\overline{P}_w-T\right)}
 \end{itemize}
 
 \subsection{Matriz de proyección}
+
 El modelo \emph{pinhole} fija un sistema de coordenadas proyectivas en el centro óptico. El eje $Z$ de este sistema coincide con el eje principal de la cámara. A partir de ahora nos referiremos a este sistema de coordenadas como sistema de referencia de la cámara. Además, el plano imagen se fija en el plano $Z = f$.
 Definiendo la siguinte notación que se va a seguir:
 \begin{itemize}
@@ -462,6 +463,77 @@ donde:
 \item $\overline{x}$  es el vector columna, de dimensión 3, que representan las coordenadas homogéneas del punto de la imagen.
 \item A la matriz $P$ de se la denomina \textbf{matriz homogénea de proyección de la cámara}.
 \end{itemize}
+
+\subsection{Distorsión}
+Para la distorsión, OpenCV tiene en cuenta los factores radiales y tangenciales. La distorsión radial, consiste en el desplazamiento de los píxeles de de la imagen, de tal modo que las líneas situadas en los extremos del encuadre aparentarán salir hacia el exterior o el interior.   
+
+Para la correción de la distorsión radial de las coordenadas de un pixel de la imagen, se utiliza la siguiente fórmula:
+
+\begin{equation}
+ x_{corrected} = x(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)  
+ y_{corrected} = y(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)
+\end{equation}
+
+La distorsión tangencial se produce porque la lente no se encuentra perfectamente paralela al plano de imagen. Se puede corregir a través de las siguientes fórmulas:
+
+\begin{equation}
+   x_{corrected} = x + [ 2p_1xy + p_2(r^2+2x^2)] \\
+   y_{corrected} = y + [ p_1(r^2+ 2y^2)+ 2p_2xy]
+ \end{equation}
+
+Así que tenemos cinco parámetros de distorsión que son representados en OpenCV  como una matriz fila con 5 columnas: 
+
+\begin{equation}
+  Distortion_{coefficients} = [k_1 \hspace{10pt} k_2 \hspace{10pt} p_1 \hspace{10pt} p_2 \hspace{10pt} k_3]
+\end{equation}
+
+Ahora, para la conversión de unidades se utiliza la siguiente fórmula:
+
+Now for the unit conversion we use the following formula:
+
+\begin{equation}
+  \left[  \begin{matrix}   x \\   y \\  w \end{matrix} \right ] = \left [ \begin{matrix}   f_x & 0 & c_x \\  0 & f_y & c_y \\   0 & 0 & 1 \end{matrix} \right ] \left [ \begin{matrix}  X \\  Y \\   Z \end{matrix} \right ]
+\end{equation}
+
+%Aquí la presencia de w se explica por el uso de homografía sistema de coordenadas (y w = Z ). Los parámetros desconocidos son f_x y f_y (Cámara longitudes focales) y (C_x, c_y) que son los centros ópticos expresadas en píxeles coordenadas. Si para ambos ejes una longitud focal común se utiliza con un dado un relación de aspecto (por lo general 1), entonces f_y = f_x * a y en la fórmula superior tendremos una sola longitud focal F . La matriz que contiene estos cuatro parámetros se conoce como la matriz de cámara. Mientras que los coeficientes de distorsión son los mismos independientemente de las resoluciones de cámara utilizados, éstos deben ampliarse junto con la resolución actual de la resolución calibrada.
+
+
+Here the presence of $w$ is explained by the use of homography coordinate system (and $w=Z$). The unknown parameters are $f_x$ and $f_y$ (camera focal lengths) and $(c_x, c_y)$ which are the optical centers expressed in pixels coordinates. If for both axes a common focal length is used with a given $a$ aspect ratio (usually 1), then $f_y=f_x*a$ and in the upper formula we will have a single focal length $f$. The matrix containing these four parameters is referred to as the \emph{camera matrix}. While the distortion coefficients are the same regardless of the camera resolutions used, these should be scaled along with the current resolution from the calibrated resolution.
+
+The process of determining these two matrices is the calibration. Calculation of these parameters is done through basic geometrical equations. The equations used depend on the chosen calibrating objects. Currently OpenCV supports three types of objects for calibration:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \subsection{Modelado del proyector}
 Un proyector de luz puede considerarse como una cámara inversa, en el sentido de que proyecta en vez de recoger luz. No obstante el hecho de poder aplicar un modelo pin-hole a un proyector no parece tan evidente como en el caso de una cámara. 
