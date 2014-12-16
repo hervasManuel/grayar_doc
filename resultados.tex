@@ -10,22 +10,22 @@ de diseño y terminando con los detalles de implementación.
 El módulo de captura de vídeo se encarga de crear y proporcionar fuentes de vídeo de diversa naturaleza para dar soporte al submódulo de registro (ver Sección 5.5), y al submódulo de representación 2D (ver Sección 5.3.4).
 Es capaz de dar soporte multicámara. Se pueden crear tantas fuentes de vídeo como se disponga en el sistema, que será de alguno de los siguientes tipos: 
 \begin{itemize}
-\item RaspiCam: Para un redimiento óptimo en la raspberry pi, al menos la cámara principal debería ser de este tipo.
+\item RaspiCam: Para un rendimiento óptimo en la raspberry pi, al menos la cámara principal debería ser de este tipo.
 \item Cámara USB: En caso de no disponer de una raspicam o si se quieren incluir cámara adicionales para obtener capturas desde otra posición (videoconferencia,...).
 \end{itemize}
 
-El submódulo de vídeo se implementa en dos componentes: el VideoFactory, que proporciona la interfaz de creación y gestión de fuentes de vídeo, y el VideoSource, que implementa una única fuente de vídeo basáda en la biblioteca de visión artificial OpenCV.
+El submódulo de vídeo se implementa en dos componentes: el VideoFactory, que proporciona la interfaz de creación y gestión de fuentes de vídeo, y el VideoSource, que implementa una única fuente de vídeo basada en la biblioteca de visión artificial OpenCV.
 
 OpenCV utiliza la clase cv::VideoCapture como abstracción de las de fuentes de vídeo a las que da soporte.
 Para la realización de este proyecto se ha compilado una versión de OpenCV con soporte de archivos de vídeo basado en FFMPEG y con soporte de dispositivos de vídeo basado en Video4Linux 2. Así, la idea inicial de utilizar OpenCV para encapsular el acceso a cualquier tipo de fuente de vídeo 
 
 \subsection{Biblioteca RaspiCam}
 La raspicam no es compatible con \emph{video4linux} y se debe utilizar la API MMAL (Multi-Media Abstraction Layer) sobre OpenMAX, para acceder a los datos de la cámara y transferirlos a la pantalla o codificarlo como imágenes o vídeos.
-El grupo de investigación "Aplicaciones de la Visión Artificial" de la Universidad de Córdoba ha liberado una biblioteca en C++, que haciendo uso de la API anterior, porporciona una interfaz sencilla, sin necesidad de dependencias y compatible con los objetos de OpenCV.
+El grupo de investigación "Aplicaciones de la Visión Artificial" de la Universidad de Córdoba ha liberado una biblioteca en C++, que haciendo uso de la API anterior, proporciona una interfaz sencilla, sin necesidad de dependencias y compatible con los objetos de OpenCV.
 
-El rendimiento que ofrece en el uso de la cámara es de hasta 30 fps para los modos YUV420, RGB y en escala de grises con imágenes de hasta 1280x960 pixeles. En modo BGR y con un tamaño de 1280x960 el rendimiento cae hasta los 14 fps, ya que el proceso de conversión del espacio de color consume bastantes recursos. 
+El rendimiento que ofrece en el uso de la cámara es de hasta 30 fps para los modos YUV420, RGB y en escala de grises con imágenes de hasta 1280x960 píxeles. En modo BGR y con un tamaño de 1280x960 el rendimiento cae hasta los 14 fps, ya que el proceso de conversión del espacio de color consume bastantes recursos. 
 
-Por defecto, cuando se utiliza esta biblioteca con OpenCV las imágenes obtenidas estan en el espacio de color BGR, con lo que el desempeño es menor. Al utilizar una arquitectura cliente-servidor, se decide que la tarea de conversión sea delegada, y sea el servidor el encargado de cambiar al espacio de color de OpenCV cuando la imagen es recibida.
+Por defecto, cuando se utiliza esta biblioteca con OpenCV las imágenes obtenidas están en el espacio de color BGR, con lo que el desempeño es menor. Al utilizar una arquitectura cliente-servidor, se decide que la tarea de conversión sea delegada, y sea el servidor el encargado de cambiar al espacio de color de OpenCV cuando la imagen es recibida.
 
 \subsection{Patrones utilizados}
 El diseño de este subsistema corresponde con el patrón «factoría abstracta» [GHJV95], donde VideoCapture desempeña el papel de fábrica abstracta, VideoCaptureUEye y VideoCaptureOpenCV de fábricas concretas, y VideoFile y VideoDevice harían de productos.
@@ -35,19 +35,19 @@ La instanciación de un VideoCapture se realiza con una fachada (patrón facade)
 
 
 \section{Módulo de calibración}
-Como ya se explicó en el capitulo \ref{chap:antecedentes}, los objetivos de realizar el proceso de calibración son la estimación de los parámetros intrínsecos y extrínsecos de la cámara. Los parámetros intrínsecos se refieren a las características internas de la cámara, como por ejemplo, su distancia focal, distorsión, y el centro de la imagen. Los parámetros extrínsecos describen su posición y orientación dentro de un espacio de refencia. Conocer los parámetros intrínsecos es un primer paso esencial, ya que permite calcular la estructura de la escena en el espacio euclideo y elimina la distorsión de lentes, la cual afecta a la precisión.
+Como ya se explicó en el capitulo \ref{chap:antecedentes}, los objetivos de realizar el proceso de calibración son la estimación de los parámetros intrínsecos y extrínsecos de la cámara. Los parámetros intrínsecos se refieren a las características internas de la cámara, como por ejemplo, su distancia focal, distorsión, y el centro de la imagen. Los parámetros extrínsecos describen su posición y orientación dentro de un espacio de referencia. Conocer los parámetros intrínsecos es un primer paso esencial, ya que permite calcular la estructura de la escena en el espacio euclídeo y elimina la distorsión de lentes, la cual afecta a la precisión.
 
 Para ubicar objetos en el mundo real, establecemos un sistema de referencia, denominado sistema de referencia global. Un objeto en una imagen es medido en términos de coordenadas de píxeles, los cuales están en el sistema de referencia de la imagen. El sólo conocer la distancia en píxeles entre puntos en una imagen, no nos permite determinar la distancia correspondiente a los mismos puntos en el mundo real. Por lo tanto, es necesario establecer las ecuaciones que unan el sistema de referencia global con el sistema de referencia de la imagen, de manera de establecer la relación entre los puntos en coordenadas en el espacio 3D y los puntos en coordenadas de imagen 2D. 
 
 Desafortunadamente, no se puede establecer esta relación directamente, haciéndose necesario establecer un sistema de referencia intermedio, llamado sistema de referencia de la cámara. Por lo tanto, se deben encontrar las ecuaciones que unan el sistema de referencia de la cámara con el sistema de referencia de la imagen, y las ecuaciones que unan el sistema  de referencia del global con el sistema de referencia de la cámara. Al resolver el sistema de ecuaciones generado se obtiene la relación buscada.
 
-Básicamente, el proceso consiste en obtener una serie de imágenes en los que se encuentre visible un patrón plano (de dimensiones conocidas), con distintas orientaciones y distancias de la cámara. De cada patron encontrado en las imágenes obtenemos una ecuación de homografía que establece la relación entre los puntos en coordenadas en el espacio 3D y los puntos en coordenadas de imagen 2D. Aunque en teoria con dos imágenes sería suficiente para la resolución mediante un sistema lineal de ecuaciones, el objetivo es obtener el mayor número de ellas, ya que en la práctica existe gran cantidad de ruido en las imágenes adquiridas. Se recomienda por tanto, para obtener buenos resultados, al menos 10 imágenes correctas del patrón en diferentes posiciones.
+Básicamente, el proceso consiste en obtener una serie de imágenes en los que se encuentre visible un patrón plano (de dimensiones conocidas), con distintas orientaciones y distancias de la cámara. De cada patrón encontrado en las imágenes obtenemos una ecuación de homografía que establece la relación entre los puntos en coordenadas en el espacio 3D y los puntos en coordenadas de imagen 2D. Aunque en teoría con dos imágenes sería suficiente para la resolución mediante un sistema lineal de ecuaciones, el objetivo es obtener el mayor número de ellas, ya que en la práctica existe gran cantidad de ruido en las imágenes adquiridas. Se recomienda por tanto, para obtener buenos resultados, al menos 10 imágenes correctas del patrón en diferentes posiciones.
 
 Como soporte al cálculo de los parámetros, OpenCV proporciona tres tipos de patrones para la calibración:
 
 \begin{itemize}
 \item Tablero de ajedrez
-\item Ditribución de círculos simétrica
+\item Distribución de círculos simétrica
 \item Distribución de círculos asimétrica 
 \end{itemize}
 
@@ -56,27 +56,27 @@ En principio, cualquier objeto caracterizado apropiadamente podría ser utilizad
 La principal ventaja de la utilización de patrones planos frente a otras técnicas es su flexibilidad. No necesita de una preparación exhaustiva de la escena, ni es necesario conocer las posiciones de los mismos. También resulta mucho más complicada la construcción y distribución de objetos 3D precisos para realizar una calibración.
 
 \subsection{Descripción general del calibrado de GrayAR}
-El proceso de calibrado de la cámara esta basado esencialmente por el enfoque de Zhang [cita Zhang]. Se utiliza un patron tipo tablero de ajedrez, en la que se alternan cuadrados blancos y negros, de dimensiones conocidas. El patron se imprime y se pega sobre una superficie plana rígida. A continuación se obtiene una serie de imágenes en los que se encuentre visible el patrón desde varias posiciones. 
+El proceso de calibrado de la cámara esta basado esencialmente por el enfoque de Zhang [cita Zhang]. Se utiliza un patrón tipo tablero de ajedrez, en la que se alternan cuadrados blancos y negros, de dimensiones conocidas. El patrón se imprime y se pega sobre una superficie plana rígida. A continuación se obtiene una serie de imágenes en los que se encuentre visible el patrón desde varias posiciones. 
 
 Se realiza el cálculo de las homografías entre el patrón y sus imágenes. Estas transformaciones proyectivas 2D producen un sistema de ecuaciones lineales que al resolverse obtiene los parámetros de la cámara. Esta fase generalmente es seguida por una etapa de refinamiento no lineal, basado en la minimización del error total de reproyección.
 
-Se ha creado como una utilidad a parte del proceso principal. Ya que una vez calibrado el sistema, genera unos ficheros XML con los parametros intrinsecos y extrinsecos que se cargan en el proyecto. Mientras que la cámara y el proyector mantengan su posición y rotacion entre ellos, no es necesario realizar una nueva calibración y es posible mover todo el sistema.
+Se ha creado como una utilidad a parte del proceso principal, ya que una vez calibrado el sistema, genera unos ficheros XML con los parámetros intrínsecos y extrínsecos que se cargan en el proyecto. Mientras que la cámara y el proyector mantengan su posición y rotación entre ellos, no es necesario realizar una nueva calibración y es posible mover todo el sistema.
 
-El módulo implementado está basado en un plugin para openFrameworks que han realizado Alvaro Cassinelli, Niklas Bergström y Cyril Diagne a partir de un complemento desarrollado por Kyle McDonald. Es capaz de calibrar cámaras y proyectores, consigiendo los parametros intrínsecos de ambos, además de los extrinsecos en cuestión de varios minutos. 
+El módulo implementado está basado en un plugin para openFrameworks que han realizado Álvaro Cassinelli, Niklas Bergström y Cyril Diagne a partir de un complemento desarrollado por Kyle McDonald. Es capaz de calibrar cámaras y proyectores, consiguiendo los parámetros intrínsecos de ambos, además de los extrínsecos en cuestión de varios minutos. 
 
 El proceso de calibrado está divido en 4 fases:
 
 \begin{itemize}
-\item\textbf{Calibrado de la cámara. } Aunque la cámara y el proyector podrían ser calibrados de forma simultánea, es mejor comenzar primero por calibrar la cámara. Siguendo en método de Zhang, los parametros intrísecos de la cámara se calculan encontrando las coordenadas, en el plano de imagen, de las esquinas de los cuadrados de un patrón de calibración para cada una de las orientaciones capturadas.
+\item\textbf{Calibrado de la cámara. } Aunque la cámara y el proyector podrían ser calibrados de forma simultánea, es mejor comenzar primero por calibrar la cámara. Siguiendo en método de Zhang, los parámetros intrínsecos de la cámara se calculan encontrando las coordenadas, en el plano de imagen, de las esquinas de los cuadrados de un patrón de calibración para cada una de las orientaciones capturadas.
 
-\item\textbf{Calibración del proyector. } El sistema proyecta un patron de circulos asimetrico en una posición fija. La cámara se utiliza para calcular la posición 3D de los círculos proyectados, primero según el sistema de coordenadas de la camara, y luego segun el sistema de coordenadas del patron proyectado. Con esto parametros se calculan los parametros instrinsecos del proyector porque tiene puntos 3D (los círculos proyectados) en coordenadas reales, y sus respectivas proyecciones en el plano de imagen del proyector. El procedimiento de cálculo de homografiás es el mismo que para las cámaras, ya que el modelo matématico del proyector, es el de una cámara invertida. 
+\item\textbf{Calibración del proyector. } El sistema proyecta un patrón de círculos asimétrico en una posición fija. La cámara se utiliza para calcular la posición 3D de los círculos proyectados, primero según el sistema de coordenadas de la cámara, y luego según el sistema de coordenadas del patrón proyectado. Con esto parámetros se calculan los parámetros intrínsecos del proyector porque tiene puntos 3D (los círculos proyectados) en coordenadas reales, y sus respectivas proyecciones en el plano de imagen del proyector. El procedimiento de cálculo de homografías es el mismo que para las cámaras, ya que el modelo matemático del proyector, es el de una cámara invertida. 
 
-\item\textbf{Calibración del sistema estereo (cámara-proyector). } Una vez que tengamos un buen error reproyección suficiente (para el proyector), podemos empezar a mover los puntos proyectados en torno a fin de explorar mejor el espacio (y obtener una mejor y más precisa calibración). En esta fase, podemos ejecutar la calibración estéreo OpenCV para obtener los parámetros extrínsecos cámara-proyector y otra vez, que no tenga que volver a calcular los instrinics del proyector. Después de unos pocos ciclos (y limpieza de malas "tablas"), el proceso converge, los datos se guardan.
+\item\textbf{Calibración del sistema estéreo (cámara-proyector). } Una vez que tengamos un buen error reproyección suficiente (para el proyector), podemos empezar a mover los puntos proyectados en torno a fin de explorar mejor el espacio (y obtener una mejor y más precisa calibración). En esta fase, podemos ejecutar la calibración estéreo OpenCV para obtener los parámetros extrínsecos cámara-proyector y otra vez, que no tenga que volver a calcular los instrinics del proyector. Después de unos pocos ciclos (y limpieza de malas "tablas"), el proceso converge, los datos se guardan.
 
-\item\textbf{Verificación del calibrado. } Una vez se han obtenido todos los parametros de calibrado del sistema, se inicia una fase de test para comprobar la fiabilidad del calibrado realizado. Utilizando el patron de tablero de ajedrez, el sistema proyectará, de forma dinámica, 4 círculos situados en las respectivas esquinas del patrón. Si el proceso se ha relizado correctamente y con un error de reproyección contenido, las proyecciones deben coincidir con las esquinas y realizar un desplazamiento acorde, según movamos el patrón dentro de la zona de proyección 
+\item\textbf{Verificación del calibrado. } Una vez se han obtenido todos los parámetros de calibrado del sistema, se inicia una fase de test para comprobar la fiabilidad del calibrado realizado. Utilizando el patrón de tablero de ajedrez, el sistema proyectará, de forma dinámica, 4 círculos situados en las respectivas esquinas del patrón. Si el proceso se ha realizado correctamente y con un error de reproyección contenido, las proyecciones deben coincidir con las esquinas y realizar un desplazamiento acorde, según movamos el patrón dentro de la zona de proyección 
 \end{itemize}
 
-La decisión de separar el proceso, permite iniciarlo en cualquiera de las fases descritas. Podremos por tanto, calibrar solo la cámara, o partiendo de una calibración previa de la cámara cálcular los parametros del proyector o simplemente validar una calibración anterior, iniciando el proceso en la fase de verificación.  
+La decisión de separar el proceso, permite iniciarlo en cualquiera de las fases descritas. Podremos por tanto, calibrar solo la cámara, o partiendo de una calibración previa de la cámara calcular los parámetros del proyector o simplemente validar una calibración anterior, iniciando el proceso en la fase de verificación.  
 
 
 \subsection{Definición del modelo de proyección y calibrado}
@@ -101,7 +101,7 @@ f_{x} & \gamma & c_{x} \\
 
 Los parámetros $f_{x}$ y $f_{y}$ representan la distancia focal en términos de distancia. $\gamma$ representa el coeficiente de asimetría entre los ejes $X$ e $Y$, pero por simplificar el modelo, tomaremos que tiene valor 0. Finalmente, $c_{x}$ y $c_{y}$ representan las coordenadas en píxeles del punto principal, que sería idealmente en el centro de la imagen.
 
-A partir de la matriz de la cámara y el tamaño de la imagen capturada, la clase \texttt{Intrisics} cálcula el resto de parametros propios como son el campo visual \texttt{(fov)}, la distancia focal \texttt{(focalLength)}, el centro óptico \texttt{(principalPoint)}, la relación de aspecto \texttt{(aspectRatio)} mediante la función \texttt{cv::calibrationMatrixValues}. 
+A partir de la matriz de la cámara y el tamaño de la imagen capturada, la clase \texttt{Intrisics} calcula el resto de parámetros propios como son el campo visual \texttt{(fov)}, la distancia focal \texttt{(focalLength)}, el centro óptico \texttt{(principalPoint)} y la relación de aspecto \texttt{(aspectRatio)} mediante la función \texttt{cv::calibrationMatrixValues}. 
 
 \begin{listing}[
   float=ht,
@@ -117,7 +117,7 @@ A partir de la matriz de la cámara y el tamaño de la imagen capturada, la clas
  cv::Point2d principalPoint; // Principal point (center)
 \end{listing}
 
-OpenGL asume que no existe distorsión en la cámara por lo que a la hora de calcular la matriz de proyección debemos tener en cuenta que los parametros de la matriz de la cámara deben estar corregidos. De esta forma, se utilizaran dos instancias de la clase \texttt{Instrinsics}: \texttt{distortedIntrinsics} y \texttt{undistortedIntrinsics}. La primera instancia almacena los parametros ``reales'' mientras que en \texttt{undistortedIntrinsics} se encuentran los parametros corregidos mendiante las funciones \texttt{cv::getOptimalNewCameraMatrix} y \texttt{cv::initUndistortRectifyMap}.
+OpenGL asume que no existe distorsión en la cámara por lo que a la hora de calcular la matriz de proyección debemos tener en cuenta que los parámetros de la matriz de la cámara deben estar corregidos. De esta forma, se utilizaran dos instancias de la clase \texttt{Instrinsics}: \texttt{distortedIntrinsics} y \texttt{undistortedIntrinsics}. La primera instancia almacena los parámetros ``reales'' mientras que en \texttt{undistortedIntrinsics} se encuentran los parámetros corregidos mediante las funciones \texttt{cv::getOptimalNewCameraMatrix} y \texttt{cv::initUndistortRectifyMap}.
 
 \begin{listing}[
   float=ht,
@@ -152,9 +152,9 @@ OpenGL asume que no existe distorsión en la cámara por lo que a la hora de cal
   bool ready;
  \end{listing}
 
-Aunque el proceso de calibrado para la cámara y el proyector sigue el mismo enfoque, hay ciertas particularidades propias de cada dispositivo en el proceso de calibrado. La clase \texttt{Calibration} implementa toda la funcionalidad común, que es la mayoria, mientras que se han definido las clases \texttt{CameraCalibration} y \texttt{ProjectorCalibration} que heredan de \texttt{Calibration} y terminan de definir los procesos específicos.
+Aunque el proceso de calibrado para la cámara y el proyector sigue el mismo enfoque, hay ciertas particularidades propias de cada dispositivo en el proceso de calibrado. La clase \texttt{Calibration} implementa toda la funcionalidad común, que es la mayoría, mientras que se han definido las clases \texttt{CameraCalibration} y \texttt{ProjectorCalibration} que heredan de \texttt{Calibration} y terminan de definir los procesos específicos.
 
-Finalmente la clase \texttt{CameraProjectorCalibration} encapsula un objeto de  \texttt{CameraCalibration} y otro de \texttt{ProjectorCalibration} con los parametros intrinsecos de ambos dispositivos e incluye los vectores de rotación \texttt{(rotCamToProj)} y traslación \texttt{(transCamToProj)} que definen las transformaciones necesarias entre el sistema de referencia de la cámara y el sistema de referencia del proyector. 
+Finalmente la clase \texttt{CameraProjectorCalibration} encapsula un objeto de  \texttt{CameraCalibration} y otro de \texttt{ProjectorCalibration} con los parámetros intrínsecos de ambos dispositivos e incluye los vectores de rotación \texttt{(rotCamToProj)} y traslación \texttt{(transCamToProj)} que definen las transformaciones necesarias entre el sistema de referencia de la cámara y el sistema de referencia del proyector. 
 
 \texttt{CalibrationCore} es la encargada de inicializar la calibración de calibrado mediante la configuración establecida y define el proceso a realizar en cada una de las fases que lo compone.  bucle Update/draw
 
@@ -184,172 +184,271 @@ La configuración del proceso:
   projectorFrame.create(cv::Size(800,600), CV_8UC1);
   
   // --- INITIAL MODE ---
-  setState(CAMERA); //CAMERA, PROJECTOR_STATIC,DEMO_AR
+  setState(CAMERA); //CAMERA, PROJECTOR_STATIC, DEMO_AR
 \end{listing}
   
-\subsection{Calibracion de la camara}
-En esta primera fase el objetivo es obtener los parámetros de la cámara. De forma continua, el sistema realiza capturas de imagen. Durante este proceso, debemos mostrar a la cámara el patron impreso, en distintas posiciones y orientaciones. 
+\subsection{Calibración de la cámara}
+En esta primera fase el objetivo es obtener los parámetros intrínsecos de la cámara. De forma continua, el sistema realiza capturas de imagen. Durante este proceso, se debe mostrar a la cámara el patrón impreso en distintas posiciones y orientaciones. 
 
 Para cada imagen capturada, se realiza el siguiente proceso:
 
 \begin{itemize}
 
-\item Se buscan las esquinas de los cuadrados del patrón de calibración de la imagen. Para detectar las esquinas se utiliza la función \texttt{cv::findChessboardCorners}. A esta función se le debe proporcinar la imagen actual donde buscar el patrón, las dimensiones del patron y un vector de cv::Point2f donde se almacenaran los puntos de la imagen de las esquinas detectadas. Adicionalmente, para mejorar esta detección se emplea \texttt{cv::cornerSubPix}, que se encargará de ubicar estas esquinas en medidas de subpíxels. Si se ha encontrado el tablero de ajedrez en la imagen, el vector de puntos devuelto se guardan en \texttt{imagePoints} junto con las extracciones de los frames anteriores.  
+\item Se realiza una \textbf{búsqueda de las esquinas de los cuadrados del patrón de calibración} en la imagen. Para detectar las esquinas se utiliza la función \texttt{cv::findChessboardCorners}. A esta función se le debe proporcionar la imagen actual donde buscar el patrón, las dimensiones del patrón y un vector de \texttt{cv::Point2f} donde se almacenaran los puntos de la imagen de las esquinas detectadas. Adicionalmente, para mejorar esta detección se emplea \texttt{cv::cornerSubPix}, que se encargará de ubicar estas esquinas en medidas de subpíxeles. Si se ha encontrado el tablero de ajedrez en la imagen, el vector de puntos devuelto se guardan en el vector \texttt{imagePoints} junto con las extracciones de los frames anteriores.  
 
-\item Se generan los \texttt{objectPoints} correspondientes a la imagen actual, en funcion del tipo, dimensiones y tamaño del lado de patrón. Además, habrá que proporcionar un valor de la medida real del mundo. Se proporciona la medida del lado de un cuadrado del tablero de ajedrez para ello y se utiliza un vector con la medida de las esquinas partiendo de esta base.
+\begin{listing}[
+  float=ht,
+  language = C++,
+  caption  = {Detección de las esquinas del patrón \emph{Chessboard}},
+  label    = code:findChessBoard]
+  cout << "Detecting chessboard ...";
+  found = cv::findChessboardCorners(currentFrame, patternSize, pointBuf, chessFlags);
 
-\item Para realizar la asociacion entre los puntos de la imagen y los del objeto se utiliza la funcion \texttt{cv::calibrateCamera} que estima los parametros intrinsecos y extrinsecos de la cámara para cada una de las vistas. Recibe los objectPoints y los imagePoints de todas las capturas que llevamos realizadas y el tamaño de la imagen \texttt{addedImageSize}. y devuelve la matriz de la camara \texttt{cameraMatrix}, los coeficientes de distorsión {distCoeffs} y un vector con los vectores de rotación y traslación que se ha estimado para cada vista del patrón. Es decir, cada rotación del vector k-ésimo junto con el vector correspondiente k-ésimo de la traslacion lleva al patrón de calibración desde el modelo de espacio de coordenadas (en el que se especifican los puntos del objeto) para el mundo espacio de coordenadas, que es decir, una posición real del patrón de calibración en la vista de patrón k-ésimo (k = 0 .. M -1). boardRotations, boardTranslations. The function returns the final re-projection error.
-Si la calibración tiene un error de reproyección cometido en la calibracion mayor de un umbral definido en la configuración se descarta
+  // improve corner accuracy
+  if(found) {
+    if(currentFrame.type() != CV_8UC1) 
+    cv::cvtColor(currentFrame, grayMat, CV_RGB2GRAY);
+    else 
+    grayMat = currentFrame;
+    
+    if(refine)
+    // the 11x11 dictates the smallest image space square size allowed
+    // in other words, if your smallest square is 11x11 pixels, then set this to 11x11
+    cv::cornerSubPix(grayMat, pointBuf, subpixelSize,  cv::Size(-1,-1), cv::TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1 ));
+  }
+  
+  imagePoints.push_back(pointBuf);
+\end{listing}
 
-\item Las funciones checkRange comprobar que cada elemento de la matriz de la camara y de los coeficientes de distorsion es ni NaN ni infinito. 
+\item \textbf{Se generan los puntos de las esquinas del patrón en el sistema de coordenadas globales} \texttt{(objectPoints)} correspondientes a la imagen actual, en funcion del tipo, dimensiones y el valor de la medida real del lado del cuadrado del patrón que se ha impreso a través de la función \texttt{updateObjectPoints}.
+\begin{listing}[
+  float=ht,
+  language = C++,
+  caption  = {Función \texttt{Calibration::updateObjectPoints()}},
+  label    = code:updateObjectPoints]
+  void Calibration::updateObjectPoints() {
+    vector<cv::Point3f> points = createObjectPoints(patternSize, squareSize, patternType);
+    objectPoints.resize(imagePoints.size(), points);
+  }
+\end{listing}
 
-\item actualización de distortedIntrinsics, actualización del error de reproyección y calculo de undistortedIntrinsics:distortedIntrinsics.setup(cameraMatrix, addedImageSize);  updateReprojectionError();   updateUndistortion();
+\item Para \textbf{realizar la asociación entre los puntos de la imagen y los del objeto} se utiliza la funcion \texttt{cv::calibrateCamera} que estima los parámetros intrínsecos y extrínsecos de la cámara para cada una de las vistas. Recibe los \texttt{objectPoints} y los \texttt{imagePoints } de todas las capturas que llevamos realizadas y el tamaño de la imagen capturada \texttt{(addedImageSize)}, y devuelve la matriz de la cámara \texttt{(cameraMatrix)}, los coeficientes de distorsión \texttt{(distCoeffs)} y un vector con los vectores de rotación \texttt{boardRotations} y traslación \texttt{boardTranslations} que se ha estimado para cada vista del patrón. Es decir, cada rotación del vector k-ésimo junto con el vector correspondiente k-ésimo de la traslación, convierte los puntos del patrón de calibración desde el sistema de coordenadas globales (en el que se especifican los puntos del objeto) al sistema de referencia de la cámara en la vista k-ésima. La función devuelve también el error de reproyección cometido para cada una de las vistas.
 
-\item Cada X iteraciones se eliminan las calibraciones que tienen un error de reproyeción mayor que un umbral definido:       calibrationCamera.clean(maxReprojErrorCamera);
-        
+\begin{listing}[
+  float=ht,
+  language = C++,
+  caption  = {Calibrado de la cámara mediante \texttt{cv::calibrateCamera} },
+   label    = code:calibrateCamera]
+   cv::Mat cameraMatrix = cv::Mat::eye(3, 3, CV_64F);
+   distCoeffs = cv::Mat::zeros(8, 1, CV_64F);
+   int calibFlags = 0;
+   float rms = cv::calibrateCamera(objectPoints, imagePoints, addedImageSize, cameraMatrix, distCoeffs, boardRotations, boardTranslations, calibFlags);
+   cout << "RMS reprojection error: " << rms << endl;
+ \end{listing}
+
+\item La función \texttt{cv::checkRange} \textbf{comprueba la integridad de los elementos de la matriz de la cámara y de los coeficientes de distorsión}, asegurando que son valores numéricos válidos. 
+
+\item A partir de los parámetros intrínsecos obtenidos, se \textbf{actualiza el error de reproyección general} de la calibración \texttt{(updateReprojectionError())}, y se \textbf{calcula la matriz de proyección de la cámara corregida} \texttt{(undistortedIntrinsics)} aplicando los valores de distorsión.
+  
+\item Cada cierto número de iteraciones \textbf{se eliminan las calibraciones que tienen un error de reproyección mayor que el umbral definido} en la variable \texttt{maxReprojErrorCamera}
+      
+\begin{listing}[
+  float=ht,
+  language = C++,
+  caption  = {Limpieza de calibraciones},
+  label    = code:clean]  
+void Calibration::clean(float maxReprojErrorCamera) {
+  cout << "Cleaning ...";
+   int removed = 0;
+   for(int i = size() - 1; i >= 0; i--) {
+     if(getReprojectionError(i) > maxReprojErrorCamera) {
+       objectPoints.erase(objectPoints.begin() + i);
+       imagePoints.erase(imagePoints.begin() + i);
+       removed++;
+     }
+   }
+   cout << "Done!" << endl;
+   if(size() > 0 && removed > 0) 
+   calibrate();
+}
+\end{listing}
+ 
+
+
 \end{itemize}
       
-Un vez alcanzado el número de calibraciones correctas por debajo del error definido, se procede al almacenamiento de los parametros calculados en un fichero de tipo YAML. Para ello se usa un objeto de tipo cv::FileStorage. calibrationCamera.yml
+Alcanzado el número de calibraciones correctas por debajo del error definido, se procede al \textbf{almacenamiento de los últimos parámetros calculados} en un fichero de tipo YAML. Para ello se usa un objeto de tipo \texttt{cv::FileStorage} para escribir el fichero \texttt{calibrationCamera.yml} con la estructura y formato definido.
 
-Se pasa a la siguiente fase para obtener los parametros intrinsecos del proyector
-
-\subsection{Calibracion del proyector}
-
-
-
-FASE 1 objetivo es sólo para establecer los puntos de imagen del proyector para proyectar, por lo que el proyector proyectará algo para ser detectado en la función draw. La primera vez, esto es usar el patrón grabado, pero más tarde (ya que el proyector se calibra) podemos utilizar algunos puntos arbitrarios "más cerca" del patrón impreso. En este último caso (patrón dinámico), si el patrón impreso no es visible, entonces no vamos a ir a la fase 2.
-
-
-            //(a) Set the candidate points (for projection) using the fixed pattern:
-
-
-
-
-
-  bool bPrintedPatternFound = calibrationCamera.findBoard(img, chessImgPts, true);
-  //debug
-  img.copyTo(infoFrame);
-  cv::cvtColor(infoFrame, infoFrame, CV_GRAY2BGR);      
-  cv::drawChessboardCorners(infoFrame, calibrationCamera.getPatternSize(), cv::Mat(chessImgPts),bPrintedPatternFound);
-  
-  if(bPrintedPatternFound) {
-
-Se busca el patron asimétrico en la imagen generada, para ello se utiliza la funcion \texttt{cv::findCirclesGrid} que ntenta determinar si la imagen de entrada contiene una cuadrícula de círculos. Si es así, la función localiza centros de los círculos. Para la detección de los círculos esta función se apoya en un detector de regiones (Blob detector) al que configuramos en lugar de utilizar los parametros por defecto.
-
-    cv::SimpleBlobDetector::Params params;
-    params.minArea = 10;
-    params.minDistBetweenBlobs = 5;
-    cv::Ptr<cv::FeatureDetector> blobDetector = new cv::SimpleBlobDetector(params);
-    bool bProjectedPatternFound = cv::findCirclesGrid(processedImg, calibrationProjector.getPatternSize(), circlesImgPts, 
-						      cv::CALIB_CB_ASYMMETRIC_GRID | cv::CALIB_CB_CLUSTERING, blobDetector);   
-
-
-
-    if(bProjectedPatternFound){
-      //debug
-      cv::drawChessboardCorners(infoFrame, calibrationProjector.getPatternSize(), cv::Mat(circlesImgPts),bProjectedPatternFound);
-
-      vector<cv::Point3f> circlesObjectPts;
-      cv::Mat boardRot;
-      cv::Mat boardTrans;
-
-      Obtenemos los vectores de rotación boardRot y translación boardTrans de los puntos proyectados en el sistema de referencia de la cámara mediante la funcion \texttt{cv:solvePnP}
-      calibrationCamera.computeCandidateBoardPose(chessImgPts, boardRot, boardTrans);
-      void CameraCalibration::computeCandidateBoardPose(const vector<cv::Point2f> & imgPts, cv::Mat& boardRot, cv::Mat& boardTrans){
-        cv::solvePnP(candidateObjectPts, imgPts,
-        distortedIntrinsics.getCameraMatrix(),
-        distCoeffs,
-        boardRot, boardTrans);
-}
-
-
-
-
-      calibrationCamera.backProject(boardRot, boardTrans, circlesImgPts, circlesObjectPts);
-                
-      calibrationCamera.imagePoints.push_back(chessImgPts);
-      calibrationCamera.getObjectPoints().push_back(calibrationCamera.getCandidateObjectPoints());
-      calibrationCamera.getBoardRotations().push_back(boardRot);
-      calibrationCamera.getBoardTranslations().push_back(boardTrans);
-                
-      calibrationProjector.imagePoints.push_back(calibrationProjector.getCandidateImagePoints());
-      calibrationProjector.getObjectPoints().push_back(circlesObjectPts);
-      cout << "OK!" << endl;           
-      return true;
+\begin{listing}[
+  float=ht,
+  language = C++,
+  caption  = {Almacenamiento de los parámetros intrínsecos en un fichero YAML},
+  label    = code:FileStorage]
+  void Calibration::save(string filename, bool absolute) const {
+    if(!ready){
+      cout << "Calibration::save() failed, because your calibration isn't ready yet!"<< endl;
     }
-    else cout << "Failed!" << endl;
+    cv::FileStorage fs(filename, cv::FileStorage::WRITE);
+    cv::Size imageSize = distortedIntrinsics.getImageSize();
+    cv::Size sensorSize = distortedIntrinsics.getSensorSize();
+    cv::Mat cameraMatrix = distortedIntrinsics.getCameraMatrix();
+    fs << "cameraMatrix" << cameraMatrix;
+    fs << "imageSize_width" << imageSize.width;
+    fs << "imageSize_height" << imageSize.height;
+    fs << "sensorSize_width" << sensorSize.width;
+    fs << "sensorSize_height" << sensorSize.height;
+    fs << "distCoeffs" << distCoeffs;
+    fs << "reprojectionError" << reprojectionError;
+    fs << "features" << "[";
+    for(int i = 0; i < (int)imagePoints.size(); i++) {
+      fs << "[" << imagePoints[i] << "]";
+    }
+    fs << "]";
   }
-  return false;
-}
+\end{listing}
+
+Una vez finalizada la calibración de la cámara, el sistema continua para obtener los parámetros intrínsecos del proyector.
+
+\subsection{Calibración del proyector}
+El cálculo de los parámetros intrínsecos de proyector se realiza mediante el mismo enfoque que en la cámara. Considerándolo como una \textit{«cámara inversa»} se puede aplicar el mismo modelo matemático de cámara \emph{pinhole}.
+
+En esta fase, el sistema proyecta continuamente un patrón de círculos asimétricos con un tamaño y en una posición fija. El objetivo es que la cámara detecte el patrón y pueda establecer, una primera aproximación de la matriz de proyección del proyector. Posteriormente, estos parámetros serán refinados en la siguiente fase del proceso de calibrado, mediante la proyección del patrón dinámicamente.
+
+En primer lugar, Se carga el fichero con los parámetros intrínsecos de la cámara y se establecen los puntos del patrón asimétrico en la imagen que se va a proyectar \texttt{(imagePoints)} y en el sistema de referencia global \texttt{(objectPoints)} utilizando parámetros y distancias fijas.  
+
+\begin{listing}[
+  float=ht,
+  language = C++,
+  caption  = {Inicialización de la fase de calibrado del proyector},
+  label    = code:ProjectorStatic]
+calibrationCamera.load("calibrationCamera.yml",false);
+camProjCalib.resetBoards();
+calibrationCamera.setupCandidateObjectPoints();
+calibrationProjector.setStaticCandidateImagePoints();
+\end{listing}
+
+Se busca el patrón asimétrico en la imagen capturada, para ello se utiliza la funcion \texttt{cv::findCirclesGrid} que intenta determinar si la imagen de entrada contiene una cuadrícula de círculos. Si es así, la función localiza los centros de los círculos. Para la detección de los círculos esta función se apoya en un detector de regiones \emph{(Blob detector)} que configuramos mediante los siguiente parámetros para adaptar la búsqueda en función del tamaño de la imagen y el tamaño de las regiones que se van a detectar.
+
+\begin{listing}[
+  float=ht,
+  language = C++,
+  caption  = {Parametrización del \emph{Blob Detector}},
+  label    = code:BlobDetector]
+cv::SimpleBlobDetector::Params params;
+params.minArea = 10;
+params.minDistBetweenBlobs = 5;
+cv::Ptr<cv::FeatureDetector> blobDetector = new cv::SimpleBlobDetector(params);
+bool bProjectedPatternFound = cv::findCirclesGrid(processedImg, calibrationProjector.getPatternSize(), circlesImgPts, cv::CALIB_CB_ASYMMETRIC_GRID | cv::CALIB_CB_CLUSTERING, blobDetector);
+\end{listing}
+
+Se aplica una binarización de la imagen de entrada que permite la segmentación de los círculos proyectados y realizar una separación del patrón de tablero de ajedrez.
+
+  
+Encontrado el patrón de círculos, obtenemos los vectores de rotación \texttt{boardRot} y translación \texttt{boardTrans} de los puntos proyectados en el sistema de referencia de la cámara mediante la funcion \texttt{cv:solvePnP}
 
 
-
-En matemáticas, una proyectividad es una aplicación inducida entre espacios proyectivos mediante una aplicación lineal. Esto es, si f:E\rightarrow E' es una aplicación lineal, la proyectividad que induce es de la forma f^*:P(E)- P(Ker(f)) \rightarrow P(E').
-
-Una proyectividad admite unas ecuaciones, que se expresan sencillamente de manera matricial. Para ello basta elegir dos referencias proyectivas \{U_0,U_1,...,U_n;U\} y \{V_0,V_1,...,V_n;V\} de P(E) y P(E'), que vendrán referidas por las bases \{u_0,u_1,...,u_n\} y \{v_0,v_1,...,v_n\} de E y E' respectivamente. Así, la ecuación matricial viene dada por \rho Y=AX, donde X,Y son las coordenadas de un punto de P(E) y P(E') respectivamente, y A es la matriz de coeficientes de la aplicación. \rho es un escalar de proporcionalidad dado por las coordenadas homogéneas.
-
-
-
-
-
-
-El sistema proyecta un patrón de círculos asímetricos, primero en una posición fija, y cuando la calibración logra cierta exactitud, se proyecta siguiendo el patrón de tablero de ajedrez impreso. 
-
-Se aplica una binarización de la imagen de entrada que permite la segmentación de los círculos proyectados y realizar una separación del patron de tablero de ajedrez.
-
-
-La cámara se utiliza para calcular la posición 3D de los círculos proyectados (por retroproyección) segun el  sistema de coordenadas local de la cámara, y luego en el sistema de coordenadas local del patron (que es el sistema de coordenadas "mundo"). Esto se hace en el método de "backProject" (método de la calibración clase, pero llama sólo cuando el objeto es de tipo "cámara"). 
+ Transform all image points to world points in camera reference frame  and then into the plane reference frame
+Se transforman los punto de la imagen a puntos reales en el sistema de referencia de la cámara, y después al sistema de referencia del patrón
+La cámara se utiliza para calcular la posición 3D de los círculos proyectados (por retroproyección) según el  sistema de coordenadas local de la cámara, y luego en el sistema de coordenadas local del patrón (que es el sistema de coordenadas "mundo"). Esto se hace en el método de "backProject" (método de la calibración clase, pero llama sólo cuando el objeto es de tipo "cámara"). 
 
 Esto significa que podemos comenzar a computar los instrinsics del proyector porque tiene puntos 3d (los círculos proyectados) en coordenadas del mundo, y sus respectivos "proyección" "imagen" en el proyector plano. 
 
-\subsection{Calibracion del sistema estereo}
+Para realizar la asociación entre los puntos de la imagen y los del objeto se utiliza la funcion \texttt{cv::calibrateCamera} que estima los parámetros intrínsecos y extrínsecos de la cámara para cada una de las vistas. Recibe los objectPoints y los imagePoints de todas las capturas que llevamos realizadas y el tamaño de la imagen \texttt{addedImageSize}. y devuelve la matriz de la cámara \texttt{cameraMatrix}, los coeficientes de distorsión {distCoeffs} y un vector con los vectores de rotación y traslación que se ha estimado para cada vista del patrón. Las funciones checkRange comprobar que cada elemento de la matriz de la cámara y de los coeficientes de distorsión es ni NaN ni infinito. Actualización de distortedIntrinsics, actualización del error de reproyección y calculo de undistortedIntrinsics:distortedIntrinsics.setup(cameraMatrix, addedImageSize);  updateReprojectionError();   updateUndistortion();
 
-Notas: En caso de calibración de la cámara / proyector, tenemos que proceder en dos fases para dar tiempo a la imagen proyectada para refrescar antes de tratar de detectarlo (en caso de "patrón proyectado dinámica"). De lo contrario podemos estar detectando el viejo patrón proyectado, pero el uso de los puntos de imagen más recientes (que rompe por completo la calibración por supuesto)
+calibrationProjector.calibrate();
+
+Se comprueba que el error de reproyección no es superior al umbral definido.
+
+Este proceso se repite hasta capturar un número de patrones definido en la configuración. Una vez alcanzado el numero de patrones capturados y con un error inferior al umbral pasamos a la siguiente fase de calibrado.
+
+\subsection{Calibración del sistema estéreo cámara-proyector}
+En esta fase refinaremos la calibración de los parámetros intrínsecos del proyector calculados en la fase previa y realizaremos los cálculos para obtener los parámetros extrínsecos del sistema estéreo cámara-proyector.
+
+A partir de ahora, generamos el patrón de círculos asimétricos de manera dinámica. A partir de la posición y las dimensiones del patrón de tablero de ajedrez observado por la cámara, con la función \texttt{setDynamicProjectorImagePoints} se calcula y genera un patrón de círculos asimétricos que se proyectará junto al de ajedrez. 
+
+Dispondremos entonces de los puntos 3D en el sistema de referencia global (el patrón), que son los círculos proyectados, y también su proyección (puntos 2D en la imagen) en el sistema de referencia de la cámara y en el sistema de referencia del proyector. Esto significa que se puede utilizar  un procedimiento de calibración estéreo como el que proporciona OpenCV. 
 
 
+Consideraremos en nuestro sistema estéreo que la posición y orientación relativa entre la cámara y el proyector es fija. En los paso previos, se ha  calculado la pose de un objeto respecto a la cámara $(R_1, T_1)$ y la pose para el mismo objeto pero respecto al proyector $(R_2, T_2)$, entonces esas poses se relacionan entre sí. Esto significa que, dado $(R_1,T_1)$, es posible calcular $(R_2,T_2)$ conociendo la posición y orientación de la segunda cámara con respecto a la primera cámara. Esto es lo que hace la función descrita. Calcula $(R,T)$ de modo que:
 
-(c) Finalmente, podemos empezar a calcular los extrinsics de la cámara-proyector (porque básicamente tenemos puntos 3d en "coordenadas mundo" (la mesa), que son los círculos proyectados, y también su proyección (puntos 2d) en la cámara imagen y proyector "imagen"). Esto significa que puede utilizar la rutina de calibración estéreo estándar en OpenCV (esto se hace en la función. La razón por la cual se calcula en primer lugar el instrinsics del proyector se debe a que el método stereoCalibrationCameraProjector llamará a la función de calibración OpenCV estéreo utilizando "intrínsecos fijos" para asegurar mejor convergencia del algoritmo (presumiblemente mejor, porque si la cámara está muy bien calibrado en primer lugar, a continuación, los instrinsics del proyector debe ser bueno - probablemente mejor que si recalculado desde todos los puntos 3D y puntos de imagen en la cámara y el proyector). 
+\begin{equation}
+R_2 = R * R_1
+T_2 = R * T_1 + T,
+\end{equation}
+
+Opcionalmente, se calcula la matriz esencial $E$:
+\begin{equation}
+E=\begin{bmatrix}
+0 & -T_2 & -T_1\\ 
+T_2 & 0  & -T_0\\ 
+-T_1 & T_0 & 0 
+\end{bmatrix} * R
+\end{equation}
+
+donde $t_i$ son componentes del vector de traslación $T: T = [T_0, T_1, T_2] ^ T$. Y la función también puede calcular la matriz $F$ fundamental:
+\begin{equation}
+F = cameraMatrix_2^ {-T} * E * cameraMatrix_1^{-1}
+\end{equation}
 
 
- y los parámetros extrínsecos (rotación y translación), que
-representan la localización y orientación (pose) de la cámara relativa a una imagen en un sistema de coordenadas.
+Mediante la función \texttt{cv::stereoCalibrate} se estima la matriz de transformación entre dos cámaras que formen un par estéreo. En nuestro caso la cámara y el proyector. 
+
+La funcion \texttt{cv::stereoCalibrate} también permite obtener los parámetros intrínsecos de cada dispositivo, sin embargo debido a la alta dimensionalidad del espacio de parámetros y el ruido que pueden introducir las imágenes de entrada, la funcion puede divergir de la solución correcta. Por tanto utilizaremos los parámetros intrínsecos calculados en las fases previas para cada uno de los dispositivos de forma individual, proporcionándolos a la funcion e indicándolo mediante el \emph{flag} CV\_CALIB\_FIX\_INTRINSIC. Esto acción, simplifica los cálculos que tiene que realizar la función y que se realicen cálculos erróneos de unas matrices de proyección que ya se han obtenido previamente con bastante precisión. 
+
+Como hemos indicado, debemos proporcionar los puntos del patrón de calibración y las proyecciones de estos puntos observados respecto a la cámara y el proyector. \texttt{setDynamicProjectorImagePoints()} nos genera los puntos del patrón asimétrico y almacena la proyección de los puntos respecto de la cámara. La funcion \texttt{calibrationProjector.calibrate()} obtiene los parámetros intrínsecos y la proyección de los puntos del patrón respecto del proyector. 
+
+Al estar diseñado el bucle del programa mediante un enfoque \emph{update/draw}, tenemos que proceder en dos iteraciones para dar tiempo a la imagen proyectada a refrescarse antes de tratar de detectarlo. De lo contrario podemos estar detectando el viejo patrón proyectado, pero el uso de los puntos de imagen más recientes (que rompe por completo la calibración por supuesto)
+
+Con todos los parámetros necesarios calculados:
+\begin{itemize}
+  \item objectPoints: Puntos del patrón generado dinámicamente.
+  \item auxImagePointsCamera: Proyecciones de los puntos del patrón desde el punto de vista de la cámara
+  \item calibrationProjector.imagePoints: Proyecciones de los puntos del patrón desde el punto de vista del proyector
+  \item cameraMatrix: Matriz de parámetros intrínsecos de la cámara
+  \item cameraDistCoeffs: Coeficientes de distorsión de la cámara
+  \item projectorMatrix: Matriz de parámetros intrínsecos del proyector
+  \item projectorDistCoeffs: Coeficientes de distorsión del proyector
+  \item calibrationCamera.getDistortedIntrinsics().getImageSize(): Tamaño de la imagen utilizada.
+\end{itemize}  
+ 
+\texttt{cv::stereoCalibrate} devuelve la matriz de rotación \texttt{rotation3x3}, el vector de translación \texttt{transCamToProj} entre el sistema de referencia de la cámara y el proyector y el error de reproyección obtenido. La función \texttt{cv::Rodrigues} transforma la matriz de rotación en el vector de rotación \texttt{rotCamToProj} que almacena el proceso de calibrado.
+
+Cada cierto número de iteraciones, configurable en el sistema, se eliminan las capturas del patrón que el error de reproyección supere un determinado umbral. Y finalmente al alcanzar un numero suficiente de calibraciones correctas, se toman los valores de los parámetros intrínsecos y extrínsecos del proyector a los que converge el proceso como los finales, guardándolos en un fichero de tipo YAML al igual que se realizó con los parámetros intrínsecos de la cámara mediante un objeto de tipo cv::FileStorage. calibrationProjector.yml CameraProjectorExtrinsics.xml
+
+
+Para finalizar, el sistema pasa al modo de validación del proceso de calibrado, donde de manera visual, comprobaremos la precisión de la calibración realizada.
+  %setState(DEMO_AR);
 
 \subsection{Verificación del proceso de calibrado}
 Carga de los ficheros YAML y obtener instancias de los objetos:
-CameraCalibration calibrationCamera = camProjCalib.getCalibrationCamera();
-ProjectorCalibration calibrationProjector  = camProjCalib.getCalibrationProjector();
+%CameraCalibration calibrationCamera = camProjCalib.getCalibrationCamera();
+%ProjectorCalibration calibrationProjector  = camProjCalib.getCalibrationProjector();
 
-Se busca el patron de tablero de ajedrez en la imagen y se extraen los puntos de las esquinas \texttt{chessImgPts}
-bool bPrintedPatternFound = calibrationCamera.findBoard(cameraFrame, chessImgPts, true);
+Se busca el patrón de tablero de ajedrez en la imagen y se extraen los puntos de las esquinas \texttt{chessImgPts}
+%bool bPrintedPatternFound = calibrationCamera.findBoard(cameraFrame, chessImgPts, true);
 
-Calcula los vectores de rotacion \texttt{cv::Mat boardRot} y traslación \texttt{cv::Mat boardTrans }del patron a la camara
-calibrationCamera.computeCandidateBoardPose(chessImgPts, boardRot, boardTrans);
+Calcula los vectores de rotación \texttt{cv::Mat boardRot} y traslación \texttt{cv::Mat boardTrans} del patrón a la cámara
+%calibrationCamera.computeCandidateBoardPose(chessImgPts, boardRot, boardTrans);
 
-Seleccionamos los ObjectPoints correspondientes a las cuatro esquinas del patron y se almacenan en \texttt{vector<cv::Point3f> auxObjectPoints}
+Seleccionamos los ObjectPoints correspondientes a las cuatro esquinas del patrón y se almacenan en \texttt{vector<cv::Point3f> auxObjectPoints}
 
-cv::Mat rotObjToProj, transObjToProj;
+%cv::Mat rotObjToProj, transObjToProj;
 
-Componemos los vectores de rotacion y traslación del objeto a la camara con vectores camara al projector para obtener las transformaciones objeto a proyector
-cv::composeRT(boardRot,  boardTrans,
-camProjCalib.getCamToProjRotation(), camProjCalib.getCamToProjTranslation(),
-rotObjToProj, transObjToProj);
+Componemos los vectores de rotación y traslación del objeto a la cámara con vectores cámara al projector para obtener las transformaciones objeto a proyector
+%cv::composeRT(boardRot,  boardTrans,
+%camProjCalib.getCamToProjRotation(), camProjCalib.getCamToProjTranslation(),
+%rotObjToProj, transObjToProj);
 
-Proyectamos con la funcion \texttt{cv::projectPoints} los puntos de las cuatro esquinas del patron \texttt{auxObjectPoints}, mediante las transformaciones objeto-proyector y los parametros intrinsecos del proyector
+Proyectamos con la funcion \texttt{cv::projectPoints} los puntos de las cuatro esquinas del patrón \texttt{auxObjectPoints}, mediante las transformaciones objeto-proyector y los parámetros intrínsecos del proyector
 
-projectPoints(cv::Mat(auxObjectPoints),
-rotObjToProj, transObjToProj,
-calibrationProjector.getDistortedIntrinsics().getCameraMatrix(),
-calibrationProjector.getDistCoeffs(),
-out);
+%projectPoints(cv::Mat(auxObjectPoints),
+%rotObjToProj, transObjToProj,
+%calibrationProjector.getDistortedIntrinsics().getCameraMatrix(),
+%calibrationProjector.getDistCoeffs(),
+%out);
 
-Establacemos los puntos obtenidos en la proyección \texttt{vector<cv::Point2f> out} como la salida que tiene que representar el proyector y que deben coincidir fisicamente si se ha realizado una buena calibración. calibrationProjector.setCandidateImagePoints(out);
-  
-%We use a pattern of alternating black and white squares (see Figure 11-9), which ensures that there is no bias toward one side or the other in measurement. Also, the resulting grid corners lend themselves naturally to the subpixel localization function discussed in Chapter 10. Given an image of a chessboard (or a person holding a chessboard, or any other scene with a chessboard and a reasonably uncluttered background), you can use the OpenCV function cvFindChessboardCorners() to locate the corners of the chessboard.
+Establecemos los puntos obtenidos en la proyección \texttt{vector<cv::Point2f> out} como la salida que tiene que representar el proyector y que deben coincidir físicamente si se ha realizado una buena calibración. calibrationProjector.setCandidateImagePoints(out);
 
-%In this routine, the method of calibration is to target the camera on a known structure that has many individual and identifi able points. By viewing this structure from a variety of angles, it is possible to then compute the (relative) location and orientation of the camera at the time of each  image as well as the intrinsic parameters of the camera (see Figure 11-9 in the “Chessboards” section). In order to provide multiple views, we rotate and translate the object, so let’s pause to learn a little more about rotation and translation.
-
-%Imprimir un Select a pattern, download, and print Mount the pattern onto a rigid flat surface Take many pictures of the target at different orientations and distances Download pictures to compute and select ones that are in focus
-%\subsection{Cálculo de las matrices de transformación camara-proyector}
 
 \section{Tracking y registro}
 El cálculo del registro requiere posicionar el sistema cámara-proyector, mediante su posición y
@@ -1041,22 +1140,22 @@ centro de la hoja.
 
 \section{Módulo de soporte y utilidades}
 \subsection{Gestor de configuración}
-Existen muchos parametros configurables en GrayAR. En las primeras versiones del proyecto estos parametros estaban implementados en variables dentro del programa y cada vez que era necesario modificar estos parametros, por ejemplo para la realizacion de pruebas, era necesario recompilar el código. Para los archivos que se encuentran en la raspberry, el tiempo de compilación al modificar el valor de uno de esto parametros podia incluso a tardar varios minutos. Otro problema que surgió al crecer el proyecto esra que estos parametros estaban repartidos entre varios ficheros, lo que suponia tener que recordar donde estaba localizado cada parametro y el consecuente riesgo de dejarse alguno sin actualizar que invalidaria las pruebas realizadas.
+Existen muchos parámetros configurables en GrayAR. En las primeras versiones del proyecto estos parámetros estaban implementados en variables dentro del programa y cada vez que era necesario modificar estos parámetros, por ejemplo para la realizacion de pruebas, era necesario recompilar el código. Para los archivos que se encuentran en la raspberry, el tiempo de compilación al modificar el valor de uno de esto parámetros podia incluso a tardar varios minutos. Otro problema que surgió al crecer el proyecto esra que estos parámetros estaban repartidos entre varios ficheros, lo que suponia tener que recordar donde estaba localizado cada parametro y el consecuente riesgo de dejarse alguno sin actualizar que invalidaria las pruebas realizadas.
 
-Lo primero que se realizo fue sacar todos los parametros configurables a un fichero \acs{XML} que es leido al inicio del programa permitiendo que todos los parametros sean accesibles por cualquier módulo dentro del programa.
+Lo primero que se realizo fue sacar todos los parámetros configurables a un fichero \acs{XML} que es leido al inicio del programa permitiendo que todos los parámetros sean accesibles por cualquier módulo dentro del programa.
 
-Las ventajas son apreciables a instante, el proceso de pruebas es mucho más rápido, ya que no es necesario volver a compilar cada vez que se realiza un cambio en la configuración. Todos los parametros se encuentran en un único fichero, que al ser \acs{XML}, tiene una estructura clara y legible para las personas, y que permite una edicion y modificacion sencilla. Tambien permite tener varios ficheros con distintas configuraciones y que se cargue en el programa uno u otro en funcion de las necesidades del momento.
+Las ventajas son apreciables a instante, el proceso de pruebas es mucho más rápido, ya que no es necesario volver a compilar cada vez que se realiza un cambio en la configuración. Todos los parámetros se encuentran en un único fichero, que al ser \acs{XML}, tiene una estructura clara y legible para las personas, y que permite una edicion y modificacion sencilla. Tambien permite tener varios ficheros con distintas configuraciones y que se cargue en el programa uno u otro en funcion de las necesidades del momento.
  
 La necesidad es la de tener una clase centralizada y accesible desde cualquier parte del programa que sea capaz de leer un fichero de configuración en \acs{XML} y almacene aquellas variables parametrizables de
 
 Para implementar el gestor de configuración se ha creado la clase  \texttt{ConfigManager}. Esta tiene la funcion  \texttt{loadConfiguration} a la que se le indica el fichero \acs{XML} con la configuración a cargar 
 
-Se ha optado por seguir el principio de diseño \acs{KISS} que establece que la mayoría de sistemas funcionan mejor si se mantienen simplesen lugar de hacerlos complejos; por ello, la simplicidad debe ser mantenida como un objetivo clave del diseño, y cualquier complejidad innecesaria debe ser evitada. Las ventajas genéricas que ofrece un patron Singleton frente a la implementación de un clase estática como puede ser que las funciones se puedan sobreescribir en las clases herederas, que la inicialización asincrona mientras que una clase estática generalmente se inicializa cuando se carga por primera vez o que el singleton pueda ser manejado polimorficamente sin forzar a los usuarios a asumir que solo existe una instancia, no suponen un mejora para la funcionalidad que necesitamos implementar. 
+Se ha optado por seguir el principio de diseño \acs{KISS} que establece que la mayoría de sistemas funcionan mejor si se mantienen simplesen lugar de hacerlos complejos; por ello, la simplicidad debe ser mantenida como un objetivo clave del diseño, y cualquier complejidad innecesaria debe ser evitada. Las ventajas genéricas que ofrece un patrón Singleton frente a la implementación de un clase estática como puede ser que las funciones se puedan sobreescribir en las clases herederas, que la inicialización asincrona mientras que una clase estática generalmente se inicializa cuando se carga por primera vez o que el singleton pueda ser manejado polimorficamente sin forzar a los usuarios a asumir que solo existe una instancia, no suponen un mejora para la funcionalidad que necesitamos implementar. 
 
 \subsection{Funciones de representación para depuración}
 Aunque la creación de funciones para la representación gráfica están fuera del alcance de este proyecto, a la hora de probar y depurar los distintos algoritmos implementados resulta muy practico disponer de algunas funciones de dibujado ya implementadas para corregir errores y tener una vision preeliminar de como puede quedar finalmente.
 
-A partir de las primitivas de dibujado que ofrece OpenCV se han implementado una serie de funciones para facilitar la representación de contornos, esquinas, y una vez obtenidos los parametros extrinsecos de las camara y el proyector, dibujado de ejes, cubos u ortoedros que permiten validar si los cálculos se han realizado correctamente.
+A partir de las primitivas de dibujado que ofrece OpenCV se han implementado una serie de funciones para facilitar la representación de contornos, esquinas, y una vez obtenidos los parámetros extrínsecos de las cámara y el proyector, dibujado de ejes, cubos u ortoedros que permiten validar si los cálculos se han realizado correctamente.
 
 
 
