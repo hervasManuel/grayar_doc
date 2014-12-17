@@ -26,7 +26,7 @@ El modelo \textbf{\textit{pinhole}} \cite{Hartley} permite modelar el proceso de
 \begin{figure}[h!]
   \centering
   \includegraphics[width=1.0\textwidth]{pinhole.png}
-  \caption{Modelo de cámara \textit{pinhole}. La imagen de un punto 3D se forma mediante proyección de perspectiva. Un punto \textit{M} es proyectado a un punto \textit{m} en el plano \textit{P}}
+  \caption{Modelo de cámara \textit{pinhole}. La imagen de un punto 3D se forma mediante proyección de perspectiva. Un punto $X$ es proyectado a un punto $x$ en el plano imagen}
   \label{fig:pinholeCamera}
 \end{figure}
 
@@ -36,7 +36,7 @@ Los elementos que forman este modelo se definen de la siguiente forma:
 \item El \textbf{plano imagen} o plano focal. De cada punto del espacio parte un rayo de luz que pasa por el centro de proyección e intersecta con este plano formando la imagen. Como se puede ver en la figura, el plano focal se ha situado delante del centro
   óptico. Si éste estuviese detrás, las imágenes estarían invertidas.
 \item \textbf{Distancia focal.} Se define como la distancia entre el centro de proyección y el plano imagen.
-\item \textbf{Eje o rayo principal} Es la línea que pasa por el centro de proyección y es perpendicular al plano imagen.
+\item \textbf{Eje principal} Es la línea que pasa por el centro de proyección y es perpendicular al plano imagen.
 \item \textbf{Punto principal.} Es el punto de intersección del eje principal con el plano imagen. Coincide con el centro de la imagen.
 \item \textbf{Plano principal.} Es el plano paralelo al plano imagen y que contiene al centro de proyección. Además, este plano está formado por todos los puntos cuyas proyecciones se corresponden con puntos en el infinito en la imagen.
 \end{itemize}
@@ -47,13 +47,15 @@ Matemáticamente, una proyectividad es una aplicación inducida entre espacios p
 f^*:P(E)- P(Ker(f)) \rightarrow P(E')
 \end{equation}
 
-Una homografía es una transformación proyectiva que determina una correspondencia entre dos figuras geométricas planas, de forma que a cada uno de los puntos y las rectas de una de ellas le corresponden, respectivamente, un punto y una recta de la otra.
-
 Una proyectividad admite que se exprese sencillamente de manera matricial. Para ello basta elegir dos referencias proyectivas $\{U_0,U_1,...,U_n;U\}$ y $\{V_0,V_1,...,V_n;V\}$ de $P(E)$ y $P(E')$, que vendrán referidas por las bases $\{u_0,u_1,...,u_n\}$ y $\{v_0,v_1,...,v_n\}$ de $E$ y $E'$ respectivamente. Así, la ecuación matricial viene dada por 
 \begin{equation}
 \rho Y = KX
 \end{equation}
 donde $X$,$Y$ son las coordenadas de un punto de $P(E)$ y $P(E')$ respectivamente, y $K$ es la matriz de coeficientes de la aplicación. $\rho$ es un escalar de proporcionalidad dado por las coordenadas homogéneas.
+
+Una homografía es una transformación proyectiva que determina una correspondencia entre dos figuras geométricas planas, de forma que a cada uno de los puntos y las rectas de una de ellas le corresponden, respectivamente, un punto y una recta de la otra.
+
+
 
 
 
@@ -625,39 +627,8 @@ La figura \ref{fig:pirámides} muestra los pasos involucrados en el cálculo de 
 \end{figure}
 
 \section{Geometría de formación de la imagen}
-\subsection{Modelado de la cámara}
-La formación de las imágenes consiste en una representación bidimensional del mundo 3D, perdiéndose la información de profundidad.
-
-La óptica geométrica clásica se basa en modelos de lentes para modelar el proceso de formación de las imágenes. Sin embargo, podemos simplificar este proceso suponiendo que todos los rayos que llegan a la cámara atraviesan un único punto y se proyectan en un plano. Este modelo se conoce como modelo \emph{pinhole}. 
-
-Debido a que las lentes no tienen un comportamiento ideal, habrá que añadir al modelo unos parámetros de distorsión que permitan corregirlo y aproximarlo al comportamiento real de la cámara.
-
-\subsubsection{Estructura del modelo pinhole}
-El modelo pinhole \cite{Hartley} permite modelar el proceso de formación de las imágenes mediante una proyección central, en la cual, de cada punto del espacio tridimensional sale un rayo de luz que pasa por un punto fijo del espacio y intersecta en un plano dando lugar a la imagen.
-
-\begin{figure}[h!] 
-  \centering
-  \includegraphics[width=1.0\textwidth]{pinhole.png}
-  \caption{Modelo de cámara pin-hole. La imagen de un punto 3D se forma mediante proyección de perspectiva. Un punto \textit{M} es proyectado a un punto \textit{m} en el plano \textit{P}}
-  \label{fig:pinholeCamera}
-\end{figure}
-
-Los elementos que forman este modelo se definen de la siguiente forma:
-\begin{description}
-\item[Centro óptico o de proyección central] Es el punto fijo del espacio por donde pasan todos los rayos de luz. Se corresponde con el centro de la cámara y es donde
-  se fija el sistema de referencia de la cámara.
-\item[Plano imagen o plano focal] De cada punto del espacio parte un rayo de luz que pasa por el centro de proyección e interseca con este plano formando la imagen.
-  Como se puede ver en la figura, el plano focal se ha situado delante del centro
-  óptico. Si éste estuviese detrás, las imágenes estarían invertidas.
-\item[Distancia focal] Se define como la distancia entre el centro de proyección y el plano imagen.
-\item[Eje o rayo principal] Es la línea que pasa por el centro de proyección y es perpendicular al plano imagen.
-\item[Punto principal] Es el punto de intersección del eje principal con el plano imagen. Coincide con el centro de la imagen.
-\item[Plano principal] Es el plano paralelo al plano imagen y que contiene al centro de proyección. Además, este plano está formado por todos los puntos cuyas proyecciones se corresponden con puntos en el infinito en la imagen.
-\end{description}
-
 
 \subsection{¿Qué suposiciones hemos hecho hasta ahora?}
-
 
 Todas las ecuaciones que hemos derivado hasta el momento están escritas en los marcos de referencia de la cámara.
 
