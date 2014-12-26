@@ -33,83 +33,125 @@ El modelo \textbf{\textit{pinhole}} \cite{Hartley} permite modelar el proceso de
 Los elementos que forman este modelo se definen de la siguiente forma:
 \begin{itemize}
 \item El \textbf{centro óptico} o de proyección central, es el punto fijo del espacio por donde pasan todos los rayos de luz. Se corresponde con el centro de la cámara y es donde se fija el sistema de referencia de la cámara.
-\item El \textbf{plano imagen} o plano focal. De cada punto del espacio parte un rayo de luz que pasa por el centro de proyección e intersecta con este plano formando la imagen. Como se puede ver en la figura, el plano focal se ha situado delante del centro
-  óptico. Si éste estuviese detrás, las imágenes estarían invertidas.
+\item El \textbf{plano imagen} o plano focal. De cada punto del espacio parte un rayo de luz que pasa por el centro de proyección e intersecta con este plano formando la imagen. Como se puede ver en la figura, el plano focal se ha situado delante del centro óptico. Si éste estuviese detrás, las imágenes estarían invertidas.
 \item \textbf{Distancia focal.} Se define como la distancia entre el centro de proyección y el plano imagen.
 \item \textbf{Eje principal} Es la línea que pasa por el centro de proyección y es perpendicular al plano imagen.
 \item \textbf{Punto principal.} Es el punto de intersección del eje principal con el plano imagen. Coincide con el centro de la imagen.
 \item \textbf{Plano principal.} Es el plano paralelo al plano imagen y que contiene al centro de proyección. Además, este plano está formado por todos los puntos cuyas proyecciones se corresponden con puntos en el infinito en la imagen.
 \end{itemize}
 
-\section{Homografías}
-Matemáticamente, una proyectividad es una aplicación inducida entre espacios proyectivos mediante una aplicación lineal. Esto es, si $f:E\rightarrow E'$ es una aplicación lineal, la proyectividad que induce es de la forma 
+%Una \textbf{homografía} es una transformación proyectiva que determina una correspondencia entre dos figuras geométricas planas, de forma que a cada uno de los puntos y las rectas de una de ellas le corresponden, respectivamente, un punto y una recta de la otra.
+
+%Una homografía es una matriz (generalmente de 3x3) cuya misión es la de mapear los puntos de una superficie planar bidimensional a otra. Según esta definición, una matriz que transforme los puntos de un plano en puntos del plano de cámara, será considerada una homografía. Esta transformación se realiza en términos de coordenadas físicas.
+
+%\begin{figure}[tb]
+%  \begin{minipage}{13.1cm}
+%    \centering
+%    \includegraphics[width=10cm]{homografia.jpg}
+%        \cite{OpenCV}.}{}}{}{\caption{Transformación de un punto P del mundo real a su proyección p
+%        en el plano de cámara utilizando una homografía. (Bradski y Kaehler)}}
+%    \ifthenelse{\equal{FIGhomografia}{}}{}{\label{FIGhomografia}}
+%  \end{minipage}
+%\end{figure}
+
+%Se ha introducido el parámetro $s$, el cual es un factor de escala arbitrario (entendiéndose que la homografía está definida bajo ese factor, debido al desconocimiento de las medidas del mundo real). En la figura \ref{FIGhomografia} puede verse la implicación de utilizar la homografía en este escenario.
+
+%Podría llegar a pensarse que las funciones de la matriz esencial y de la homografía son las mismas,
+%puesto que ambas realizan transformaciones en la geometría del sistema de visión estereoscópica sin tener en cuenta los parámetros intrínsecos de la cámara. La diferencia reside en que la homografía trabaja sobre planos que son visibles desde la cámara y relacionaría un punto de ese plano con el de su propio plano. La matriz esencial no tiene en cuenta esta restricción y solo es capaz de relacionar un punto en una imagen que se encuentre alineado con otra imagen.
+
+
+\subsection{Matriz de proyección}\label{subsec:matproy}
+El modelo \textit{pinhole} \cite{Hartley} fija un sistema de coordenadas proyectivas en el centro óptico. El eje $Z$ de este sistema coincide con el eje principal de la cámara. A partir de ahora nos referiremos a este sistema de coordenadas como sistema de referencia de la cámara. Además, el plano imagen se fija en el plano $Z = f$.
+
+Definiendo la siguiente notación que se va a seguir:
+\begin{itemize}
+\item $(X_c , Y_c , Z_c )^T$ Coordenadas de un punto del espacio tridimensional respecto al sistema de referencia de la cámara.
+\item $(X_w , Y_w , Z_w )^T$ Coordenadas del mismo punto del espacio tridimensional respecto a un sistema de referencia asociado al modelo del objeto. Este nuevo sistema de referencia es distinto al de la cámara.
+\item $(x, y)^T$  Coordenadas del punto proyectado en el plano imagen.
+\item $f$  Distancia focal
+\end{itemize}
+
+%Utilizaremos $\overline{X}$, para representar vectores columna. Por tanto, su traspuesta, $X^T$ , será un vector fila. Por convenio con la notación anterior, las coordenadas de un punto cualquiera se van a representar por un vector columna $\overline{X} = (X, Y, Z)^T$.
+
+Mediante relación de semejanza de triángulos, de la figura \ref{fig:pinholeCamera}: 
 \begin{equation}
-f^*:P(E)- P(Ker(f)) \rightarrow P(E')
+\dfrac{x}{f} = \dfrac{X}{Z} \quad \quad \dfrac{y}{f} = \dfrac{Y}{Z} 
 \end{equation}
 
-Una proyectividad admite que se exprese sencillamente de manera matricial. Para ello basta elegir dos referencias proyectivas $\{U_0,U_1,...,U_n;U\}$ y $\{V_0,V_1,...,V_n;V\}$ de $P(E)$ y $P(E')$, que vendrán referidas por las bases $\{u_0,u_1,...,u_n\}$ y $\{v_0,v_1,...,v_n\}$ de $E$ y $E'$ respectivamente. Así, la ecuación matricial viene dada por 
+podemos determinar la correspondencia entre un punto cualquiera del espacio y su proyección en el plano imagen:
 \begin{equation}
-\rho Y = KX
-\end{equation}
-donde $X$,$Y$ son las coordenadas de un punto de $P(E)$ y $P(E')$ respectivamente, y $K$ es la matriz de coeficientes de la aplicación. $\rho$ es un escalar de proporcionalidad dado por las coordenadas homogéneas.
-
-Una homografía es una transformación proyectiva que determina una correspondencia entre dos figuras geométricas planas, de forma que a cada uno de los puntos y las rectas de una de ellas le corresponden, respectivamente, un punto y una recta de la otra.
-
-
-
-
-
-
-A la hora de calcular la geometría 3D del escenario visto a través de las cámaras son las \textit{homografías planares} o, simplemente, \textit{homografías} \cite{Martinez03}.
-
-
-
-
-
-
-Una homografía es una matriz (generalmente de 3x3) cuya misión es la de mapear los puntos de una superficie planar bidimensional a otra. Según esta definición, una matriz que transforme los puntos de un plano en puntos del plano de cámara, será considerada una homografía. Esta transformación se realiza en términos de coordenadas físicas.
-
-\begin{figure}[tb]
-  \begin{minipage}{13.1cm}
-    \centering
-    \includegraphics[width=10cm]{homografia.jpg}
-    \ifthenelse{\equal{Transformación de un punto P del mundo real utilizando una homografía. Fuente
-        \cite{OpenCV}.}{}}{}{\caption{Transformación de un punto P del mundo real a su proyección p
-        en el plano de cámara utilizando una homografía. (Bradski y Kaehler)}}
-    \ifthenelse{\equal{FIGhomografia}{}}{}{\label{FIGhomografia}}
-  \end{minipage}
-\end{figure}
-
-Es posible expresar este mapeo en términos de multiplicación de matrices utilizando coordenadas homogéneas para expresar el punto que se está visualizando ($P$) y el punto proyectado en el plano de imagen ($p$). Éstos se definen como:
-
-\begin{equation}
-  P=
-  \begin{bmatrix}
-    X & Y & Z & 1
-  \end{bmatrix}^T
+  (X_c , Y_c , Z_c )^T \Longrightarrow  (x, y)^T = (f \dfrac{X_c}{Z}, f \dfrac{Y_c}{Z})^T
 \end{equation}
 
-\begin{equation}
-  p=
-  \begin{bmatrix}
-    x & y & 1
-  \end{bmatrix}^T
+Las coordenadas homogéneas son un instrumento usado para describir un punto en el espacio proyectivo. Consiste en ampliar el plano euclídeo (en el caso bidimensional) al plano proyectivo, es decir, incluirle los puntos impropios o del infinito. De forma que, un punto de dimensiones $x, y, z$, se lo representa por la terna: $x/w$, $y/w$, $z/w$ con $w=1$. Y un punto impropio es aquel donde $w=0$.
+
+Este sistema de coordenadas tiene la particularidad de que permite pasar fácilmente coordenadas de un número de dimensiones a otro. Para ello, almacena las coordenadas con una dimensión adicional, de tal forma que para un espacio de 3D, utilizaríamos 4 coordenadas. El valor de la coordenada adicional indica entre otras cosas, si el punto se encuentra en el infinito, valor 0, o es un punto cualquiera, valor distinto de 0. En este sistema, si dos coordenadas son proporcionales, se refieren al mismo punto.
+
+Utilizándolas, podemos expresar un punto del espacio tridimensional respecto al sistema de referencia de la cámara de forma matricial:
+\begin{equation} 
+\begin{pmatrix}
+    X_{c} \\
+    Y_{c} \\
+    Z_{c} \\
+    1
+  \end{pmatrix}
+  \Longrightarrow
+  \begin{pmatrix}
+    fX_{c} \\
+    fY_{c} \\
+    Z_{c} \\
+  \end{pmatrix}
+  =
+  \begin{bmatrix} f & 0 & 0 & 0 \\ 0 & f & 0 & 0 \\ 0 & 0 & 1 & 0 \\\end{bmatrix}
+  \begin{pmatrix} X_{w} \\  Y_{w} \\  Z_{w} \\  1 \\\end{pmatrix}
+\end{equation}
+y la expresión de relación de correspondencia, queda de la siguiente forma:
+\begin{equation} 
+\sigma
+\begin{pmatrix}
+    X_{w} \\
+    Y_{w} \\
+    Z_{w} \\
+    1
+  \end{pmatrix}
+=
+  \begin{bmatrix} f & 0 & 0 & 0 \\ 0 & f & 0 & 0 \\ 0 & 0 & 1 & 0 \\\end{bmatrix}
+  \begin{pmatrix} X_{c} \\  Y_{c} \\  Z_{c} \\  1 \\\end{pmatrix}
 \end{equation}
 
-La homografía relaciona ambos puntos de la siguiente manera:
+Y de forma abreviada:
 
-\begin{equation}
-  p=sHP
+\begin{equation}\label{eq:proy}
+\sigma \overline{x_w} = P \overline{X_c}   
 \end{equation}
-Se ha introducido el parámetro $s$, el cual es un factor de escala arbitrario (entendiéndose que la homografía está definida bajo ese factor, debido al desconocimiento de las medidas del mundo real). En la figura \ref{FIGhomografia} puede verse la implicación de utilizar la homografía en este escenario.
+donde:
+\begin{itemize}
+\item $P = diag(f, f, 1) [I|0]$
+\item $diag(f, f, 1)$ es una matriz diagonal.
+\item $[I|0]$ representa una matriz identidad de 3x3 concatenada con un vector columna nulo de dimensión 3.
+\item $\overline{X_c}$  es el vector columna, de dimensión 4, que representa las coordenadas homogéneas del punto del espacio respecto al sistema de referencia de la cámara.
+\item $\overline{x}$  es el vector columna, de dimensión 3, que representan las coordenadas homogéneas del punto de la imagen.
+\item A la matriz $P$ de se la denomina \textbf{matriz homogénea de proyección de la cámara}.
+\end{itemize}
 
-Podría llegar a pensarse que las funciones de la matriz esencial y de la homografía son las mismas,
-puesto que ambas realizan transformaciones en la geometría del sistema de visión estereoscópica sin tener en cuenta los parámetros intrínsecos de la cámara. La diferencia reside en que la homografía trabaja sobre planos que son visibles desde la cámara y relacionaría un punto de ese plano con el de su propio plano. La matriz esencial no tiene en cuenta esta restricción y solo es capaz de relacionar un punto en una imagen que se encuentre alineado con otra imagen.
 
 \subsection{Parámetros intrínsecos de la cámara}
+La matriz de proyección $P$ de la ecuación (2.3), permite transformar las coordenadas de un punto 3D del mundo real en píxeles de una imagen. Se construye a partir de una matriz $K$ y un vector de valores nulos:
+\begin{equation}
+ P = [K|0] 
+\end{equation}
+donde la $K$ es la \textbf{matriz de la cámara}, la cuál está formada por una serie de parámetros, denominados \textbf{parámetros intrínsecos}:
 
-Los \textbf{parámetros intrínsecos} son aquellos que describen las características
-ópticas y geométricas de una cámara y que son constantes. Entre estos parámetros se encuentran la distancia focal, el centro óptico y el punto principal. En la figura \ref{fig:FIGparamCam} se pueden visualizar estos tres parámetros.
+\begin{equation}
+  K =
+  \begin{bmatrix}
+    f_{x} & \gamma & {c_{x}} \\
+    {0}&{f_{y}}&{c_{y}}\\
+    {0}&{0}&{1}
+  \end{bmatrix}
+\end{equation}
+
+Los \textbf{parámetros intrínsecos} son aquellos que describen las características ópticas y geométricas de una cámara y son constantes. Entre estos parámetros se encuentran la distancia focal, el centro óptico y el punto principal. En la figura \ref{fig:FIGparamCam} se pueden visualizar estos tres parámetros.
 
 \begin{figure}[h!]
   \centering
@@ -119,23 +161,47 @@ Los \textbf{parámetros intrínsecos} son aquellos que describen las caracterís
 \end{figure}
 
 \begin{itemize}
-\item El \textbf{centro óptico} o centro de proyección, denotado como \textbf{\textit{O}},  es el punto de la cámara desde el cual parten todos los rayos que son proyectados en el plano de imagen de la cámara.
-\item El \textbf{punto principal}, denotado como \textbf{\textit{c}}, es la proyección ortogonal del centro óptico sobre el plano de cámara.
-\item La \textbf{distancia focal}, denotada como \textbf{\textit{f}}, es la distancia existente entre el centro óptico y el punto principal.
+\item El \textbf{centro óptico} o centro de proyección, es el punto de la cámara desde el cual parten todos los rayos que son proyectados en el plano de imagen de la cámara.
+
+\item El \textbf{punto principal}, denotado como \textbf{\textit{c}}, es la proyección ortogonal del centro óptico sobre el plano de cámara.  $c_x$,$c_y$ indican el desplazamiento del centro de coordenadas del plano imagen, respecto al punto principal. Será nulo sólo si el eje óptico coincide con el centro del sensor de la cámara, pero el eje óptico no siempre atraviesa el centro de la imagen generada. 
+
+\item El factor $\gamma$ (skew factor ) determina el grado de perpendicularidad de las paredes de los píxeles del sensor. Es inversamente proporcional a la tangente del ángulo que forman los ejes X e Y , por lo que s tendrá un valor nulo si los píxeles son rectangulares. Esto suele ser así en casi todos los sensores utilizados hoy en día. 
+
+\item La \textbf{distancia focal}, es la distancia existente entre el centro óptico y el punto principal. $f_x$ y $f_y$ son dos distancias focales en píxeles. Son proporcionales a la longitud focal $f$ considerada en las ecuaciones (2.1) y (2.2), según 
+\begin{equation}
+f_x = f S_x \quad \quad f_y = f S_y
+\end{equation}
+donde: $f$ es la longitud focal física de la lente, en unidades de longitud (milímetros, micras, etc.). $S_x$ y $S_y$ son el número de píxeles por unidad de longitud del sensor, a largo del eje $X$ y del eje $Y$ respectívamente. Como es obvio, si el sensor tiene el mismo número de píxeles por unidad de longitud en todas sus dimensiones, las dos focales $f_x$ y $f_y$ tendrán el mismo valor.
 \end{itemize}
 
-Una vez realizada la calibración de la cámara, se obtienen una serie de matrices y vectores con valores que contienen los valores de los parámetros descritos anteriormente. En primer lugar, se obtiene la llamada \textbf{Matriz de cámara}, denotada como \textbf{M}, que contiene los valores de distancia focal y punto principal de la cámara. Esta matriz tiene la si\-guiente forma:
+\subsection{Distorsión}
+Por otra parte, se obtiene un vector con los factores de distorsión de la cámara. Normalmente este vector contiene 5 valores, correspondientes a 3 factores de distorsión radial, denotados como $k_{i}$ y 2 factores de distorsión tangencial, denotados como $p_{j}$. El número de factores de distorsión radial puede verse incrementado hasta 5, dependiendo del algoritmo de calibración que se realice.
 
+El uso de lentes facilita la entrada de luz, un enfoque adecuado y una mayor versatilidad, pero también introduce deformaciones en las imágenes que se forman en el sensor. Para el cálculo de coeficientes de distorsión, se tienen en cuenta los factores radiales y tangenciales. 
+
+La distorsión radial, consiste en el desplazamiento de los píxeles de de la imagen, de tal modo que las líneas situadas en los extremos del encuadre aparentarán salir hacia el exterior o el interior.   
+
+Para la correción de la distorsión radial de las coordenadas de un pixel de la imagen, se utiliza la siguiente fórmula:
 \begin{equation}
-  M =
-  \begin{bmatrix}
-    f_{x} & {0} & {c_{x}} \\
-    {0}&{f_{y}}&{c_{y}}\\
-    {0}&{0}&{1}
-  \end{bmatrix}
+  \begin{split}
+    x_{corrected} = x(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)  \\
+    y_{corrected} = y(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)
+  \end{split}
 \end{equation}
 
-Por otra parte, se obtiene un vector con los factores de distorsión de la cámara. Normalmente este vector contiene 5 valores, correspondientes a 3 factores de distorsión radial, denotados como $k_{i}$ y 2 factores de distorsión tangencial, denotados como $p_{j}$. El número de factores de distorsión radial puede verse incrementado hasta 5, dependiendo del algoritmo de calibración que se realice.
+La distorsión tangencial se produce porque la lente no se encuentra perfectamente paralela al plano de imagen. Se puede corregir a través de las siguientes fórmulas:
+\begin{equation}
+  \begin{split}
+    x_{corrected} = x + [ 2p_1xy + p_2(r^2+2x^2)] \\ 
+    y_{corrected} = y + [ p_1(r^2+ 2y^2)+ 2p_2xy]
+  \end{split}
+\end{equation}
+
+Así que tenemos cinco parámetros de distorsión que son representados en OpenCV como una matriz fila con 5 columnas: 
+
+\begin{equation}
+  Distortion_{coefficients} = [k_1 \hspace{10pt} k_2 \hspace{10pt} p_1 \hspace{10pt} p_2 \hspace{10pt} k_3]
+\end{equation}
 
 
 % \begin{figure}[h!]
@@ -147,13 +213,19 @@ Por otra parte, se obtiene un vector con los factores de distorsión de la cáma
 %   \end{minipage}
 % \end{figure}
 
-Tanto la matriz de cámara como el vector de distorsión contienen únicamente parámetros intrínsecos, lo que significa que serán constantes. No ocurre lo mismo con los parámetros extrínsecos, que varían en función de la situación de la cámara en el escenario, y que producen una matriz de rotación y un vector de traslación. Estos dos elementos indican la transformación geométrica que hay que realizar sobre la cámara para alcanzar la posición y la rotación finales desde su posición inicial. En la figura \ref{fig:RT} se puede ver gráficamente la implicación de los parámetros extrínsecos.
-
-
-
-
-
 \subsection{Parámetros extrínsecos de la cámara}
+En la sección \ref{subsec:matproy} se asumió el hecho de que el centro óptico \textbf{C} era el origen de coordenadas del mundo. Esto era así a efectos del cálculo de parámetros intrínsecos, con lo cual el modelo era válido siempre que el sistema no fuera movido de su posición inicial.
+
+Por otro lado, en la mayor parte de las aplicaciones prácticas es necesario que la cámara se mueva o se gire, para captar adecuadamente la escena. Por ello, para poder modelar el sistema con independencia de que su posición haya sido alterada o de que un objeto se pueda referenciar respecto al origen de coordenadas de la cámara, es necesario modificar la ecuación \ref{eq:proy} introduciendo un matriz de transformación $T$ 
+
+\begin{equation}
+\sigma x = KTX  
+\end{equation}
+
+$W = [R|t]$ donde: R es una matriz de rotación, que representa un giro de la cámara (o de un objeto respecto de ella). Tendrá una forma distinta dependiendo de respecto a que eje (X, Y, Z) se haga la rotación:
+
+
+%Tanto la matriz de cámara como el vector de distorsión contienen únicamente parámetros intrínsecos, lo que significa que serán constantes. No ocurre lo mismo con los parámetros extrínsecos, que varían en función de la situación de la cámara en el escenario, y que producen una matriz de rotación y un vector de traslación. Estos dos elementos indican la transformación geométrica que hay que realizar sobre la cámara para alcanzar la posición y la rotación finales desde su posición inicial. En la figura \ref{fig:RT} se puede ver gráficamente la implicación de los parámetros extrínsecos.
 
 Los \textbf{parámetros extrínsecos} son aquellos que definen la posición y la orientación de la cámara con respecto al mundo real.
 
@@ -182,7 +254,7 @@ La pose del objeto viene determinada por una posición (3 parámetros: X, Y, Z) 
   \label{fig:ángulos}
 \end{figure}
 
-El objetivo es encontrar una correspondencia entre puntos de la imagen en 2D y sus coordenadas en el mundo 3D. A la hora de representar los objetos del espacio observado (3D), los convertimos a un plano de visión (2D), y tenemos que definir cual es la correspondencia entre las coordenadas del espacio y las de la representación. Para facilitar esta conversión, se utiliza el sistema de coordenadas ``homogéneo''. Este sistema de coordenadas tiene la particularidad de que permite pasar fácilmente coordenadas de un número de dimensiones a otro. Para ello, almacena las coordenadas con una dimensión adicional, de tal forma que para un espacio de 3D, utilizaríamos 4 coordenadas. El valor de la coordenada adicional indica entre otras cosas, si el punto se encuentra en el infinito, valor 0, o es un punto cualquiera, valor distinto de 0. En este sistema, si dos coordenadas son proporcionales, se refieren al mismo punto.
+%El objetivo es encontrar una correspondencia entre puntos de la imagen en 2D y sus coordenadas en el mundo 3D. A la hora de representar los objetos del espacio observado (3D), los convertimos a un plano de visión (2D), y tenemos que definir cual es la correspondencia entre las coordenadas del espacio y las de la representación. Para facilitar esta conversión, se utiliza el sistema de coordenadas ``homogéneo''. 
 
 Las matrices de transformación, utilizadas para pasar de unas dimensiones a otras, suelen incluir 3
 tipos de transformaciones \textbf{R}otación, \textbf{T}ranslación y e\textbf{S}calado. Podemos representarlas así:
@@ -194,21 +266,19 @@ tipos de transformaciones \textbf{R}otación, \textbf{T}ranslación y e\textbf{S
   \end{bmatrix}
 \end{equation}
 
-Para convertir las coordenadas del mundo a coordenadas de pantalla, de espacio tridimensional a bidimensional, los sistemas de visión artificial utilizan la siguiente fórmula:
-\begin{equation}
-q=MQ
-\end{equation}
-donde:
-\begin{center}
-$q=\begin{bmatrix} x \\ y \\ z \end{bmatrix}$, $M=\begin{bmatrix} f_{x} & 0 & c_{x} \\ 0 & f_{y} & c_{y} \\ 0 & 0 & 1 \end{bmatrix}$ y $Q=\begin{bmatrix} X \\ Y \\ Z \end{bmatrix}$
-\end{center}
+%Para convertir las coordenadas del mundo a coordenadas de pantalla, de espacio tridimensional a bidimensional, los sistemas de visión artificial utilizan la siguiente fórmula:
+%\begin{equation}
+%q=MQ
+%\end{equation}
+%donde:
+%\begin{center}
+%$q=\begin{bmatrix} x \\ y \\ z \end{bmatrix}$, $M=\begin{bmatrix} f_{x} & 0 & c_{x} \\ 0 & f_{y} & c_{y} \\ 0 & 0 & 1 \end{bmatrix}$ y %$Q=\begin{bmatrix} X \\ Y \\ Z \end{bmatrix}$
+%\end{center}
 
-Por tanto, $q$ representa el espacio bidimensional en coordenadas homogéneas, y $Q$ el espacio tridimensional. $f_{x}$ es la distancia focal en el eje $X$, $f_{y}$ la distancia focal en el eje $Y$, ($c_{x},c_{y}$) marcan el punto principal, el punto donde el eje de visión corta el plano de visión (normalmente suele estar en el centro de la imagen, o muy cerca)
+%Por tanto, $q$ representa el espacio bidimensional en coordenadas homogéneas, y $Q$ el espacio tridimensional. $f_{x}$ es la distancia focal en el eje $X$, $f_{y}$ la distancia focal en el eje $Y$, ($c_{x},c_{y}$) marcan el punto principal, el punto donde el eje de visión corta el plano de visión (normalmente suele estar en el centro de la imagen, o muy cerca)
 
-Mediante alguna técnica de resolución al problema PnP, se calcula la pose (rotación y traslación) dado un conjunto de puntos de objeto, sus proyecciones en la imagen correspondiente, así como la matriz de cámara y los coeficientes de distorsión. Esta función encuentra una pose que minimiza el error de reproyección, es decir, la suma de los cuadrados de las distancias entre las proyecciones observados y las puntos proyectados
-La matriz de la cámara se corresponde con sus parámetros intrínsecos. Tanto la matriz como el vector
-de coeficientes de distorsión se obtienen en un proceso previo de calibración de la cámara y se
-mantienen fijos y conocidos durante todo el proceso.
+%Mediante alguna técnica de resolución al problema PnP, se calcula la pose (rotación y traslación) dado un conjunto de puntos de objeto, sus proyecciones en la imagen correspondiente, así como la matriz de cámara y los coeficientes de distorsión. Esta función encuentra una pose que minimiza el error de reproyección, es decir, la suma de los cuadrados de las distancias entre las proyecciones observados y las puntos proyectados
+%La matriz de la cámara se corresponde con sus parámetros intrínsecos. Tanto la matriz como el vector de coeficientes de distorsión se obtienen en un proceso previo de calibración de la cámara y se mantienen fijos y conocidos durante todo el proceso.
 
 
 %usando los parámetros extrínsecos de la cámara, podemos encontrar la relación entre las coordenadas de un punto $P$ en el mundo $(P_w)$ y las coordenadas de la cámara %$\left(P_c\right)$:
@@ -232,6 +302,7 @@ mantienen fijos y conocidos durante todo el proceso.
 %  Z_c=R^{T}_3\left(P_w-T\right)
 %\end{equation}
 %donde $R^{T}_i$ corresponde a la fila $i-th$ de la matriz de rotación.
+
 
 
 %\begin{figure}[h!]
@@ -267,54 +338,8 @@ mantienen fijos y conocidos durante todo el proceso.
 %
 %Nota: la relación de los puntos 3D y sus proyecciones 2D pueden ser vistas como una transformación lineal de la proyección espacial $({X_w}, {Y_w}, {Z_x}, 1)^T$ a la proyección del plano $({X_h}, {Y_h}, w)^T$.
 
-\subsection{Matriz de proyección}
-El modelo \emph{pinhole} fija un sistema de coordenadas proyectivas en el centro óptico. El eje $Z$ de este sistema coincide con el eje principal de la cámara. A partir de ahora nos referiremos a este sistema de coordenadas como sistema de referencia de la cámara. Además, el plano imagen se fija en el plano $Z = f$.
-Definiendo la siguiente notación que se va a seguir:
-\begin{itemize}
-\item $\overline{X_c} = (X_c , Y_c , Z_c )^T$ Coordenadas no homogéneas de cualquier punto del espacio tridimensional respecto al sistema de referencia de la cámara.
-\item $\overline{X_w} = (X_w , Y_w , Z_w )^T$ Coordenadas no homogéneas del mismo punto del espacio tridimensional respecto a un marco de referencia ligado al modelo del objeto. Este nuevo sistema de referencia es distinto al de la cámara.
-\item $x = (x, y, z)^T$  Coordenadas del punto proyectado en el plano imagen.
-\item $f$  Distancia focal
-\end{itemize}
 
-Utilizaremos $\overline{X}$, para representar vectores columna. Por tanto, su traspuesta, $X^T$ , será un vector fila. Por convenio con la notación anterior, las coordenadas de un punto cualquiera se van a representar por un vector columna $\overline{X} = (X, Y, Z)^T$.
-
-Mediante relación de triángulos, de la figura \ref{fig:pinholeCamera}, podemos determinar el proceso de correspondencia entre un punto cualquiera del espacio y su proyección en el plano imagen:
-\begin{equation}
-  (X_c , Y_c , Z_c )^T \Longrightarrow  (x, y)^T = (f \dfrac{X_c}{Z}, f \dfrac{Y_c}{Z})^T
-\end{equation}
-Utilizando coordenadas homogéneas, podemos expresar la relación anterior de forma matricial:
-\begin{equation}
-  \begin{pmatrix}
-    X_{c} \\
-    Y_{c} \\
-    Z_{c} \\
-    1
-  \end{pmatrix}
-  \Longrightarrow
-  \begin{pmatrix}
-    fX_{c} \\
-    fY_{c} \\
-    Z_{c} \\
-  \end{pmatrix}
-  =
-  \begin{bmatrix} f & 0 & 0 & 0 \\ 0 & f & 0 & 0 \\ 0 & 0 & 1 & 0 \\\end{bmatrix}
-  \begin{pmatrix} X_{c} \\  Y_{c} \\  Z_{c} \\  1 \\\end{pmatrix}
-\end{equation}
-La expresión anterior, abreviada, queda de la siguiente forma:
-\begin{equation}
-  P = diag(f, f, 1) [I|0] \Longrightarrow  \overline{x} = P\overline{X_c}
-\end{equation}
-donde:
-\begin{itemize}
-\item $diag(f, f, 1)$ es una matriz diagonal.
-\item $[I|0]$ representa una matriz identidad de 3x3 concatenada con un vector columna nulo de dimensión 3.
-\item $\overline{X_c}$  es el vector columna, de dimensión 4, que representa las coordenadas homogéneas del punto del espacio respecto al sistema de referencia de la cámara.
-\item $\overline{x}$  es el vector columna, de dimensión 3, que representan las coordenadas homogéneas del punto de la imagen.
-\item A la matriz $P$ de se la denomina \textbf{matriz homogénea de proyección de la cámara}.
-\end{itemize}
-
-\subsection{Modelado Cámara-Proyector mediante visión estéreo}
+\subsection{Visión Estereoscópica}
 
 Un proyector se calibra usando los mismos algoritmos de calibración que una cámara ya que puede
 considerarse como una ``cámara inversa''. No obstante el hecho de poder aplicar un modelo pin-hole
@@ -431,23 +456,6 @@ Además de estas propiedades, existen otras propiedades geométricas:
   \end{equation}
 
 \end{itemize}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -625,363 +633,6 @@ La figura \ref{fig:pirámides} muestra los pasos involucrados en el cálculo de 
   \caption{Pirámide multiresolución. (journal.code4lib.org)}
   \label{fig:pirescale}
 \end{figure}
-
-\section{Geometría de formación de la imagen}
-
-\subsection{¿Qué suposiciones hemos hecho hasta ahora?}
-
-Todas las ecuaciones que hemos derivado hasta el momento están escritas en los marcos de referencia de la cámara.
-
-Estas ecuaciones solo son válidas cuando:
-\begin{itemize}
-    \item (1) todas las distancias se miden en el marco de referencia de la cámara.
-    \item(2) las coordenadas de la imagen tienen su orígen en el punto principal.
-\end{itemize}
-
-  (imagen 1, ejes de coordenadas y plano)
-
-En general, el mundo y los sistemas de coordenadas píxel están relacionados por un conjunto de parámetros físicos como:
-\begin{itemize}
-     \item la longitud focal de las lentes
-     \item el tamaño de los píxeles
-     \item la posición del punto  principal
-     \item la posición y orientación de la cámara
-\end{itemize}
-\subsection{Tipos de parámetros (Trucco 2.4)}
-
-Hay dos tipos de parámetros que deben ser recuperados para poder reconstruir la estructura 3D de una escena, a partir de las coordenadas píxel de sus puntos de imagen:
-\begin{description}
-\item[Parámetros extrínsecos de la cámara:] Son los parámetros que definen la localización y orientación de los marcos de referencia de la cámara con respecto a el marco de referencia real.
-  \item[Parámetros intrínsecos de la cámara:] Son los parámetros necesarios para vincular las coordenadas de píxeles de un punto de una imagen con las coordenadas correspondientes en el marco de referencia de la cámara.
-  \end{description}
-  Coordenadas del objeto (3D)
-                                                   !
-                                       Coordenadas reales conociadas (3D)         parámetros extrínsecos de la cámara 
-(esquema)
-                                                   !
-                                       Coordenadas de la cámara (3D)
-                                                   !
-                                       Coordenadas de la imagen plana (2D)         parámetros intrínsecos de la cámara 
-                                                   !
-                                       Coordenadas píxel (2D, int)                                            
-
-\subsection{Parámetros extrínsecos de la cámara}
-
-Son parámetros que identifican de forma exclusiva la transformación entre el marco de referencia desconocido de la camra y el marco de referencia mundialmenteconocido.
-Comúnmente, la determinación de estos parámetros significa:
-\begin{itemize}
-   \item (1) encontrar el vector de translación entre las posiciones relativas al origen de dos marcos de referencia.
-   \item (2) encontrar la matriz de rotación que provocan los ejes correspondientes a los dos marcos alineados ( ej.: uno sobre otro)
-\end{itemize}
-
-(imagen 3, R,T)
-
-usando los parámetros extrínsecos de la cámara, podemos encontrar la relación entre las coordenadas de un punto $P$ en el mundo $\left(P_w\right)$ y las coodenadas de la cámara $\left(P_c\right)$:
-\begin{equation}
-		P_c=R\left(P_w-T\right)where R=\begin{pmatrix}
- 		r_{11} & r_{12} & r_{13}\\ 
- 		r_{21} & r_{22} & r_{23}\\ 
- 		r_{31} & r_{32} & r_{33}
- 		\end{pmatrix}
-\end{equation}
-
-Si $P_c=\begin{pmatrix}{X_c} \\ {Y_c} \\ {Z_c} \end{pmatrix}$ Y $P_w=\begin{pmatrix}{X_w} \\ {Y_w} \\ {Z_w} \end{pmatrix}$, entonces
-\begin{equation}
-  \begin{pmatrix} X_{c}\\ Y_{c}\\ z_{c}\end{pmatrix} =\begin{pmatrix}r_{11} & r_{12} & r_{13}\\r_{21} & r_{22} & r_{23}\\r_{31} & r_{32} & r_{33}
-  \end{pmatrix}\begin{pmatrix}X_{w} - T_{x}\\Y_{w} - T_{y}\\Z_{w} - T_{z}\end{pmatrix}
-\end{equation}
-o 
-\begin{equation}
-  X_c=R^{T}_1\left(P_w-T\right)\\ 
-  Y_c=R^{T}_2\left(P_w-T\right)\\ 
-  Z_c=R^{T}_3\left(P_w-T\right) 
-  \end{equation}
-donde $R^{T}_i$ corresponde a la fila $i-th$ de la matriz de rotación.
-
-\subsection{Parámetros intrínsecos de la cámara}
-
-Parametrizan las caracteristicas ópticas, geométricas y digitales propias de la cámara:
-\begin{itemize}
-   \item (1) la proyección en perspectiva (longitud focal {f})
-   \item (2) la tranformación entre las coordenadas del plano de la imagen y las coordenadas píxel.
-   \item (3) la distorsión geométrica introducida por las ópticas
-\end{itemize}
-
-\subsubsection{De las coordenadas de la cámara a las coordenadas del plano de la imagen}
-
-Aplicar proyección en perspectiva
-
-\begin{equation}
-x={f}\frac{X_c}{Zc}={f}\frac{R^T_1\left(P_w-T\right)}{R^T_3\left(P_w-T\right)},\
-y={f}\frac{Y_c}{Zc}={f}\frac{R^T_2\left(P_w-T\right)}{R^T_3\left(P_w-T\right)}
-\end{equation}
-\subsubsection{De las coordenadas del plano de la imagen a las coordenadas píxel}
-
-(imagen 4, camera frame)
-
-%\begin{equation}
-%x=-\left(x_{im}-0{x}\right)s_x ó x_{im}=-{\frac{x}{s_x}+0_x}
-
-%y=-\left(y_{im}-0{y}\right)s_y ó y_{im}=-{\frac{y}{s_y}+0_y}
-%\end{equation}
-
-donde $({0_x}, {0_y})$ son las coordenadas del punto principal (en píxeles, ej.: $0_{x}={\frac{N}{2}}, 0_{y}={\frac{M}{2}}$ si el punto principal esta en el centro de la imagen) y $S_x$, $S_y$ corresponden al tamaño efectivo de los píxeles en horizontal y vertical (en milimetros).
-
-Usando la notación de la matriz:
-\begin{equation}
-  \begin{pmatrix}x_{im}\\y_{im}\\1\end{pmatrix}=\begin{pmatrix}{\frac{-1}{S_x}} & 0 & 0\\0 & {\frac{-1}{S_y}} & 0_{y}\\0 & 0 & 1\end{pmatrix}\begin{pmatrix}x\\y\\1\end{pmatrix}
-\end{equation}
-\subsubsection{Relacionar coordenadas píxel en coordenadas reales}
-
-\begin{equation}
--\left(x_{im}-0_x\right)s_x={f}\frac{R^T_1\left(P_{w}-T\right)}{R^T_3\left(P_{w}-T\right)},\ -\left(y_{im}-0_y\right)s_y={f}\frac{R^T_2\left(P_{w}-T\right)}{R^T_3\left(P_{w}-T\right)}
-\end{equation}
-ó
-\begin{equation}
-x_{im}=-fs_x\frac{R^T_1\left(P_{w}-T\right)}{R^T_3\left(P_{w}-T\right)}+o_x\ ,\ y_{im}=-fs_y\frac{R^T_1\left(P_{w}-T\right)}{R^T_3\left(P_{w}-T\right)}+0_y
-\end{equation}
-
-\subsubsection{Distorsión de la imagen debido a la óptica}
-
-Suponiendo distorsión radial:
-\begin{equation}
-  x=x_d\left(1+k_1r^2+k_2r^4\right)
-  y=y_d\left(1+k_1r^2+k_2r^4\right)
-\end{equation}
-donde $({X_d}, {y_d})$ son las coordenadas de los puntos de distorsión $(r^2=x_d^2+y_d^2)$. $
-{k_1}$ y ${k_2}$ son parámetros intrínsecos también pero no seran considerados aquí...
-
-\subsection{Combinación de parámetros extrínsecos e intrínsecos de la cámara}
-
-La matriz que contiene los parámetros intrínsecos de la cámara:
-\begin{equation}
-M_{in}=\begin{pmatrix}-\frac{f}{s_x} & 0 & 0_{x}\\0 & -\frac{f}{s_y} & o_y\\0 & 0 & 1\end{pmatrix}
-\end{equation}
-- La matriz que contiene los parámetros extrínsecos de la cámara:
-\begin{equation}
-M_{ex}=\begin{pmatrix}r_{11} & r_{12} & r_{13} & -R_1^TT\\r_{21} & r_{22} & r_{23} & -R_2^TT\\r_{31} & r_{32} & r_{33} & -R_3^TT\end{pmatrix}M_{ex}=\begin{pmatrix}r_{11} & r_{12} & r_{13} & -R_1^TT\\r_{21} & r_{22} & r_{23} & -R_2^TT\\r_{31} & r_{32} & r_{33} & -R_3^TT\end{pmatrix}
-\end{equation}
-
-Usar coordenadas homogéneas:
-\begin{equation}
-\begin{pmatrix}x_{h}\\y_{h}\\w \end{pmatrix}=M_{in}M_{ex}\begin{pmatrix}x_{w}\\y_{w}\\z_{w}\\1 \end{pmatrix}=M\begin{pmatrix}x_{w}\\y_{w}\\z_{w}\\1 \end{pmatrix}=\begin{pmatrix}m_{11} &m_{12} & m_{13} & m_{14}\\m_{21} & m_{22} & m_{23} & m_{24}\\m_{31} & m_{32} & m_{33} & m_{34}\\m_{41} & m_{42} & m_{43} & m_{44}\end{pmatrix}\begin{pmatrix}x_{w}\\y_{w}\\z_{w}\\1 \end{pmatrix}
-\end{equation}
-
-La homogeneización es necesaria pra obtener las coordenadas píxel:
-\begin{equation}
-x_{im}=\frac{x_h}{w}=\frac{m_{11}X_w+m_{12}Y_w+m_{13}Z-w+m_{14}}{m_{31}X_w+m_{32}Y_w+m_{33}Z-w+m_{34}}
-y_{im}=\frac{y_h}{w}=\frac{m_{21}X_w+m_{22}Y_w+m_{23}Z-w+m_{24}}{m_{31}X_w+m_{32}Y_w+m_{33}Z-w+m_{34}}
-\end{equation}
-
-Llamamos M a la proyección de la matriz (es una matriz 3x4)
-
-Nota: la relación de los puntos 3D y sus proyecciones 2D pueden ser vistas como una transformación lineal de la proyección espacial $({X_w}, {Y_w}, {Z_x}, 1)^T$ a la proyección del plano $({X_h}, {Y_h}, w)^T$.
-
-\subsection{El modelo de la perspectiva de la cámara (usando la matriz de notación)}
-
-Suponiendo  $O_x=O_y=0$ y $S_x=S_y=1$
-\begin{equation}
-M_p=\begin{pmatrix}-fr_{11} & -fr_{12} & -fr_{13} & -fr_{14}\\-fr_{21} & -fr_{22} & -fr_{23} & -fr_{24}\\ -fr_{31} & -fr_{32} & -fr_{33} & -fr_{34}\end{pmatrix}
-\end{equation}
-
-Vamos a verificar la corrección de la matriz anterior:
-
-%\begin{equation}
-%p=Mr_1^T_pPw=\begin{pmatrix}-fR_1^T & fR_1^TT \\-fR_2^T & fR_2^TT \\R_3^T & -R_3^TT\end{pmatrix}\begin{pmatrix}PW\\1\end{pmatrix}=\begin{pmatrix}-fR_1^T\left(P_w-T\right)\\ -fR_2^T\left(P_w-T\right)\\R_3^T\left(P_w-T\right)\end{pmatrix}
-%\end{equation}
-
-Después homogeneización:
-\begin{equation}
-x=-f\frac{R_1^T\left(P_w-T\right)}{R_3^T\left(P_w-T\right)}
-y=-f\frac{R_2^T\left(P_w-T\right)}{R_3^T\left(P_w-T\right)}
-\end{equation}
-
-\subsection{El modelo de la cámara perspectiva débil(usando la matriz de notación)}
-
-\begin{equation}
-M_{wp}=\begin{pmatrix}-fr_{11} & -fr_{12} & -fr_{13} & fR_1^TT\\-fr_{21} & -fr_{22} & -fr_{23} & fR_2^TT\\0 & 0 & 0 & R_3^T\left(\overline{P}-T\right) \end{pmatrix}
-\end{equation}
-donde $\overline{P}$ es el centro  del objeto (es decir, la distancia promedio del objetivo desde la cámara)
-
-Nosotros podemos verificar las correcciones de la matriz anterior:
-\begin{equation}
-p=M_{wp}P_w=\begin{pmatrix} -fR_1^T  & fR_1^T \\-fR_2^T & fR_2^T \\0  0  0  & R_3^T\left(P-T\right)\end{pmatrix}\begin{pmatrix}P_w \\1 \end{pmatrix}=\begin{pmatrix} -fR_1^T\left(P_w-T\right)  \\-fR_2^T\left(P_w-T\right) \\R_3^T\left(P-T\right)\end{pmatrix}
-\end{equation}
-Después de la homogeneización:
-\begin{equation}
-x=-f\frac{R_1^T\left(P_w-T\right)}{R_3^T\left(\overline{P}_w-T\right)}
-y=-f\frac{R_2^T\left(P_w-T\right)}{R_3^T\left(\overline{P}_w-T\right)}
-\end{equation}
-
-\subsection{El modelo de cámara afín}
-\begin{itemize}
-\item Las entradas de la matriz de proyección carecen de restricciones:
-  
-  $M_a=\begin{pmatrix}a_{11} & a_{12} & a_{13} & a_{14}\\a_{21} & a_{22} & a_{23} & a_{24}\\0 & 0 & 0 & a_{34}\end{pmatrix}$
-  
-\item El modelo afín no parece corresponder a ninguna cámara física.
-
-\item Conduce a ecuaciones simples y propiedades geométricas recurrentes.
-
-\item No conserva los ángulos pero conserva el paralelismo.
-\end{itemize}
-
-\subsection{Matriz de proyección}
-
-El modelo \emph{pinhole} fija un sistema de coordenadas proyectivas en el centro óptico. El eje $Z$ de este sistema coincide con el eje principal de la cámara. A partir de ahora nos referiremos a este sistema de coordenadas como sistema de referencia de la cámara. Además, el plano imagen se fija en el plano $Z = f$.
-Definiendo la siguinte notación que se va a seguir:
-\begin{itemize}
-\item $\overline{X_c} = (X_c , Y_c , Z_c )^T$ Coordenadas no homogéneas de cualquier punto del espacio tridimensional respecto al sistema de referencia de la cámara.
-\item $\overline{X_w} = (X_w , Y_w , Z_w )^T$ Coordenadas no homogéneas del mismo punto del espacio tridimensional respecto a un marco de referencia ligado al modelo del objeto. Este nuevo sistema de referencia es distinto al de la cámara.
-\item $x = (x, y, z)^T$  Coordenadas del punto proyectado en el plano imagen.
-\item $f$  Distancia focal
-\end{itemize}
-
-Utilizaremos $\overline{X}$, para representar vectores columna. Por tanto, su traspuesta, $X^T$ , será un vector fila. Por convenio con la notación anterior, las coordenadas de un punto cualquiera se van a representar por un vector columna $\overline{X} = (X, Y, Z)^T$.
-
-Mediante relación de triángulos, de la figura \ref{fig:pinholeCamera}, podemos determinar el proceso de correspondencia entre un punto cualquiera del espacio y su proyección en el plano imagen:
-\begin{equation}
-  (X_c , Y_c , Z_c )^T \Longrightarrow  (x, y)^T = (f \dfrac{X_c}{Z}, f \dfrac{Y_c}{Z})^T
-\end{equation}
-Utilizando coordenadas homogéneas, podemos expresar la relación anterior de forma matricial:
-\begin{equation}
-  \begin{pmatrix}
-    X_{c} \\
-    Y_{c} \\
-    Z_{c} \\
-    1
-  \end{pmatrix}
-  \Longrightarrow
-  \begin{pmatrix}
-    fX_{c} \\
-    fY_{c} \\
-    Z_{c} \\
-  \end{pmatrix}
-  =
-  \begin{bmatrix} f & 0 & 0 & 0 \\ 0 & f & 0 & 0 \\ 0 & 0 & 1 & 0 \\\end{bmatrix}
-  \begin{pmatrix} X_{c} \\  Y_{c} \\  Z_{c} \\  1 \\\end{pmatrix}
-\end{equation}
-La expresión anterior, abreviada, queda de la siguiente forma:
-\begin{equation}
-  P = diag(f, f, 1) [I|0] \Longrightarrow  \overline{x} = P\overline{X_c}
-\end{equation}
-donde:
-\begin{itemize}
-\item $diag(f, f, 1)$ es una matriz diagonal.
-\item $[I|0]$ representa una matriz identidad de 3x3 concatenada con un vector columna nulo de dimensión 3.
-\item $\overline{X_c}$  es el vector columna, de dimensión 4, que representa las coordenadas homogéneas del punto del espacio respecto al sistema de referencia de la cámara.
-\item $\overline{x}$  es el vector columna, de dimensión 3, que representan las coordenadas homogéneas del punto de la imagen.
-\item A la matriz $P$ de se la denomina \textbf{matriz homogénea de proyección de la cámara}.
-\end{itemize}
-
-\subsection{Distorsión}
-Para la distorsión, OpenCV tiene en cuenta los factores radiales y tangenciales. La distorsión radial, consiste en el desplazamiento de los píxeles de de la imagen, de tal modo que las líneas situadas en los extremos del encuadre aparentarán salir hacia el exterior o el interior.   
-
-Para la correción de la distorsión radial de las coordenadas de un pixel de la imagen, se utiliza la siguiente fórmula:
-
-\begin{equation}
- x_{corrected} = x(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)  
- y_{corrected} = y(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)
-\end{equation}
-
-La distorsión tangencial se produce porque la lente no se encuentra perfectamente paralela al plano de imagen. Se puede corregir a través de las siguientes fórmulas:
-
-\begin{equation}
-   x_{corrected} = x + [ 2p_1xy + p_2(r^2+2x^2)] \\
-   y_{corrected} = y + [ p_1(r^2+ 2y^2)+ 2p_2xy]
- \end{equation}
-
-Así que tenemos cinco parámetros de distorsión que son representados en OpenCV  como una matriz fila con 5 columnas: 
-
-\begin{equation}
-  Distortion_{coefficients} = [k_1 \hspace{10pt} k_2 \hspace{10pt} p_1 \hspace{10pt} p_2 \hspace{10pt} k_3]
-\end{equation}
-
-Ahora, para la conversión de unidades se utiliza la siguiente fórmula:
-
-Now for the unit conversion we use the following formula:
-
-\begin{equation}
-  \left[  \begin{matrix}   x \\   y \\  w \end{matrix} \right ] = \left [ \begin{matrix}   f_x & 0 & c_x \\  0 & f_y & c_y \\   0 & 0 & 1 \end{matrix} \right ] \left [ \begin{matrix}  X \\  Y \\   Z \end{matrix} \right ]
-\end{equation}
-
-%Aquí la presencia de w se explica por el uso de homografía sistema de coordenadas (y w = Z ). Los parámetros desconocidos son f_x y f_y (Cámara longitudes focales) y (C_x, c_y) que son los centros ópticos expresadas en píxeles coordenadas. Si para ambos ejes una longitud focal común se utiliza con un dado un relación de aspecto (por lo general 1), entonces f_y = f_x * a y en la fórmula superior tendremos una sola longitud focal F . La matriz que contiene estos cuatro parámetros se conoce como la matriz de cámara. Mientras que los coeficientes de distorsión son los mismos independientemente de las resoluciones de cámara utilizados, éstos deben ampliarse junto con la resolución actual de la resolución calibrada.
-
-
-Here the presence of $w$ is explained by the use of homography coordinate system (and $w=Z$). The unknown parameters are $f_x$ and $f_y$ (camera focal lengths) and $(c_x, c_y)$ which are the optical centers expressed in pixels coordinates. If for both axes a common focal length is used with a given $a$ aspect ratio (usually 1), then $f_y=f_x*a$ and in the upper formula we will have a single focal length $f$. The matrix containing these four parameters is referred to as the \emph{camera matrix}. While the distortion coefficients are the same regardless of the camera resolutions used, these should be scaled along with the current resolution from the calibrated resolution.
-
-The process of determining these two matrices is the calibration. Calculation of these parameters is done through basic geometrical equations. The equations used depend on the chosen calibrating objects. Currently OpenCV supports three types of objects for calibration:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\subsection{Modelado del proyector}
-Un proyector de luz puede considerarse como una cámara inversa, en el sentido de que proyecta en vez de recoger luz. No obstante el hecho de poder aplicar un modelo pin-hole a un proyector no parece tan evidente como en el caso de una cámara. 
-
-Un proyector se calibra usando los mismos algoritmos de calibración que una cámara ya que puede considerarse como una ``cámara inversa''. Sin embargo como el proyector no ``ve'', el método no es tan directo como en el caso de una cámara. Para la calibración de un proyector es inevitable el uso al menos una cámara. Para calibrar un proyector, ya sea usando el método de Tsai \cite{Tsai}, como el método de Zhang \cite{Zhang99} es necesario obtener un conjunto de coordenadas 3D-2D correspondientes. 
-
-\section{Estimación de la pose}
-El proceso de estimación de pose de un objeto consiste en determinar los parámetros de rotación y translación de dicho objeto a partir de información visual. El problema se consolida como uno de los retos más destacados en el campo de la visión por computador, surgiendo numerosas alternativas y métodos para solucionarlo. 
-
-La pose del objeto viene determinada por una posición (3 parámetros: X, Y, Z) y una orientación (3 ángulos: yaw, pitch, roll) que forman un conjunto de 6 grados de libertad (6DOF). La solución para la estimación de la pose ha sido propuesta, entre otros métodos, mediante transformada lineal directa (DLT), algoritmos Pnp (perspective-n-point).
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.4\textwidth]{angles.png}
-  \caption{Ángulos de orientación: \emph{yaw, pitch y roll}}
-  \label{fig:ángulos}
-\end{figure}
-
-El objetivo es encontrar una correspondencia entre puntos de la imagen en 2D y sus coordenadas en el mundo 3D. A la hora de representar los objetos del espacio observado (3D), los convertimos a un plano de visión (2D), y tenemos que definir cual es la correspondencia entre las coordenadas del espacio y las de la representación. Para facilitar esta conversión, se utiliza el sistema de coordenadas ``homogéneo''. Este sistema de coordenadas tiene la particularidad de que permite pasar fácilmente coordenadas de un número de dimensiones a otro. Para ello, almacena las coordenadas con una dimensión adicional, de tal forma que para un espacio de 3D, utilizaríamos 4 coordenadas. El valor de la coordenada adicional indica entre otras cosas, si el punto se encuentra en el infinito, valor 0, o es un punto cualquiera, valor distinto de 0. En este sistema, si dos coordenadas son proporcionales, se refieren al mismo punto.
-
-Las matrices de transformación, utilizadas para pasar de unas dimensiones a otras, suelen incluir 3 tipos de transformaciones: Rotación, Translación y eScalado. Podemos representarlas así:
-\begin{equation}
-  [R|t] = \begin{bmatrix} SR_{1,1} & SR_{1,2} & SR_{1,3} & T_{1}  \\
-    SR_{2,1} & SR_{2,2} & SR_{2,3} & T_{2}  \\
-    SR_{3,1} & SR_{3,2} & SR_{3,3} & T_{3}  \\
-    0    &     0   &     0   &  1 
-  \end{bmatrix}
-\end{equation}
-
-Para convertir las coordenadas del mundo a coordenadas de pantalla, de espacio tridimensional a bidimensional, los sistemas de visión artificial utilizan la siguiente fórmula:
-
-\begin{center}
-  $q=MQ$ donde $q=\begin{bmatrix} x \\ y \\ z \end{bmatrix}$, $M=\begin{bmatrix} f_{x} & 0 & c_{x} \\ 0 & f_{y} & c_{y} \\ 0 & 0 & 1 \end{bmatrix}$ y $Q=\begin{bmatrix} X \\ Y \\ Z \end{bmatrix}$
-\end{center}
-
-Por tanto, q representa el espacio bidimensional en coordenadas homogéneas, y Q el espacio tridimensional. $f_{x}$ es la distancia focal en el eje X, $f_{y}$ la distancia focal en el eje Y, ($c_{x},c_{y}$) marcan el punto principal, el punto donde el eje de visión corta el plano de visión (normalmente suele estar en el centro de la imagen, o muy cerca) 
-
-Mediante alguna técnica de resolución al problema PnP, se calcula la pose (rotación y traslación) dado un conjunto de puntos de objeto, sus proyecciones en la imagen correspondiente, así como la matriz de cámara y los coeficientes de distorsión. Esta función encuentra una pose que minimiza el error de reproyección, es decir, la suma de los cuadrados de las distancias entre las proyecciones observados y las puntos proyectados
-La matriz de la cámara se corresponde con sus parámetros intrínsecos. Tanto la matriz como el vector de coeficientes de distorsión se obtienen en un proceso previo de calibración de la cámara y se mantienen fijos y conocidos durante todo el proceso.
 
 \section{Detección}
 En el contexto de la realidad aumentada, la detección es el proceso de localizar un objeto en una imagen capturada y calcular la posición y orientación de la cámara \emph{(camera pose)} respecto a ese objeto.
