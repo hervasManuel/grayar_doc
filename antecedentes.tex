@@ -25,7 +25,7 @@ El modelo \textbf{\textit{pinhole}} \cite{Hartley} permite modelar el proceso de
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=1.0\textwidth]{pinhole.png}
+  \includegraphics[width=0.75\textwidth]{pinhole.png}
   \caption{Modelo de cámara \textit{pinhole}. La imagen de un punto 3D se forma mediante proyección de perspectiva. Un punto $X$ es proyectado a un punto $x$ en el plano imagen}
   \label{fig:pinholeCamera}
 \end{figure}
@@ -63,17 +63,24 @@ Los elementos que forman este modelo se definen de la siguiente forma:
 \subsection{Matriz de proyección}\label{subsec:matproy}
 El modelo \textit{pinhole} \cite{Hartley} fija un sistema de coordenadas proyectivas en el centro óptico. El eje $Z$ de este sistema coincide con el eje principal de la cámara. A partir de ahora nos referiremos a este sistema de coordenadas como sistema de referencia de la cámara. Además, el plano imagen se fija en el plano $Z = f$.
 
-Definiendo la siguiente notación que se va a seguir:
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{pinhole2.png}
+  \caption{Modelo de cámara \textit{pinhole} visto desde el eje $X$}
+  \label{fig:pinholeCamera2}
+\end{figure}
+
+Utilizaremos $[X, Y, Z]$, para representar vectores fila. Por tanto, su traspuesta, $[X, Y, Z]^T$, será un vector columna. 
+
+Por convenio con la notación anterior, las coordenadas de un punto cualquiera se van a representar por un vector columna, definiendo los siguiente elementos a considerar:
 \begin{itemize}
-\item $(X_c , Y_c , Z_c )^T$ Coordenadas de un punto del espacio tridimensional respecto al sistema de referencia de la cámara.
-\item $(X_w , Y_w , Z_w )^T$ Coordenadas del mismo punto del espacio tridimensional respecto a un sistema de referencia asociado al modelo del objeto. Este nuevo sistema de referencia es distinto al de la cámara.
-\item $(x, y)^T$  Coordenadas del punto proyectado en el plano imagen.
+\item $[X_c , Y_c , Z_c ]^T$ Coordenadas de un punto del espacio tridimensional respecto al sistema de referencia de la cámara.
+\item $[X_w , Y_w , Z_w ]^T$ Coordenadas del mismo punto del espacio tridimensional respecto a un sistema de referencia asociado al modelo del objeto. Este nuevo sistema de referencia es distinto al de la cámara.
+\item $[x, y]^T$  Coordenadas del punto proyectado en el plano imagen.
 \item $f$  Distancia focal
 \end{itemize}
 
-%Utilizaremos $\overline{X}$, para representar vectores columna. Por tanto, su traspuesta, $X^T$ , será un vector fila. Por convenio con la notación anterior, las coordenadas de un punto cualquiera se van a representar por un vector columna $\overline{X} = (X, Y, Z)^T$.
-
-Mediante relación de semejanza de triángulos, de la figura \ref{fig:pinholeCamera}: 
+Mediante relación de semejanza de triángulos, de la figura \ref{fig:pinholeCamera2}: 
 \begin{equation}
 \dfrac{x}{f} = \dfrac{X}{Z} \quad \quad \dfrac{y}{f} = \dfrac{Y}{Z} 
 \end{equation}
@@ -1168,13 +1175,12 @@ Los descriptores de LLAH tiene las siguientes características:
 En LLAH las imágenes se almacenan y recuperan mediante una tabla hash. En primer lugar se calculan y almacenan los descriptores de la imagen de forma preliminar. Cuando se da una imagen para recuperar, se calculan los descriptores de la consulta y se buscan y contabilizan los documentos posibles en los que coincidan el mismo descriptor. Finalmente, el documento que obtiene el mayor número de votos (descriptores encontrados)  es devuelto como resultado del proceso de recuperación
 
 
-\section{Limitaciones de la realidad aumentada en la identificación de documentos}
-\subsection{Adquisición de imágenes mediante cámaras. Ventajas e inconvenientes}
+\subsection{Limitaciones en la identificación de documentos}
 El análisis de documentos mediante cámaras tiene una serie de ventajas sobre aquellos que están basados en la adquisición mediante escáner. Las cámaras son pequeñas y fáciles de transportar. También se pueden utilizar en cualquier entorno y sobre documentos que por su formato sean difíciles de manipular en un escáner como periódicos, libros, o manuscritos antiguos. Incluso para capturar texto que no se encuentra en papel, como carteles en fachadas, o texto que se encuentre el objetos que se muevan por la escena.
 
 En la mayoría de casos, los escáneres obtienen mejor calidad en la captura de calidad que las realizadas mediante cámaras, pero los sistemas basados en cámaras son mucho más flexibles y portables. 
 
-\subsection{Problemática asociada}
+\subsubsection{Problemática asociada}
 Casi todos los algoritmos de reconocimiento de documentos obtienen grandes resultados partiendo de imágenes limpias, en alta resolución y con contrastes claramente definidos entre el texto y el fondo. Sin embargo, mediante la captura con cámaras debido a su naturaleza, a la forma en que se realiza la captura y el entorno en que nos encontremos se presentan una serie de dificultades que deben ser tenidas en cuenta.  
 \begin{description}
 \item[Baja resolución] Las imágenes obtenidas con las cámaras suelen estar en baja resolución, bien por las limitaciones del sensor, o por que la capacidad de computo del dispositivo que la contiene es limitada. Mientras que con un escáner es normal trabajas con una resolución de entre 150 a 600 dpi, el mismo texto en una captura con una cámara rodaría los 50 dpi.
