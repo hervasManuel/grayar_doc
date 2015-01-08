@@ -26,12 +26,6 @@ Mitsuru Ambai y Yuichi Yoshida.
   Vision}, ICCV '11, páginas 97--104, Washington, DC, USA, 2011. IEEE Computer
   Society.
 
-\bibitem[Azu97]{Azuma}
-Ronald.~T. Azuma.
-\newblock A survey of augmented reality.
-\newblock {\em Presence: Teleoperators and Virtual Environments},
-  6(4):355--385, 1997.
-
 \bibitem[BET08]{Bay}
 H.~Bay, A.~Ess, y T.~Tuytelaars.
 \newblock Speeded-Up Robust FeatureS.
@@ -95,6 +89,11 @@ Michael Donoser, Peter Kontschieder, y Horst Bischof.
 Amaury Dame y Éric Marchand.
 \newblock Accurate real-time tracking using mutual information.
 \newblock En {\em ISMAR}, páginas 47--56. IEEE, 2010.
+
+\bibitem[dT13]{OIT}
+Organización~Internacional del Trabajo.
+\newblock Estudio: Factores para la inclusión laboral de las personas con
+  discapacidad, 2013.
 
 \bibitem[EAH08]{Erol}
 Berna Erol, Emilio Ant\'{u}nez, y Jonathan~J. Hull.
