@@ -16,23 +16,23 @@ arte de los sistemas existentes.
 \section{Geometría de la formación de imágenes}
 La formación de las imágenes consiste en una representación bidimensional del mundo 3D, perdiéndose la información de profundidad.
 
-La óptica geométrica clásica se basa en modelos de lentes para modelar el proceso de formación de las imágenes. Sin embargo, podemos simplificar este proceso suponiendo que todos los rayos que llegan a la cámara atraviesan un único punto y se proyectan en un plano. Este modelo se conoce como modelo \emph{pinhole}.
+La óptica geométrica clásica se basa en modelos de lentes para modelar el proceso de formación de las imágenes. Sin embargo, podemos simplificar este proceso suponiendo que todos los rayos que llegan a la cámara atraviesan un único punto y se proyectan en un plano. Este modelo se conoce como modelo \textbf{\textit{pinhole}}.
 
 Debido a que las lentes no tienen un comportamiento ideal, habrá que añadir al modelo unos parámetros de distorsión que permitan corregirlo y aproximarlo al comportamiento real de la cámara.
 
 \subsection{Estructura del modelo \textit{pinhole}}
 El modelo \textbf{\textit{pinhole}} \cite{Hartley} permite modelar el proceso de formación de las imágenes mediante una proyección central, en la cual, de cada punto del espacio tridimensional sale un rayo de luz que pasa por un punto fijo del espacio y intersecta en un plano dando lugar a la imagen.
 
-\begin{figure}[h!]
+\begin{figure}[h]
   \centering
-  \includegraphics[width=0.75\textwidth]{pinhole.png}
+  \includegraphics[width=0.85\textwidth]{pinhole.png}
   \caption{Modelo de cámara \textit{pinhole}. La imagen de un punto 3D se forma mediante proyección de perspectiva. Un punto $X$ es proyectado a un punto $x$ en el plano imagen}
   \label{fig:pinholeCamera}
 \end{figure}
 
 Los elementos que forman este modelo se definen de la siguiente forma:
 \begin{itemize}
-\item El \textbf{centro óptico} o de proyección central, es el punto fijo del espacio por donde pasan todos los rayos de luz. Se corresponde con el centro de la cámara y es donde se fija el sistema de referencia de la cámara.
+\item El \textbf{centro óptico} es el punto fijo del espacio por donde pasan todos los rayos de luz. Se corresponde con el centro de la cámara y es donde se fija el sistema de referencia de la cámara.
 \item El \textbf{plano imagen} o plano focal. De cada punto del espacio parte un rayo de luz que pasa por el centro de proyección e intersecta con este plano formando la imagen. Como se puede ver en la figura, el plano focal se ha situado delante del centro óptico. Si éste estuviese detrás, las imágenes estarían invertidas.
 \item \textbf{Distancia focal.} Se define como la distancia entre el centro de proyección y el plano imagen.
 \item \textbf{Eje principal} Es la línea que pasa por el centro de proyección y es perpendicular al plano imagen.
@@ -59,13 +59,12 @@ Los elementos que forman este modelo se definen de la siguiente forma:
 %Podría llegar a pensarse que las funciones de la matriz esencial y de la homografía son las mismas,
 %puesto que ambas realizan transformaciones en la geometría del sistema de visión estereoscópica sin tener en cuenta los parámetros intrínsecos de la cámara. La diferencia reside en que la homografía trabaja sobre planos que son visibles desde la cámara y relacionaría un punto de ese plano con el de su propio plano. La matriz esencial no tiene en cuenta esta restricción y solo es capaz de relacionar un punto en una imagen que se encuentre alineado con otra imagen.
 
-
 \subsection{Matriz de proyección}\label{subsec:matproy}
 El modelo \textit{pinhole} \cite{Hartley} fija un sistema de coordenadas proyectivas en el centro óptico. El eje $Z$ de este sistema coincide con el eje principal de la cámara. A partir de ahora nos referiremos a este sistema de coordenadas como sistema de referencia de la cámara. Además, el plano imagen se fija en el plano $Z = f$.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.6\textwidth]{pinhole2.png}
+  \includegraphics[width=0.8\textwidth]{pinhole2.png}
   \caption{Modelo de cámara \textit{pinhole} visto desde el eje $X$}
   \label{fig:pinholeCamera2}
 \end{figure}
@@ -81,18 +80,18 @@ Por convenio con la notación anterior, las coordenadas de un punto cualquiera s
 \end{itemize}
 
 Mediante relación de semejanza de triángulos, de la figura \ref{fig:pinholeCamera2}: 
-\begin{equation}
-\dfrac{x}{f} = \dfrac{X}{Z} \quad \quad \dfrac{y}{f} = \dfrac{Y}{Z} 
+\begin{equation}\label{eq:semejanza}
+\dfrac{x}{f} = \dfrac{X}{Z} \quad \quad \quad \quad \dfrac{y}{f} = \dfrac{Y}{Z} 
 \end{equation}
 
 podemos determinar la correspondencia entre un punto cualquiera del espacio y su proyección en el plano imagen:
-\begin{equation}
+\begin{equation}\label{eq:proyeccion}
   (X_c , Y_c , Z_c )^T \Longrightarrow  (x, y)^T = (f \dfrac{X_c}{Z}, f \dfrac{Y_c}{Z})^T
 \end{equation}
 
-Las coordenadas homogéneas son un instrumento usado para describir un punto en el espacio proyectivo. Consiste en ampliar el plano euclídeo (en el caso bidimensional) al plano proyectivo, es decir, incluirle los puntos impropios o del infinito. De forma que, un punto de dimensiones $x, y, z$, se lo representa por la terna: $x/w$, $y/w$, $z/w$ con $w=1$. Y un punto impropio es aquel donde $w=0$.
+Las coordenadas homogéneas son un instrumento empleado para describir un punto en el espacio proyectivo. Consiste en ampliar el plano euclídeo (en el caso bidimensional) al plano proyectivo, es decir, incluirle los puntos impropios o del infinito. De forma que, un punto de dimensiones $(x, y, z)$, se representa por la terna: $(x/w$, $y/w$, $z/w)$ con $w=1$. %Y un punto impropio es aquel donde $w=0$.
 
-Este sistema de coordenadas tiene la particularidad de que permite pasar fácilmente coordenadas de un número de dimensiones a otro. Para ello, almacena las coordenadas con una dimensión adicional, de tal forma que para un espacio de 3D, utilizaríamos 4 coordenadas. El valor de la coordenada adicional indica entre otras cosas, si el punto se encuentra en el infinito, valor 0, o es un punto cualquiera, valor distinto de 0. En este sistema, si dos coordenadas son proporcionales, se refieren al mismo punto.
+Este sistema de coordenadas tiene la particularidad de que permite pasar fácilmente coordenadas de un número de dimensiones a otro. Para ello, almacena las coordenadas con una dimensión adicional, de tal forma que para un espacio de 3D, utilizaríamos 4 coordenadas. El valor de la coordenada adicional indica entre otras cosas, si el punto se encuentra en el infinito, $w=0$, o es un punto cualquiera, $w \neq 0$. En este sistema, si dos coordenadas son proporcionales, se refieren al mismo punto.
 
 Utilizándolas, podemos expresar un punto del espacio tridimensional respecto al sistema de referencia de la cámara de forma matricial:
 \begin{equation} 
@@ -143,7 +142,7 @@ donde:
 
 
 \subsection{Parámetros intrínsecos de la cámara}
-La matriz de proyección $P$ de la ecuación (2.3), permite transformar las coordenadas de un punto 3D del mundo real en píxeles de una imagen. Se construye a partir de una matriz $K$ y un vector de valores nulos:
+La matriz de proyección $P$ de la ecuación \ref{eq:proy} permite transformar las coordenadas de un punto 3D del mundo real en píxeles de una imagen. Se construye a partir de una matriz $K$ y un vector de valores nulos:
 \begin{equation}
  P = [K|0] 
 \end{equation}
@@ -160,9 +159,9 @@ donde la $K$ es la \textbf{matriz de la cámara}, la cuál está formada por una
 
 Los \textbf{parámetros intrínsecos} son aquellos que describen las características ópticas y geométricas de una cámara y son constantes. Entre estos parámetros se encuentran la distancia focal, el centro óptico y el punto principal. En la figura \ref{fig:FIGparamCam} se pueden visualizar estos tres parámetros.
 
-\begin{figure}[h!]
+\begin{figure}[h]
   \centering
-  \includegraphics[width=0.6\textwidth]{parametrosCamara.pdf}
+  \includegraphics[width=0.7\textwidth]{parametrosCamara.pdf}
   \caption{Parámetros intrínsecos de una cámara.}
   \label{fig:FIGparamCam}
 \end{figure}
@@ -170,23 +169,21 @@ Los \textbf{parámetros intrínsecos} son aquellos que describen las caracterís
 \begin{itemize}
 \item El \textbf{centro óptico} o centro de proyección, es el punto de la cámara desde el cual parten todos los rayos que son proyectados en el plano de imagen de la cámara.
 
-\item El \textbf{punto principal}, denotado como \textbf{\textit{c}}, es la proyección ortogonal del centro óptico sobre el plano de cámara.  $c_x$,$c_y$ indican el desplazamiento del centro de coordenadas del plano imagen, respecto al punto principal. Será nulo sólo si el eje óptico coincide con el centro del sensor de la cámara, pero el eje óptico no siempre atraviesa el centro de la imagen generada. 
+\item El \textbf{punto principal}, denotado como \textbf{\textit{c}}, es la proyección ortogonal del centro óptico sobre el plano de cámara.  $c_x$, $c_y$ indican el desplazamiento del centro de coordenadas del plano imagen, respecto al punto principal. Será nulo sólo si el eje óptico coincide con el centro del sensor de la cámara, pero el eje óptico no siempre atraviesa el centro de la imagen generada. 
 
-\item El factor $\gamma$ (skew factor ) determina el grado de perpendicularidad de las paredes de los píxeles del sensor. Es inversamente proporcional a la tangente del ángulo que forman los ejes X e Y , por lo que s tendrá un valor nulo si los píxeles son rectangulares. Esto suele ser así en casi todos los sensores utilizados hoy en día. 
+\item El \textbf{factor $\gamma$ (\textit{skew factor})} determina el grado de perpendicularidad de las paredes de los píxeles del sensor. Es inversamente proporcional a la tangente del ángulo que forman los ejes $X$ e $Y$, por lo que  $\gamma$ tendrá un valor nulo si los píxeles son rectangulares. Esto suele ser así en casi todos los sensores utilizados hoy en día. 
 
-\item La \textbf{distancia focal}, es la distancia existente entre el centro óptico y el punto principal. $f_x$ y $f_y$ son dos distancias focales en píxeles. Son proporcionales a la longitud focal $f$ considerada en las ecuaciones (2.1) y (2.2), según 
+\item La \textbf{distancia focal}, es la distancia existente entre el centro óptico y el punto principal. $f_x$ y $f_y$ son dos distancias focales en píxeles. Son proporcionales a la longitud focal $f$ considerada en las ecuaciones (\ref{eq:semejanza}) y (\ref{eq:proyeccion}), según 
 \begin{equation}
-f_x = f S_x \quad \quad f_y = f S_y
+f_x = f S_x \quad \quad  \quad \quad f_y = f S_y
 \end{equation}
 donde: $f$ es la longitud focal física de la lente, en unidades de longitud (milímetros, micras, etc.). $S_x$ y $S_y$ son el número de píxeles por unidad de longitud del sensor, a largo del eje $X$ y del eje $Y$ respectívamente. Como es obvio, si el sensor tiene el mismo número de píxeles por unidad de longitud en todas sus dimensiones, las dos focales $f_x$ y $f_y$ tendrán el mismo valor.
 \end{itemize}
 
 \subsection{Distorsión}
-Por otra parte, se obtiene un vector con los factores de distorsión de la cámara. Normalmente este vector contiene 5 valores, correspondientes a 3 factores de distorsión radial, denotados como $k_{i}$ y 2 factores de distorsión tangencial, denotados como $p_{j}$. El número de factores de distorsión radial puede verse incrementado hasta 5, dependiendo del algoritmo de calibración que se realice.
+El uso de lentes facilita la entrada de luz, un enfoque adecuado y una mayor versatilidad, pero también introduce deformaciones en las imágenes que se forman en el sensor. Para el cálculo de coeficientes de distorsión, se tienen en cuenta factores radiales y tangenciales. 
 
-El uso de lentes facilita la entrada de luz, un enfoque adecuado y una mayor versatilidad, pero también introduce deformaciones en las imágenes que se forman en el sensor. Para el cálculo de coeficientes de distorsión, se tienen en cuenta los factores radiales y tangenciales. 
-
-La distorsión radial, consiste en el desplazamiento de los píxeles de de la imagen, de tal modo que las líneas situadas en los extremos del encuadre aparentarán salir hacia el exterior o el interior.   
+La \textbf{distorsión radial}, consiste en el desplazamiento de los píxeles de de la imagen, de tal modo que las líneas situadas en los extremos del encuadre aparentarán salir hacia el exterior o el interior.   
 
 Para la correción de la distorsión radial de las coordenadas de un pixel de la imagen, se utiliza la siguiente fórmula:
 \begin{equation}
@@ -196,7 +193,7 @@ Para la correción de la distorsión radial de las coordenadas de un pixel de la
   \end{split}
 \end{equation}
 
-La distorsión tangencial se produce porque la lente no se encuentra perfectamente paralela al plano de imagen. Se puede corregir a través de las siguientes fórmulas:
+La textbf{distorsión tangencial} se produce porque la lente no se encuentra perfectamente paralela al plano de imagen. Se puede corregir a través de las siguientes fórmulas:
 \begin{equation}
   \begin{split}
     x_{corrected} = x + [ 2p_1xy + p_2(r^2+2x^2)] \\ 
@@ -204,12 +201,12 @@ La distorsión tangencial se produce porque la lente no se encuentra perfectamen
   \end{split}
 \end{equation}
 
-Así que tenemos cinco parámetros de distorsión que son representados en OpenCV como una matriz fila con 5 columnas: 
+%Por otra parte, se obtiene un vector con los factores de distorsión de la cámara. Normalmente este vector contiene 5 valores, correspondientes a 3 factores de distorsión radial, denotados como $k_{i}$ y 2 factores de distorsión tangencial, denotados como $p_{j}$. El número de factores de distorsión radial puede verse incrementado hasta 5, dependiendo del algoritmo de calibración que se realice.
+De tal forma que tenemos cinco parámetros de distorsión que son representados en OpenCV como una matriz fila con 5 columnas: 
 
 \begin{equation}
   Distortion_{coefficients} = [k_1 \hspace{10pt} k_2 \hspace{10pt} p_1 \hspace{10pt} p_2 \hspace{10pt} k_3]
 \end{equation}
-
 
 % \begin{figure}[h!]
 %   \ifodd\thepage\hspace{-5.2cm}\else\hspace{-0.1cm}\fi\begin{minipage}{13.1cm}
@@ -242,7 +239,7 @@ Comúnmente, para la determinación de estos parámetros significa:
 \item Encontrar la \textbf{matriz de rotación} que provocan los ejes correspondientes a los dos sistemas de referencia alineados ( ej.: uno sobre otro)
 \end{itemize}
 
-\begin{figure}[h]
+\begin{figure}
   \centering
   \includegraphics[width=0.8\textwidth]{rt.png}
   \caption{Conversión del sistemas de coordenadas del objeto al sistema de la cámara. El punto $p_c$
@@ -254,12 +251,6 @@ Comúnmente, para la determinación de estos parámetros significa:
 El proceso de estimación de pose de un objeto consiste en determinar los parámetros de rotación y translación de dicho objeto a partir de información visual. El problema se consolida como uno de los retos más destacados en el campo de la visión por computador, surgiendo numerosas alternativas y métodos para solucionarlo.
 
 La pose del objeto viene determinada por una posición (3 parámetros: X, Y, Z) y una orientación (3 ángulos: yaw, pitch, roll) que forman un conjunto de 6 grados de libertad (6DOF). La solución para la estimación de la pose ha sido propuesta, entre otros métodos, mediante transformada lineal directa (DLT), algoritmos Pnp (perspective-n-point).
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.5\textwidth]{angles.png}
-  \caption{Ángulos de orientación: \emph{yaw, pitch y roll}}
-  \label{fig:ángulos}
-\end{figure}
 
 %El objetivo es encontrar una correspondencia entre puntos de la imagen en 2D y sus coordenadas en el mundo 3D. A la hora de representar los objetos del espacio observado (3D), los convertimos a un plano de visión (2D), y tenemos que definir cual es la correspondencia entre las coordenadas del espacio y las de la representación. Para facilitar esta conversión, se utiliza el sistema de coordenadas ``homogéneo''. 
 
@@ -360,7 +351,7 @@ dos vistas del mismo espacio desde diferentes puntos de visionado.
 
 La geometría más básica en la que se basa cualquier sistema de visión estereoscópica es la \textbf{geometría epipolar}. Se parte de la base de que en un sistema geométrico de este tipo se tienen una cámara izquierda y una cámara derecha.
 
-\begin{figure}[h!]
+\begin{figure}
   \centering
   \includegraphics[width=0.7\textwidth]{geometriaEpipolar.pdf}
   \caption{Elementos básicos de la geometría epipolar.}
@@ -388,9 +379,9 @@ Con este escenario, pueden extraerse una serie de propiedades:
 \end{itemize}
 
 
-\subsubsection{Fundamentos matemáticos}
+%\subsubsection{Fundamentos matemáticos}
 
-Una vez conocidos los elementos que describen un sistema estereoscópico, se mostrará la utilización de dos matrices a través de las cuales pueden realizarse transformaciones sobre el sistema estereoscópico. Estas matrices son la \textit{matriz esencial} y la \textit{matriz fundamental}.
+%Una vez conocidos los elementos que describen un sistema estereoscópico, se mostrará la utilización de dos matrices a través de las cuales pueden realizarse transformaciones sobre el sistema estereoscópico. Estas matrices son la \textit{matriz esencial} y la \textit{matriz fundamental}.
 
 \subsubsection{La matriz esencial}
 
@@ -467,39 +458,44 @@ Además de estas propiedades, existen otras propiedades geométricas:
 
 
 
-%\section{Realidad Aumentada}
-%La realidad aumentada es una tecnología mediante la cual la percepción del mundo real se complementa con información adicional generada por ordenador en tiempo real. Esta información adicional puede ser desde etiquetas virtuales, representaciones de modelos tridimensionales, o incluso cambios de iluminación. 
+\section{Realidad Aumentada}
+La realidad aumentada es una tecnología mediante la cual la percepción del mundo real se complementa con información adicional generada por ordenador en tiempo real. Esta información adicional puede ser desde etiquetas virtuales, representaciones de modelos tridimensionales, o incluso cambios de iluminación. 
 
-%El término Realidad Aumentada fue acuñado en 1990 por Tom Caudell durante el desarrollo de un sistema de Boeing para ayudar a los trabajadores en el ensamblaje de aviones mediante la ayuda de pantallas que mostraban información del montaje. 
+
+La Realidad Aumentada es un conjunto de técnicas que permiten integrar en tiempo real contenido digital a la percepción del mundo real.
+
+Según la taxonomía descrita por Milgram y Kishino [16], los entornos
+de Realidad Mixta son aquellos en los que “se presentan objetos del
+mundo real y objetos virtuales de forma conjunta en una única pan-
+talla”. Esto abre un abanico de definiciones en la que se sitúan las
+aplicaciones de Realidad Aumentada (ver Figura 1.2).
+
+
+El término Realidad Aumentada fue acuñado en 1990 por Tom Caudell durante el desarrollo de un sistema de Boeing para ayudar a los trabajadores en el ensamblaje de aviones mediante la ayuda de pantallas que mostraban información del montaje. 
 
 %La realidad aumentada se puede aplicar a prácticamente todos los campos. En el sector industrial, para la reparación y mantenimiento de maquinas e instalaciones complejas, visualización de datos o simulación.  En aplicaciones médicas, mostrarían la situación de órganos no visibles durante una cirugía. También se han realizado aplicaciones para diseño de interiores (IKEA), presentaciones de productos, educación, publicidad, turismo, arte y ocio. 
 
-%Uno de los principales problemas a resolver es denominado registro. Los objetos del mundo real y virtual deben estar correctamente alineados o la sensación de integración se verá seriamente afectada. Sin un registro preciso, la realidad aumentada no podría ser soportada por muchas aplicaciones, por ejemplo, en medicina para el guiado de una aguja en la realización de una biopsia. 
+Uno de los principales problemas a resolver es denominado registro. Los objetos del mundo real y virtual deben estar correctamente alineados o la sensación de integración se verá seriamente afectada. Sin un registro preciso, la realidad aumentada no podría ser soportada por muchas aplicaciones, por ejemplo, en medicina para el guiado de una aguja en la realización de una biopsia. 
 
-%Las aplicaciones de Realidad Aumentada deben cumplir las siguientes características definidas por Ronald T. Azuma \cite{Azuma}:
-%\begin{description}
-%\item[Combinar el mundo real con el virtual.] El resultado final debe mostrar la información sintética sobre las imágenes percibidas del mundo real.
-%\item[Debe ser interactivo en tiempo real.] La integración debe ser realizada \emph{en el momento}, por lo que el cálculo necesario debe realizarse en el menor tiempo posible.
-%\item[La alineación de los elementos virtuales debe realizarse en 3D.] Los objetos sintéticos deben de estar en el espacio tridimensional.
-%\end{description}
-
-\section{Componentes de un sistema de realidad aumentada}
-Un sistema de realidad aumentada depende de cuatro componentes físicos:
-
+Las aplicaciones de Realidad Aumentada deben cumplir las siguientes características definidas por Ronald T. Azuma \cite{Azuma}:
 \begin{itemize}
-
-\item \textbf{Elementos de entrada y sensores de orientación.} Proporciona al sistema la información visual, la entrada del usuario y, potencialmente, ayudar a la orientación.
-
-\item \textbf{Fuente de datos.} Proporciona información aplicable al medio ambiente para que el sistema aumente la visión del usuario.
-
-\item \textbf{Periféricos de retroalimentación de los usuarios.} Principalmente en la forma de producción visual, pero también pueden incluir audio y otras interfaces de usuario.
-
-\item \textbf{Unidad de procesamiento.} Combina los datos de los sensores de entrada para determinar la orientación y aumentar la visión del usuario con información de la fuente de datos. Envía el resultado a los periféricos de retroalimentación del usuario.
-
+\item \textbf{Combinar el mundo real con el virtual.} El resultado final debe mostrar la información sintética sobre las imágenes percibidas del mundo real.
+\item \textbf{Debe ser interactivo en tiempo real.} La integración debe ser realizada \emph{en el momento}, por lo que el cálculo necesario debe realizarse n el menor tiempo posible.
+\item \textbf{La alineación de los elementos virtuales debe realizarse en 3D.} Los objetos sintéticos deben de estar en el espacio tridimensional.
 \end{itemize}
 
+%\subsection{Componentes de un sistema de realidad aumentada}
+%Un sistema de realidad aumentada depende de cuatro componentes físicos:
+
+%\begin{itemize}
+%\item \textbf{Elementos de entrada y sensores de orientación.} Proporciona al sistema la información visual, la entrada del usuario y, potencialmente, ayudar a la orientación.
+%\item \textbf{Fuente de datos.} Proporciona información aplicable al medio ambiente para que el sistema aumente la visión del usuario.
+%\item \textbf{Periféricos de retroalimentación de los usuarios.} Principalmente en la forma de producción visual, pero también pueden incluir audio y otras interfaces de usuario.
+%\item \textbf{Unidad de procesamiento.} Combina los datos de los sensores de entrada para determinar la orientación y aumentar la visión del usuario con información de la fuente de datos. Envía el resultado a los periféricos de retroalimentación del usuario.
+%\end{itemize}
+
 \subsection{Elementos de entrada y sensores de orientación}
-Un sistema de realidad aumentada debe ser capaz de conocer su orientación y posición dentro del entorno circundante con el fin de ofrecer una experiencia ``aumentada'' satisfactoria. La combinación de la orientación y la posición de un observador que se conoce como \emph{pose}. La estimación de la \emph{pose} se definirá con más detalle en la sección 4. La orientación y posición se pueden determinar mediante técnicas de visión por computador, pero hay métodos alternativos para estimar la \emph{pose}  utilizando  sensores diseñados específicamente para medir alguno o todos los parámetros de los seis grados de libertad que componen la \emph{pose}.
+Un sistema de realidad aumentada debe ser capaz de conocer su orientación y posición dentro del entorno circundante con el fin de ofrecer una experiencia «aumentada» satisfactoria. La combinación de la orientación y la posición de un observador que se conoce como \emph{pose}. La estimación de la \emph{pose} se definirá con más detalle en la sección 4. La orientación y posición se pueden determinar mediante técnicas de visión por computador, pero hay métodos alternativos para estimar la \emph{pose}  utilizando  sensores diseñados específicamente para medir alguno o todos los parámetros de los seis grados de libertad que componen la \emph{pose}.
 
 \subsubsection{Localización}
 La manera más popular para determinar la posición es mediante la utilización del Sistema de Posicionamiento Global (GPS), desarrollado por el ejército de Estados Unidos y totalmente operativo desde 1994. 
@@ -508,48 +504,55 @@ Un receptor GPS es lo suficientemente preciso para determinar la ubicación en l
 \subsubsection{Orientación}
 En el espacio 3D, la orientación de un cuerpo rígido puede ser determinado de forma única por tres ángulos o grados de libertad (3DOF): \emph{pitch, roll y yaw}. La figura \ref{fig:ángulos}  se puede observar una representación de estos tres ángulos como rotaciones alrededor de sus ejes correspondientes. 
 
+\begin{figure}[b]
+  \centering
+  \includegraphics[width=0.5\textwidth]{angles.png}
+  \caption{Ángulos de orientación: \emph{yaw, pitch y roll}}
+  \label{fig:ángulos}
+\end{figure}
+
 Para facilitar la tarea de orientación los dispositivos móviles, sobre todo smartphones y tablets, están equipados una serie de sensores como:
 
 \begin{itemize}
-\item Sensores magneto-resistivos, o magnetómetros, que son utilizados como una ``brújula electrónica'' y se utilizan para determinar el \emph{yaw} y la dirección. Las nuevas generaciones de brújulas electrónicas utilizan tres ejes para asegurar una lectura correcta sin importar la inclinación del sensor.
-\item Acelerómetros para medir la aceleración aceleración experimentada por un objeto con respecto a un marco de referencia. Los acelerómetros no pueden determinar el \emph{yaw}, pero pueden ser utilizados para determinar el \emph{pitch} y el \emph{roll}. 
-\item Giroscopios electrónicos que son utilizados para determinar los tres grados de libertad de orientación a la vez.
+\item\textbf{Sensores magneto-resistivos}, o magnetómetros, que son utilizados como una ``brújula electrónica'' y se utilizan para determinar el \emph{yaw} y la dirección. Las nuevas generaciones de brújulas electrónicas utilizan tres ejes para asegurar una lectura correcta sin importar la inclinación del sensor.
+\item\textbf{Acelerómetros} para medir la aceleración aceleración experimentada por un objeto con respecto a un marco de referencia. Los acelerómetros no pueden determinar el \emph{yaw}, pero pueden ser utilizados para determinar el \emph{pitch} y el \emph{roll}. 
+\item\textbf{Giroscopios electrónicos} que son utilizados para determinar los tres grados de libertad de orientación a la vez.
 \end{itemize}
 
 Un problema común en los sistemas de seguimiento visual es que los movimientos bruscos de la cámara pueden ocasionar que la imagen salga borrosa y verse afectado el seguimiento visual. Un dispositivo híbrido equipado con un giroscopio y un acelerómetro será capaz de determinar rápidamente y con precisión tres de los seis grados de libertad de la \emph{pose} y ayudar al sistema de seguimiento visual a recuperarse cuando se experimentan imágenes borrosas. 
 
-\subsection{Fuentes de Vídeo}
+\subsubsection{Fuentes de Vídeo}
 La realidad aumentada superpone información sobre lo que el usuario está viendo. Para los sistemas dinámicos en los que la información virtual debe ser mezclada con la imagen real, se requiere un dispositivo de captura, como una cámara digital. Para los propósitos de las aplicaciones de realidad aumentada es preferible una cámara de vídeo. La mayoría de las aplicaciones utilizan una única cámara y se conocen como sistemas monoculares. También existen sistemas estereoscópicos, que  utilizan dos cámaras para determinar la profundidad.
 
-El desarrollo tecnológico en el ámbito de la captura de imagen digital que han mantenido los principales fabricantes en los últimos 10 años, conocido como la batalla del mega-píxel, ha supuesto un gran avance para disponer de sensores con una gran calidad de imagen y un coste reducido. Actualmente es normal encontrar cámaras de alta resolución en prácticamente todos los dispositivos móviles, permitiendo grabar vídeo en una resolución de 1920x1080 (FullHD) y obtener imágenes fijas de hasta 7136x5360px.
+El desarrollo tecnológico en el ámbito de la captura de imagen digital que han mantenido los principales fabricantes en los últimos 10 años, conocido como la «batalla del mega-píxel», ha supuesto un gran avance para disponer de sensores con una gran calidad de imagen y un coste reducido. Actualmente es normal encontrar cámaras de alta resolución en prácticamente todos los dispositivos móviles, permitiendo grabar vídeo en una resolución FullHD ó 4K y obtener imágenes fijas de hasta 7136x5360px.
 
 \subsubsection{Entrada táctil}
 En sistemas de realidad aumentada portátiles tales como teléfonos inteligentes o tablets, la pantalla funciona al mismo tiempo como una entrada para manipular objetos directamente en la pantalla y un dispositivo de salida.
 
 \subsection{Fuente de datos}
-Un sistema de realidad aumentada requiere una fuente de datos e información con la que aumentar la realidad de un usuario. La fuente de datos puede ser desde una base de datos directamente disponible en el sistema, o puede ser información agregada a partir de fuentes disponibles a través de una conexión de red. Actualmente existe un gran desarrollo para el uso de Internet como fuente de datos para aplicaciones de realidad aumentada. Aplicaciones como Wikitude y Layar son ejemplos de las sistemas que utilizan los datos disponibles en el Internet como fuente de datos.
+Un sistema de realidad aumentada requiere una fuente de datos e información con la que aumentar la realidad de un usuario. La fuente de datos puede ser desde una base de datos directamente disponible en el sistema, o puede ser información agregada a partir de fuentes disponibles a través de una conexión de red. Actualmente existe un gran desarrollo para el uso de Internet como fuente de datos para aplicaciones de realidad aumentada. Aplicaciones como Wikitude\footnote{http://www.wikitude.com} y Layar\footnote{http://www.layar.com} son ejemplos de las sistemas que utilizan los datos disponibles en Internet como fuente de datos.
 
 \subsection{Periféricos de retroalimentación de los usuarios}
 \subsubsection{Dispositivos  de Visualización}
 Existen  muchos métodos y dispositivos para mostrar la información o imágenes generadas para su combinación y alineación con la realidad: 
-\begin{description}
-\item[Monitores y pantallas tradicionales]
+\begin{itemize}
+\item \textbf{Monitores y pantallas tradicionales}
   Sobre todo impulsado por la popularidad de frameworks y bibliotecas como ARToolkit \cite{Kato}, existen muchas implementaciones de realidad aumentada para utilizar con un ordenador de sobremesa o portátil. No requieren de tecnología especial, únicamente una webcam que el usuario puede controlar. La aplicación se suele presentar en una pagina web y permite a los usuarios superponer información o imágenes sobre lo capturado por la webcam. Para la tarea de tracking y registro se utilizan marcadores que el usuario previamente ha impreso.
   
-\item[HMDs (Head Mount Display)] Los HDM o Head Mount Display son dispositivos que permiten al usuario ver el el mundo real con objetos virtuales superpuesto mediante técnicas ópticas y de vídeo. Los HDM se pueden clasificar en dos categorías:
- \begin{description}
-\item[Ópticos (OST - Optical See-Throug)] Permiten al usuario ver el mundo real a través de sus ojos y la imagen virtual se muestra mediante elementos ópticos holográficos, espejos semi-plateados o alguna otra técnica similar. Un ejemplo de este tipo de dispositivo son las Google Glass.
+\item \textbf{HMDs (Head Mount Display)} Los HDM o Head Mount Display son dispositivos que permiten al usuario ver el el mundo real con objetos virtuales superpuesto mediante técnicas ópticas y de vídeo. Los HDM se pueden clasificar en dos categorías:
+  \begin{itemize}
+  \item \textbf{Ópticos (OST - Optical See-Throug)} Permiten al usuario ver el mundo real a través de sus ojos y la imagen virtual se muestra mediante elementos ópticos holográficos, espejos semi-plateados o alguna otra técnica similar. Un ejemplo de este tipo de dispositivo son las Google Glass.
     
-  \item[Vídeo (VST - Vídeo See-Throug)] En los dispositivos de esta categoría, el usuario percibe tanto el mundo real como la imagen virtual mediante una o varias pantallas. Como ventajas de los VST esta una mayor consistencia entre el mundo real y el virtual.
-  \end{description}
+  \item \textbf{Vídeo (VST - Vídeo See-Throug)} En los dispositivos de esta categoría, el usuario percibe tanto el mundo real como la imagen virtual mediante una o varias pantallas. Como ventajas de los VST esta una mayor consistencia entre el mundo real y el virtual.
+  \end{itemize}
   
-\item[Visualización basada en proyección]
- Un sistema de visualización basado en proyección es una buena opción para sistemas fijos, además proporciona una intrusión mínima y la capacidad de interacción con varios usuarios.
+\item \textbf{Visualización basada en proyección}
+  Un sistema de visualización basado en proyección es una buena opción para sistemas fijos, además proporciona una intrusión mínima y la capacidad de interacción con varios usuarios.
   Se han propuesto una gran variedad de técnicas de visualización mediante proyectores sobre objetos y otras superficies (no necesariamente pantallas). Ehnes \cite{Ehnes} amplió el trabajo anterior de Pinhanez \cite{Pinhanez} sobre la proyección de vídeo para mostrar imágenes virtuales sobre objetos reales directamente utilizando técnicas de tracking de vídeo para seguir el movimiento y manteniendo la imagen sobre objeto mientras este se mueve.
   
-\item[Dispositivos portátiles (smartphones, tablets)]
+\item \textbf{Dispositivos portátiles (smartphones, tablets)}
   Hoy en día el dispositivo portátil por excelencia es el smartphone. Es mínimamente invasivo, muy portable y ampliamente extendido. Según el informe de comScore \footnote{http://www.comscore.com/esl/Insights/Presentations-and-Whitepapers/2013/2013-Spain-Digital-Future-in-Focus} el 66\% de los españoles tienen un teléfono inteligente, por lo que son una gran alternativa para la visualización de aplicaciones de realidad aumentada.
-\end{description}
+\end{itemize}
 
 \subsubsection{Audio}
 El audio se utiliza principalmente de dos formas diferentes en los sistemas de realidad aumentada: como una modalidad de la interfaz de usuario multimodal o para ofrecer una experiencia aural aumentada. 
@@ -557,13 +560,12 @@ El audio se utiliza principalmente de dos formas diferentes en los sistemas de r
 Por ejemplo, el usuario pueda ser capaz de dar comandos de voz y el sistema devuelva retroalimentación con señales de audio (pitidos). Este tipo de audio no direccional es trivial desde el punto de vista tecnológico aportando una nueva dimensión a las aplicaciones móviles. El audio aumentado puede servir a personas con discapacidad visual para ayudar a comprender el entorno. Mediante unos altavoces o un par de auriculares, es bastante simple proporcionar al usuario la información en forma de audio. La síntesis de voz también se puede utilizar para leer información, por ejemplo, leer palabras en voz alta desde un sistema de reconocimiento de texto.
 
 \subsection{Unidad de procesamiento}
-\subsubsection{Dispositivos móviles: Smartphones,  tablets y SBCs (Single Board Computer)}
+%\subsubsection{Dispositivos móviles: Smartphones,  tablets y SBCs (Single Board Computer)}
+El teléfono móvil ha evolucionado hacia una plataforma informática móvil (smartphone), en la que desarrollar las actividades habituales de un ordenador personal. El principal inconveniente de estos era la pantalla reducida que disponen lo que ha derivado en el desarrollo de un nuevo dispositivo denominado tablet. 
 
-El teléfono móvil ha evolucionado hacia una plataforma informática móvil (smartphone), en la que desarrollar las actividades habituales de un ordenador personal. El principal inconveniente de estos era la pantalla reducida que disponen (hasta 5”) lo que ha derivado en el desarrollo de un nuevo dispositivo denominado tablet. 
+Las tablets disponen de prácticamente las mismas características que los smartphones (incluso el mismo sistema operativo) pero las pantallas son mayores, sin necesidad de teclado físico ni ratón, con las que se interactúa principalmente mediante la pantalla táctil con los dedos o un stylus.
 
-Las tablets disponen de prácticamente las mismas características que los smartphones (incluso el mismo sistema operativo) pero las pantallas son mayores (hasta 10”) sin necesidad de teclado físico ni ratón, con las que se interactúa principalmente mediante la pantalla táctil con los dedos o un stylus (Samsung Galaxy Note).
-
-Otra tendencia tecnológica es el desarrollo de SBCs, (Single Board Computer) que básicamente es un ordenador completo montado sobre un circuito. Su diseño se basa en un microprocesador de bajo rendimiento (normalmente de arquitectura ARM), RAM y diversos dispositivos de E/S como puertos USB, lectores de tarjetas, conectores Ethernet, y salida de audio y vídeo con un precio final muy reducido (alrededor de 40 \euro). Este tipo de dispositivos se crearon para utilizarlos con fines educativos, pero entre la comunidad de usuarios, debido a su gran versatilidad se utilizan para múltiples aplicaciones tales como centros multimedia o distintos tipos de servidores dado su bajo consumo.  
+Otra tendencia tecnológica es el desarrollo de SBCs, \textit{(Single Board Computer)} que básicamente es un ordenador completo montado sobre un circuito. Su diseño se basa en un microprocesador de bajo rendimiento (normalmente de arquitectura ARM), RAM y diversos dispositivos de E/S como puertos USB, lectores de tarjetas, conectores Ethernet, y salida de audio y vídeo con un precio final muy reducido. Este tipo de dispositivos se crearon para utilizarlos con fines educativos, pero entre la comunidad de usuarios, debido a su gran versatilidad se utilizan para múltiples aplicaciones tales como centros multimedia o distintos tipos de servidores dado su bajo consumo.  
 
 \section{Técnicas de Visión por Computador}
 En esta sección comentaremos las técnicas que pueden utilizarse para el tratamiento previo de imágenes que se utilizarán para la detección y tracking en sistemas de realidad aumentada. El orden en que se introducen suele ser el aplicado  habitualmente.
@@ -624,7 +626,7 @@ Otra técnica que se utiliza es la de \emph{downsampling} para reducir el númer
 
 La teoría sobre los diferentes niveles de resolución está presentado por Adelson \cite{Adelson} y se describe como un conjunto de copias (con filtros paso bajo o paso banda de una imagen), donde cada una de ellas es una representación de la imagen en una escala diferente. Son esencialmente representaciones a escala múltiple de una imagen a partir de la imagen original y con una escala de un factor de dos en cada paso hacia abajo. Este proceso puede ser visualizado como una pirámide con la imagen original en la parte inferior. 
 
-\begin{figure}[h!] 
+\begin{figure}
   \centering
   \includegraphics[width=0.8\textwidth]{downsampling.png}
   \caption{Cálculo de las pirámides de Gauss y sus inversas (Laplace). (Bradski y Kaehler)}
@@ -634,7 +636,7 @@ La teoría sobre los diferentes niveles de resolución está presentado por Adel
 
 La figura \ref{fig:pirámides} muestra los pasos involucrados en el cálculo de una pirámide de imágenes y la pirámide laplaciana, que contiene toda la información perdida en cada paso. Si la pirámide de la imagen y la pirámide laplaciana están disponibles, la imagen original puede ser perfectamente reconstruida. En cada nivel de la pirámide, la imagen contiene cuatro veces menos píxeles que la capa inferior (Figura \ref{fig:pirescale}) lo que afectará directamente al tiempo total de procesamiento. 
 
-\begin{figure}[h!]
+\begin{figure}
   \centering
   \includegraphics[width=0.5\textwidth]{pyramid.png}
   \caption{Pirámide multiresolución. (journal.code4lib.org)}

@@ -26,6 +26,12 @@ Mitsuru Ambai y Yuichi Yoshida.
   Vision}, ICCV '11, páginas 97--104, Washington, DC, USA, 2011. IEEE Computer
   Society.
 
+\bibitem[Azu97]{Azuma}
+Ronald.~T. Azuma.
+\newblock A survey of augmented reality.
+\newblock {\em Presence: Teleoperators and Virtual Environments},
+  6(4):355--385, 1997.
+
 \bibitem[BET08]{Bay}
 H.~Bay, A.~Ess, y T.~Tuytelaars.
 \newblock Speeded-Up Robust FeatureS.

@@ -33,7 +33,7 @@ El EyeToy es un cámara que fue lanzada en octubre de 2003 para la PlayStation 2
 
 La estética de los juegos que soportaban este sistema consistían en la introducción del jugador en la pantalla mediante realidad mixta y mediante la realización de determinados gestos, sea el personaje en el que se basa la historia del juego. 
 
-\begin{figure}[h] % indico que voy a poner una figura y [h] indica que la posición relativa, tambien puedo usar t = top entre otros.
+\begin{figure}[b] % indico que voy a poner una figura y [h] indica que la posición relativa, tambien puedo usar t = top entre otros.
 \hfill
 \begin{minipage}[t]{.45\textwidth}
 \begin{center}
@@ -58,10 +58,10 @@ Este tipo de interación supuso una revolución en la forma de interactuar con l
 \subsection{Kinect}
 Kinect es un sensor que se vendió previamente como un periférico opcional, por 150 euros, para la videoconsola Xbox 360 y posteriormente para Xbox One y Windows, debido al gran éxito obtenido. Según datos de Microsoft, a principios de 2013 se habían comercializado más de 24 millones de Kinect. 
 
-\begin{figure}[h!]
+\begin{figure}
   \centering
-  \includegraphics[width=0.90\textwidth]{kinect-health.jpg}
-  \caption{Utilización de Kinect para la visualización de radiografías durante una intervención quirúrgica}
+  \includegraphics[width=1.0\textwidth]{kinect-health.jpg}
+  \caption{Utilización de Kinect para la visualización de radiografías durante una cirugía}
   \label{fig:kinect-health}
 \end{figure}
 
@@ -80,14 +80,14 @@ Estas interesantes características motivaron a la comunidad de usuarios para ob
 \section{Realidad Aumentada}
 La realidad aumentada se podría considerar como la aplicación de distintas técnicas de visión por computador, mediante la cual la percepción del mundo real se complementa con información adicional generada por ordenador en tiempo real. Esta información adicional puede ser desde etiquetas virtuales, representaciones de modelos tridimensionales, o incluso cambios de iluminación. 
 
-\begin{figure}[h] 
+\begin{figure} 
   \centering
   \includegraphics[width=1.0\textwidth]{augmented_example.jpg}
   \caption{Previsualizacion 3D mediante realidad aumentada en arquitectura}
   \label{fig:ar_example}
 \end{figure} 
 
-El principal problema que deben tratar los sistemas de realidad aumentada se considera \textbf{registro}, que consiste en calcular la posición relativa de la cámara respecto a la escena para colocar correctamente las imágenes sintéticas dentro de la imagen real. Los objetos del mundo real y virtual deben estar perfectamente alineados o la sensación de integración se verá seriamente afectada.
+%El principal problema que deben tratar los sistemas de realidad aumentada se considera \textbf{registro}, que consiste en calcular la posición relativa de la cámara respecto a la escena para colocar correctamente las imágenes sintéticas dentro de la imagen real. Los objetos del mundo real y virtual deben estar perfectamente alineados o la sensación de integración se verá seriamente afectada.
 
 La realidad aumentada se puede aplicar a prácticamente todos los campos. En el sector industrial, para la reparación y mantenimiento de máquinas e instalaciones complejas, visualización de datos o simulación.  En aplicaciones médicas, mostrarían la situación de órganos no visibles durante una cirugía. También se han realizado aplicaciones para diseño de interiores, presentaciones de productos, educación, publicidad, turismo, arte y ocio. 
 
@@ -107,7 +107,7 @@ Los enfoques basados en proyectores combinan las ventajas de la realidad virtual
 
 \begin{figure} 
   \centering
-  \includegraphics[width=0.95\textwidth]{mapping.jpg}
+  \includegraphics[width=1.0\textwidth]{mapping.jpg}
   \caption{\textit{Projection mapping} realizado sobre la catedral de Santiago en 2011}
   \label{fig:mapping}
 \end{figure}
@@ -116,9 +116,7 @@ Los enfoques basados en proyectores combinan las ventajas de la realidad virtual
 
 El presente proyecto se enmarca dentro de la Cátedra Indra-UCLM, en el proyecto “ARgos: Sistema de Ayuda a la Gestión Documental basado en Visión por Computador y Realidad Aumentada” que tiene como objetivo la construcción de un sistema de ayuda a la gestión de documentos, basado principalmente en visión por computador y síntesis visual y auditiva en el espacio físico, empleando técnicas de realidad aumentada. 
 
-Todos los países de la Unión Europea aceptan las recomendaciones generales de la Organización Mundial de la Salud así como las directrices y programas de las Naciones Unidas relativas a las personas con necesidades especiales y que proponen expresamente «su participación plena en la vida social, con oportunidades iguales a las del resto». 
-
-El proyecto esta pensado para facilitar la integración laboral, sean cuales sean las necesidades especiales de las personas que tenga que gestionar documentación impresa. 
+Todos los países de la Unión Europea aceptan las recomendaciones generales de la Organización Mundial de la Salud así como las directrices y programas de las Naciones Unidas relativas a las personas con necesidades especiales y que proponen expresamente «su participación plena en la vida social, con oportunidades iguales a las del resto». El proyecto esta pensado para facilitar la integración laboral, sean cuales sean las necesidades especiales de las personas que tenga que gestionar documentación impresa. 
   
 \section{Impacto socio-económico}
 Bajo el concepto de «discapacidad», se incluyen limitaciones muy diversas que afectan con mayor o menor gravedad las facultades que son habituales para desenvolverse en la vida cotidiana y que no tienen por qué impedir una inserción social y laboral normalizada. A día de hoy, las personas con discapacidad pueden desempeñar las funciones laborales, normalmente, gracias a la ayuda de aparatos o de procesos específicos de adaptación del puesto de trabajo. E incluso, una discapacidad total, no significa que el sujeto no pueda suplir o compensar su limitación mediante el uso de otras facultades. 
@@ -134,6 +132,8 @@ Los beneficios sociales identificados radican en el plano de la cultura, pues se
 \section{Estructura del documento}
 
   Este documento se ha estructurado según las indicaciones de la normativa de trabajos de fin de grado de la Escuela Superior de Informática de la Universidad de Castilla-La Mancha, y contará con los siguientes capítulos:
+
+
   \begin{definitionlist}
   \item[Capítulo \ref{chap:objetivos}: \nameref{chap:objetivos}] Se realiza una exposición concreta de problema a resolver, describiendo el entorno de trabajo, la situación y qué se pretende obtener a modo de requisitos del sistema.
 
