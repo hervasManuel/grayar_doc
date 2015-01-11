@@ -369,14 +369,6 @@ Jianbo Shi y Carlo Tomasi.
 \newblock En {\em Proceedings of IEEE Conference on Computer Vision and Pattern
   Recognition}, volume~94, páginas 593--600. IEEE, 1994.
 
-\bibitem[Tsa86]{Tsai}
-Roger~Y. Tsai.
-\newblock An Efficient and Accurate Camera Calibration Technique for 3D Machine
-  Vision.
-\newblock En {\em Proceedings of IEEE Conference on Computer Vision and Pattern
-  Recognition, Miami Beach, FL}, páginas 364--374,
-  http://www-cgi.cs.cmu.edu/afs/cs.cmu.edu/user/rgw/www/TsaiCode.html, 1986.
-
 \bibitem[UM11]{Uchiyama}
 Hideaki Uchiyama y Eric Marchand.
 \newblock Toward Augmenting Everything: Detecting and Tracking Geometrical
@@ -421,13 +413,5 @@ Xiang Zhang, Stephan Fronz, y Nassir Navab.
 \newblock En {\em Proceedings of the 1st International Symposium on Mixed and
   Augmented Reality}, ISMAR '02, páginas 97--, Washington, DC, USA, 2002. IEEE
   Computer Society.
-
-\bibitem[Zha99]{Zhang99}
-Zhengyou Zhang.
-\newblock Flexible camera calibration by viewing a plane from unknown
-  orientations.
-\newblock En {\em Proceedings of the Seventh IEEE International Conference on
-  Pattern Analysis and Machine Intelligence}, volume~1, páginas 666--673.
-  IEEE, 1999.
 
 \end{thebibliography}

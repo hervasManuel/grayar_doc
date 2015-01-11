@@ -89,7 +89,7 @@ podemos determinar la correspondencia entre un punto cualquiera del espacio y su
   (X_c , Y_c , Z_c )^T \Longrightarrow  (x, y)^T = (f \dfrac{X_c}{Z}, f \dfrac{Y_c}{Z})^T
 \end{equation}
 
-Las coordenadas homogéneas son un instrumento empleado para describir un punto en el espacio proyectivo. Consiste en ampliar el plano euclídeo (en el caso bidimensional) al plano proyectivo, es decir, incluirle los puntos impropios o del infinito. De forma que, un punto de dimensiones $(x, y, z)$, se representa por la terna: $(x/w$, $y/w$, $z/w)$ con $w=1$. %Y un punto impropio es aquel donde $w=0$.
+Las \textbf{coordenadas homogéneas} son un instrumento empleado para describir un punto en el espacio proyectivo. Consiste en ampliar el plano euclídeo (en el caso bidimensional) al plano proyectivo, es decir, incluirle los puntos impropios o del infinito. De forma que, un punto de dimensiones $(x, y, z)$, se representa por la terna: $(x/w$, $y/w$, $z/w)$ con $w=1$. %Y un punto impropio es aquel donde $w=0$.
 
 Este sistema de coordenadas tiene la particularidad de que permite pasar fácilmente coordenadas de un número de dimensiones a otro. Para ello, almacena las coordenadas con una dimensión adicional, de tal forma que para un espacio de 3D, utilizaríamos 4 coordenadas. El valor de la coordenada adicional indica entre otras cosas, si el punto se encuentra en el infinito, $w=0$, o es un punto cualquiera, $w \neq 0$. En este sistema, si dos coordenadas son proporcionales, se refieren al mismo punto.
 
@@ -113,7 +113,6 @@ Utilizándolas, podemos expresar un punto del espacio tridimensional respecto al
 \end{equation}
 y la expresión de relación de correspondencia, queda de la siguiente forma:
 \begin{equation} 
-\sigma
 \begin{pmatrix}
     X_{w} \\
     Y_{w} \\
@@ -128,7 +127,7 @@ y la expresión de relación de correspondencia, queda de la siguiente forma:
 Y de forma abreviada:
 
 \begin{equation}\label{eq:proy}
-\sigma \overline{x_w} = P \overline{X_c}   
+\overline{x_w} = P \overline{X_c}   
 \end{equation}
 donde:
 \begin{itemize}
@@ -193,7 +192,7 @@ Para la correción de la distorsión radial de las coordenadas de un pixel de la
   \end{split}
 \end{equation}
 
-La textbf{distorsión tangencial} se produce porque la lente no se encuentra perfectamente paralela al plano de imagen. Se puede corregir a través de las siguientes fórmulas:
+La \textbf{distorsión tangencial} se produce porque la lente no se encuentra perfectamente paralela al plano de imagen. Se puede corregir a través de las siguientes fórmulas:
 \begin{equation}
   \begin{split}
     x_{corrected} = x + [ 2p_1xy + p_2(r^2+2x^2)] \\ 
@@ -218,51 +217,122 @@ De tal forma que tenemos cinco parámetros de distorsión que son representados 
 % \end{figure}
 
 \subsection{Parámetros extrínsecos de la cámara}
-En la sección \ref{subsec:matproy} se asumió el hecho de que el centro óptico \textbf{C} era el origen de coordenadas del mundo. Esto era así a efectos del cálculo de parámetros intrínsecos, con lo cual el modelo era válido siempre que el sistema no fuera movido de su posición inicial.
+En la sección \ref{subsec:matproy} se asumió el hecho de que el centro óptico era el origen de coordenadas del mundo. Esto era así a efectos del cálculo de parámetros intrínsecos, con lo cual el modelo era válido siempre que el sistema no fuera movido de su posición inicial.
 
-Por otro lado, en la mayor parte de las aplicaciones prácticas es necesario que la cámara se mueva o se gire, para captar adecuadamente la escena. Por ello, para poder modelar el sistema con independencia de que su posición haya sido alterada o de que un objeto se pueda referenciar respecto al origen de coordenadas de la cámara, es necesario modificar la ecuación \ref{eq:proy} introduciendo un matriz de transformación $T$ 
+Por otro lado, en la mayor parte de las aplicaciones prácticas es necesario que la cámara se mueva o se gire, para captar adecuadamente la escena. Por ello, para poder modelar el sistema con independencia de que su posición haya sido alterada o de que un objeto se pueda referenciar respecto al origen de coordenadas de la cámara, es necesario modificar la ecuación \ref{eq:proy} introduciendo un matriz de transformación $[R|t]$ que contiene los \textbf{parametros extrínsecos} de la cámara. 
 
 \begin{equation}
-\sigma x = KTX  
+x = K [R|t] X  
 \end{equation}
 
-$W = [R|t]$ donde: R es una matriz de rotación, que representa un giro de la cámara (o de un objeto respecto de ella). Tendrá una forma distinta dependiendo de respecto a que eje (X, Y, Z) se haga la rotación:
-
-
-%Tanto la matriz de cámara como el vector de distorsión contienen únicamente parámetros intrínsecos, lo que significa que serán constantes. No ocurre lo mismo con los parámetros extrínsecos, que varían en función de la situación de la cámara en el escenario, y que producen una matriz de rotación y un vector de traslación. Estos dos elementos indican la transformación geométrica que hay que realizar sobre la cámara para alcanzar la posición y la rotación finales desde su posición inicial. En la figura \ref{fig:RT} se puede ver gráficamente la implicación de los parámetros extrínsecos.
-
-Los \textbf{parámetros extrínsecos} son aquellos que definen la posición y la orientación de la cámara con respecto al mundo real.
-
-Comúnmente, para la determinación de estos parámetros significa:
-\begin{itemize}
-\item Encontrar el \textbf{vector de translación} entre las posiciones relativas al origen de dos sistemas de referencia.
-\item Encontrar la \textbf{matriz de rotación} que provocan los ejes correspondientes a los dos sistemas de referencia alineados ( ej.: uno sobre otro)
-\end{itemize}
-
-\begin{figure}
+\begin{figure}[h!]
   \centering
-  \includegraphics[width=0.8\textwidth]{rt.png}
+  \includegraphics[width=0.80\textwidth]{rt.png}
   \caption{Conversión del sistemas de coordenadas del objeto al sistema de la cámara. El punto $p_c$
     está relacionado con el punto $P_0$ mediante la aplicación de una la matriz de rotación y el
     vector de traslación. (Bradski y Kaehler)}
   \label{fig:RT}
 \end{figure}
 
-El proceso de estimación de pose de un objeto consiste en determinar los parámetros de rotación y translación de dicho objeto a partir de información visual. El problema se consolida como uno de los retos más destacados en el campo de la visión por computador, surgiendo numerosas alternativas y métodos para solucionarlo.
+\begin{equation}
+  [R|t] = 
+  \begin{bmatrix} 
+    R_{1,1} & R_{1,2} & R_{1,3} & T_{1}  \\
+    R_{2,1} & R_{2,2} & R_{2,3} & T_{2}  \\
+    R_{3,1} & R_{3,2} & R_{3,3} & T_{3}  \\
+    0      &   0    &   0   &  1
+  \end{bmatrix}
+\end{equation}
 
-La pose del objeto viene determinada por una posición (3 parámetros: X, Y, Z) y una orientación (3 ángulos: yaw, pitch, roll) que forman un conjunto de 6 grados de libertad (6DOF). La solución para la estimación de la pose ha sido propuesta, entre otros métodos, mediante transformada lineal directa (DLT), algoritmos Pnp (perspective-n-point).
+Donde: 
+\begin{itemize}
+
+\item $R$ es una \textbf{matriz de rotación}, que representa un giro de la cámara (o de un objeto respecto de ella). Tendrá una forma distinta dependiendo de respecto a que eje (X, Y, Z) se haga la rotación:
+\begin{equation}
+R_x(\Psi)=\begin{bmatrix}
+1 & 0         & 0        \\ 
+0 & \cos\Psi  & \sin\Psi \\ 
+0 & -\sin\Psi & \cos\Psi
+\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+R_y(\varphi)=\begin{bmatrix}
+\cos\varphi & 0 & -\sin\varphi \\ 
+0           & 1 & 0            \\ 
+\sin\varphi & 0 & \cos\varphi
+\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+R_z(\theta)=\begin{bmatrix}
+\cos\theta  & \sin\theta & 0 \\ 
+-\sin\theta & \cos\theta & 0 \\ 
+0           & 0          & 1
+\end{bmatrix}
+\end{equation}
+
+Si el giro se realiza respecto al eje $Z$, tal y como se muestra en la figura \ref{fig:rotatingPoints}, las nuevas coordenadas quedarán de la siguiente forma:
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{rotatingPoints.png}
+  \caption{Rotación de puntos alrededor del eje Z (Bradski y Kaehler)}
+  \label{fig:rotatingPoints}
+\end{figure}
+
+\begin{equation}
+\begin{bmatrix}
+X'\\ 
+Y'\\ 
+Z'
+\end{bmatrix}
+=
+\begin{bmatrix}
+\cos\theta  & \sin\theta & 0 \\ 
+-\sin\theta & \cos\theta & 0 \\ 
+0           & 0          & 1
+\end{bmatrix}
+\begin{bmatrix}
+X\\ 
+Y\\ 
+Z
+\end{bmatrix}
+\Rightarrow 
+\begin{aligned}
+X'&= X\cos\theta + Y \sin\theta \\ 
+Y'&=-X\sin\theta + Y \cos\theta \\ 
+Z'&= Z
+\end{aligned}
+\end{equation}
+
+\item $t$ es un \textbf{vector de translación} que representa el cambio de un sistema de coordenadas a otro cuyo origen se desplaza a otra ubicación; en otras palabras, el vector de traslación es el desplazamiento desde el origen del sistema de coordenadas inicial hasta el origen del sistema de coordenadas final. En nuestro caso, como podemos ver en la figura \ref{fig:RT}, el sistema inicial pertenecería al del objeto, y el final, al sistema de coordenadas de la cámara. 
+\begin{equation}
+t = origen_{objeto} - origen_{camara}
+\end{equation}
+
+
+\end{itemize}
+
+El cálculo aproximado de la matriz de transformacion $[R|t]$ a partir de la información visual capturada se denomina \textbf{\textit{pose estimation}}. La solución para la estimación de la \textit{pose} ha sido propuesta, entre otros métodos, mediante transformada lineal directa (DLT) ó algoritmos Pnp (perspective-n-point).
+
+%Tanto la matriz de cámara como el vector de distorsión contienen únicamente parámetros intrínsecos, lo que significa que serán constantes. No ocurre lo mismo con los parámetros extrínsecos, que varían en función de la situación de la cámara en el escenario, y que producen una matriz de rotación y un vector de traslación. Estos dos elementos indican la transformación geométrica que hay que realizar sobre la cámara para alcanzar la posición y la rotación finales desde su posición inicial. En la figura \ref{fig:RT} se puede ver gráficamente la implicación de los parámetros extrínsecos.
+
+%Los \textbf{parámetros extrínsecos} son aquellos que definen la posición y la orientación de la cámara con respecto al mundo real.
+
+%Comúnmente, para la determinación de estos parámetros significa:
+%\begin{itemize}
+%\item Encontrar el \textbf{vector de translación} entre las posiciones relativas al origen de dos sistemas de referencia.
+%\item Encontrar la \textbf{matriz de rotación} que provocan los ejes correspondientes a los dos sistemas de referencia alineados ( ej.: uno sobre otro)
+%\end{itemize}
+
+%El proceso de estimación de pose de un objeto consiste en determinar los parámetros de rotación y translación de dicho objeto a partir de información visual. %El problema se consolida como uno de los retos más destacados en el campo de la visión por computador, surgiendo numerosas alternativas y métodos para solucionarlo.
+
+%La pose del objeto viene determinada por una posición (3 parámetros: X, Y, Z) y una orientación (3 ángulos: yaw, pitch, roll) que forman un conjunto de 6 grados de libertad (6DOF). La solución para la estimación de la pose ha sido propuesta, entre otros métodos, mediante transformada lineal directa (DLT), algoritmos Pnp (perspective-n-point).
 
 %El objetivo es encontrar una correspondencia entre puntos de la imagen en 2D y sus coordenadas en el mundo 3D. A la hora de representar los objetos del espacio observado (3D), los convertimos a un plano de visión (2D), y tenemos que definir cual es la correspondencia entre las coordenadas del espacio y las de la representación. Para facilitar esta conversión, se utiliza el sistema de coordenadas ``homogéneo''. 
 
-Las matrices de transformación, utilizadas para pasar de unas dimensiones a otras, suelen incluir 3
-tipos de transformaciones \textbf{R}otación, \textbf{T}ranslación y e\textbf{S}calado. Podemos representarlas así:
-\begin{equation}
-  [R|t] = \begin{bmatrix} SR_{1,1} & SR_{1,2} & SR_{1,3} & T_{1}  \\
-    SR_{2,1} & SR_{2,2} & SR_{2,3} & T_{2}  \\
-    SR_{3,1} & SR_{3,2} & SR_{3,3} & T_{3}  \\
-    0    &     0   &     0   &  1
-  \end{bmatrix}
-\end{equation}
+%Las matrices de transformación, utilizadas para pasar de unas dimensiones a otras, suelen incluir 3 tipos de transformaciones \textbf{R}otación, \textbf{T}ranslación y e\textbf{S}calado. Podemos representarlas así:
 
 %Para convertir las coordenadas del mundo a coordenadas de pantalla, de espacio tridimensional a bidimensional, los sistemas de visión artificial utilizan la siguiente fórmula:
 %\begin{equation}
@@ -337,139 +407,123 @@ tipos de transformaciones \textbf{R}otación, \textbf{T}ranslación y e\textbf{S
 %Nota: la relación de los puntos 3D y sus proyecciones 2D pueden ser vistas como una transformación lineal de la proyección espacial $({X_w}, {Y_w}, {Z_x}, 1)^T$ a la proyección del plano $({X_h}, {Y_h}, w)^T$.
 
 
-\subsection{Visión Estereoscópica}
+%\subsection{Visión Estereoscópica}
 
-Un proyector se calibra usando los mismos algoritmos de calibración que una cámara ya que puede
-considerarse como una ``cámara inversa''. No obstante el hecho de poder aplicar un modelo pin-hole
-a un proyector no parece tan evidente como en el caso de una cámara. Para la calibración de un
-proyector es inevitable el uso al menos una cámara. Para calibrar un proyector, ya sea usando el
-método de Tsai \cite{Tsai}, como el método de Zhang \cite{Zhang99} es necesario obtener un conjunto
-de coordenadas 3D-2D correspondientes. La \textbf{Visión Estereoscópica} consiste en el empleo de
-dos vistas del mismo espacio desde diferentes puntos de visionado.
+%Un proyector se calibra usando los mismos algoritmos de calibración que una cámara ya que puede considerarse como una ``cámara inversa''. No obstante el hecho de poder aplicar un modelo pin-hole a un proyector no parece tan evidente como en el caso de una cámara. Para la calibración de un proyector es inevitable el uso al menos una cámara. Para calibrar un proyector, ya sea usando el método de Tsai \cite{Tsai}, como el método de Zhang \cite{Zhang99} es necesario obtener un conjunto de coordenadas 3D-2D correspondientes. La \textbf{Visión Estereoscópica} consiste en el empleo de dos vistas del mismo espacio desde diferentes puntos de visionado.
 
-\subsubsection{Geometría epipolar}
+%\subsubsection{Geometría epipolar}
 
-La geometría más básica en la que se basa cualquier sistema de visión estereoscópica es la \textbf{geometría epipolar}. Se parte de la base de que en un sistema geométrico de este tipo se tienen una cámara izquierda y una cámara derecha.
+%La geometría más básica en la que se basa cualquier sistema de visión estereoscópica es la \textbf{geometría epipolar}. Se parte de la base de que en un sistema geométrico de este tipo se tienen una cámara izquierda y una cámara derecha.
 
-\begin{figure}
-  \centering
-  \includegraphics[width=0.7\textwidth]{geometriaEpipolar.pdf}
-  \caption{Elementos básicos de la geometría epipolar.}
-  \label{fig:FIGgeomEpipolar}
-\end{figure}
+%\begin{figure}
+%  \centering
+%  \includegraphics[width=0.7\textwidth]{geometriaEpipolar.pdf}
+%  \caption{Elementos básicos de la geometría epipolar.}
+%  \label{fig:FIGgeomEpipolar}
+%\end{figure}
 
+%En la figura \ref{fig:FIGgeomEpipolar} se pueden observar los elementos que componen la geometría epipolar de un sistema estereoscópico. A cada cámara le corresponde un centro de proyección, denotados como $O_{l}$ y $O_{r}$, y un plano proyectivo, $\Pi_{l}$ y $\Pi_{r}$. El punto P, perteneciente al mundo físico tiene una proyección dentro de cada uno de los planos proyectivos. A estas proyecciones se las denomina como $p_{l}$ y $p_{r}$.
 
-En la figura \ref{fig:FIGgeomEpipolar} se pueden observar los elementos que componen la geometría
-epipolar de un sistema estereoscópico. A cada cámara le corresponde un centro de proyección,
-denotados como $O_{l}$ y $O_{r}$, y un plano proyectivo, $\Pi_{l}$ y $\Pi_{r}$. El punto P,
-perteneciente al mundo físico tiene una proyección dentro de cada uno de los planos proyectivos. A
-estas proyecciones se las denomina como $p_{l}$ y $p_{r}$.
+%Unos puntos geométricos importantes aquí son los llamados \textbf{epipolos}. Un epipolo $e_l$ (res\-pectivamente $e_r$) en un plano de imagen $\Pi_{l}$ (respectivamente $\Pi_{r}$) se define como la imagen del centro de proyección de la otra cámara $O_{r}$ (respectivamente $O_{l}$). Teniendo presentes estos elementos, existe un plano formado entre el punto P y los dos epipolos $e_{l}$ y $e_{r}$ denominado \textbf{plano epipolar}. Las líneas $p_{l}e_{l}$ y $p_{r}e_{r}$ (líneas que atraviesan los centros de proyección y los correspondientes epipolos), se llaman \textbf{líneas epipolares}.
 
+%Para poder entender la utilidad de estos elementos se parte de que el punto P es visto en la cámara de la derecha. Debido a que la cámara solo ve $p_{r}$ (la proyección de P en $\Pi_{r}$), el punto P podría estar localizado en cualquier lugar de la línea definida por $p_{r}$ y $O_{r}$. Obviamente, esta línea contiene P, pero también contiene un gran número de puntos. Lo interesante de esto es que esta línea se encuentra proyectada en el plano de la imagen izquierda $\Pi_{l}$; de hecho, esa proyección es lo que antes ha sido definido como línea epipolar.
 
-Unos puntos geométricos importantes aquí son los llamados \textbf{epipolos}. Un epipolo $e_l$ (res\-pectivamente $e_r$) en un plano de imagen $\Pi_{l}$ (respectivamente $\Pi_{r}$) se define como la imagen del centro de proyección de la otra cámara $O_{r}$ (respectivamente $O_{l}$). Teniendo presentes estos elementos, existe un plano formado entre el punto P y los dos epipolos $e_{l}$ y $e_{r}$ denominado \textbf{plano epipolar}. Las líneas $p_{l}e_{l}$ y $p_{r}e_{r}$ (líneas que atraviesan los centros de proyección y los correspondientes epipolos), se llaman \textbf{líneas epipolares}.
+%Con este escenario, pueden extraerse una serie de propiedades:
 
-Para poder entender la utilidad de estos elementos se parte de que el punto P es visto en la cámara de la derecha. Debido a que la cámara solo ve $p_{r}$ (la proyección de P en $\Pi_{r}$), el punto P podría estar localizado en cualquier lugar de la línea definida por $p_{r}$ y $O_{r}$. Obviamente, esta línea contiene P, pero también contiene un gran número de puntos. Lo interesante de esto es que esta línea se encuentra proyectada en el plano de la imagen izquierda $\Pi_{l}$; de hecho, esa proyección es lo que antes ha sido definido como línea epipolar.
-
-Con este escenario, pueden extraerse una serie de propiedades:
-
-\begin{itemize}
-\item Todo punto 3D visto por ambas cámaras está contenido en el plano epipolar que intersecta cada imagen en una línea epipolar.
-\item Dado un punto 2D en una imagen, su punto asociado en la otra imagen se encuentra a lo largo de la correspondiente línea epipolar. Esto es lo que se conoce como \textbf{restricción epipolar}.
-\item La restricción epipolar implica que la búsqueda bidimensional de puntos asociados entre dos vistas se convierte en una búsqueda unidimensional a través de las líneas epipolares una vez conocida la geometría epipolar del sistema estereoscópico.
-\end{itemize}
+%\begin{itemize}
+%\item Todo punto 3D visto por ambas cámaras está contenido en el plano epipolar que intersecta cada imagen en una línea epipolar.
+%\item Dado un punto 2D en una imagen, su punto asociado en la otra imagen se encuentra a lo largo de la correspondiente línea epipolar. Esto es lo que se conoce como \textbf{restricción epipolar}.
+%\item La restricción epipolar implica que la búsqueda bidimensional de puntos asociados entre dos vistas se convierte en una búsqueda unidimensional a través de las líneas epipolares una vez conocida la geometría epipolar del sistema estereoscópico.
+%\end{itemize}
 
 
 %\subsubsection{Fundamentos matemáticos}
 
 %Una vez conocidos los elementos que describen un sistema estereoscópico, se mostrará la utilización de dos matrices a través de las cuales pueden realizarse transformaciones sobre el sistema estereoscópico. Estas matrices son la \textit{matriz esencial} y la \textit{matriz fundamental}.
 
-\subsubsection{La matriz esencial}
+%\subsubsection{La matriz esencial}
 
-Se define la matriz esencial ($E$) de un sistema estereoscópico como aquella que contiene la información de traslación y rotación que relaciona las dos cámaras en el espacio físico.
+%Se define la matriz esencial ($E$) de un sistema estereoscópico como aquella que contiene la información de traslación y rotación que relaciona las dos cámaras en el espacio físico.
 
-Esto significa que, conocidas las coordenadas de un punto $p_{l}$ en la imagen izquierda, puede conocerse su punto correspondiente en la imagen derecha $p_{r}$ multiplicando dicho punto por la matriz esencial del sistema, de tal forma que se cumple la siguiente ecuación:
+%Esto significa que, conocidas las coordenadas de un punto $p_{l}$ en la imagen izquierda, puede conocerse su punto correspondiente en la imagen derecha $p_{r}$ multiplicando dicho punto por la matriz esencial del sistema, de tal forma que se cumple la siguiente ecuación:
 
-\begin{equation}
-  p_{r}^TEp_{l} = 0
-  \label{esencial}
-\end{equation}\\
-Es importante indicar que la matriz esencial no tiene en cuenta los parámetros intrínsecos de la cámara, por ello es por lo que trabaja en coordenadas físicas.
+%\begin{equation}
+%  p_{r}^TEp_{l} = 0
+%  \label{esencial}
+%\end{equation}\\
+%Es importante indicar que la matriz esencial no tiene en cuenta los parámetros intrínsecos de la cámara, por ello es por lo que trabaja en coordenadas físicas.
 
-\subsubsection{La matriz fundamental}
+%\subsubsection{La matriz fundamental}
 
-La matriz esencial contiene toda la información acerca de la geometría de una cámara con respecto de la otra, pero no posee información de las cámaras en sí. En la práctica resulta más útil trabajar en unidades de píxel, ya que estas son las que se conocen en primera instancia al trabajar con imágenes.
+%La matriz esencial contiene toda la información acerca de la geometría de una cámara con respecto de la otra, pero no posee información de las cámaras en sí. En la práctica resulta más útil trabajar en unidades de píxel, ya que estas son las que se conocen en primera instancia al trabajar con imágenes.
 
-Para conocer la relación entre un píxel en una imagen y su píxel correspondiente en la otra imagen a través de la linea epipolar debe introducirse información de los parámetros intrínsecos de las cámaras. Para hacer esto, cada punto $p$ se sustituye por $q$, aplicando la matriz de cámara al anterior punto $p$, de tal forma que $q=Mp$, o, de forma equivalente, $p=M^{-1}q$. De esta forma, la ecuación \ref{esencial} se convierte en:
+%Para conocer la relación entre un píxel en una imagen y su píxel correspondiente en la otra imagen a través de la linea epipolar debe introducirse información de los parámetros intrínsecos de las cámaras. Para hacer esto, cada punto $p$ se sustituye por $q$, aplicando la matriz de cámara al anterior punto $p$, de tal forma que $q=Mp$, o, de forma equivalente, $p=M^{-1}q$. De esta forma, la ecuación \ref{esencial} se convierte en:
 
-\begin{equation*}
-  q_r^T(M_r^{-1})^TEM_l^{-1}q_l=0
-\end{equation*}\\
-Partiendo de esto, se define la matriz fundamental $F$ como:
+%\begin{equation*}
+%  q_r^T(M_r^{-1})^TEM_l^{-1}q_l=0
+%\end{equation*}\\
+%Partiendo de esto, se define la matriz fundamental $F$ como:
 
-\begin{equation}
-  F=(M_r^{-1})^TEM_l^{-1}
-  \label{defFundamental}
-\end{equation}\\
-Sustituyendo:
+%\begin{equation}
+%  F=(M_r^{-1})^TEM_l^{-1}
+%  \label{defFundamental}
+%\end{equation}\\
+%Sustituyendo:
 
-\begin{equation}
-  q_r^TFq_l=0
-  \label{fundamental}
-\end{equation}\\
-En esencia, la matriz $F$ es igual que la matriz $E$, excepto que $F$ opera en coordenadas píxel de la imagen, mientras que $E$ trabaja con coordenadas físicas.
+%\begin{equation}
+%  q_r^TFq_l=0
+%  \label{fundamental}
+%\end{equation}\\
+%En esencia, la matriz $F$ es igual que la matriz $E$, excepto que $F$ opera en coordenadas píxel de la imagen, mientras que $E$ trabaja con coordenadas físicas.
 
-Existen un par de propiedades matemáticas interesantes acerca de la matriz fundamental:
+%Existen un par de propiedades matemáticas interesantes acerca de la matriz fundamental:
 
-\begin{itemize}
-\item La matriz $F$ es una matriz de 3x3 que tiene solamente siete grados de libertad, lo que significa que, de los nueve componentes de la matriz, dos pueden ser calculados a partir de los otros siete.
-\item El rango de la matriz $F$ es 2.
-\end{itemize}
+%\begin{itemize}
+%\item La matriz $F$ es una matriz de 3x3 que tiene solamente siete grados de libertad, lo que significa que, de los nueve componentes de la matriz, dos pueden ser calculados a partir de los otros siete.
+%\item El rango de la matriz $F$ es 2.
+%\end{itemize}
 
-Además de estas propiedades, existen otras propiedades geométricas:
+%Además de estas propiedades, existen otras propiedades geométricas:
 
-\begin{itemize}
-\item Dada una geometría bifocal, la matriz $F$ es función exclusiva de dicha geometría, es decir, es independiente de todos los puntos P de la escena y de las proyecciones $p_l$ y $p_r$ de los puntos de la escena.
-\item La matriz $F$ define las líneas epipolares a través de las ecuaciones:
+%\begin{itemize}
+%\item Dada una geometría bifocal, la matriz $F$ es función exclusiva de dicha geometría, es decir, es independiente de todos los puntos P de la escena y de las proyecciones $p_l$ y $p_r$ de los puntos de la escena.
+%\item La matriz $F$ define las líneas epipolares a través de las ecuaciones:
 
-  \begin{equation}
-    l_r=Fm_l
-  \end{equation}
-  \begin{equation}
-    l_l=F^Tm_r
-  \end{equation}
+%  \begin{equation}
+%    l_r=Fm_l
+%  \end{equation}
+%  \begin{equation}
+%    l_l=F^Tm_r
+%  \end{equation}
 
-\item La matriz $F$ define los epipolos a través de las ecuaciones:
+%\item La matriz $F$ define los epipolos a través de las ecuaciones:
 
-  \begin{equation}
-    Fe_l=
-    \begin{bmatrix}
-      0 \\ 0 \\ 0
-    \end{bmatrix}
-  \end{equation}
-  \begin{equation}
-    F^Te_r=
-    \begin{bmatrix}
-      0 \\ 0 \\ 0
-    \end{bmatrix}
-  \end{equation}
-
-\end{itemize}
-
-
-
+%  \begin{equation}
+%    Fe_l=
+%    \begin{bmatrix}
+%      0 \\ 0 \\ 0
+%    \end{bmatrix}
+%  \end{equation}
+%  \begin{equation}
+%    F^Te_r=
+%    \begin{bmatrix}
+%      0 \\ 0 \\ 0
+%   \end{bmatrix}
+%  \end{equation}
+%
+%\end{itemize}
 
 \section{Realidad Aumentada}
-La realidad aumentada es una tecnología mediante la cual la percepción del mundo real se complementa con información adicional generada por ordenador en tiempo real. Esta información adicional puede ser desde etiquetas virtuales, representaciones de modelos tridimensionales, o incluso cambios de iluminación. 
+%La realidad aumentada es una tecnología mediante la cual la percepción del mundo real se complementa con información adicional generada por ordenador en tiempo real. Esta información adicional puede ser desde etiquetas virtuales, representaciones de modelos tridimensionales, o incluso cambios de iluminación. 
 
+La Realidad Aumentada es el conjunto de técnicas que permiten integrar en tiempo real contenido digital a la percepción del mundo real. Según la taxonomía descrita por Milgram y Kishino [16], los entornos de Realidad Mixta son aquellos en los que “se presentan objetos del mundo real y objetos virtuales de forma conjunta en una única pantalla”.
 
-La Realidad Aumentada es un conjunto de técnicas que permiten integrar en tiempo real contenido digital a la percepción del mundo real.
-
-Según la taxonomía descrita por Milgram y Kishino [16], los entornos
-de Realidad Mixta son aquellos en los que “se presentan objetos del
-mundo real y objetos virtuales de forma conjunta en una única pan-
-talla”. Esto abre un abanico de definiciones en la que se sitúan las
-aplicaciones de Realidad Aumentada (ver Figura 1.2).
-
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=1.0\textwidth]{augmentedVisor.jpg}
+  \caption{Representación conceptual de la realidad aumentada (James Provost)}
+  \label{fig:augmentedVisor}
+\end{figure}
 
 El término Realidad Aumentada fue acuñado en 1990 por Tom Caudell durante el desarrollo de un sistema de Boeing para ayudar a los trabajadores en el ensamblaje de aviones mediante la ayuda de pantallas que mostraban información del montaje. 
 
