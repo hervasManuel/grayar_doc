@@ -516,18 +516,37 @@ El cálculo aproximado de la matriz de transformacion $[R|t]$ a partir de la inf
 \section{Realidad Aumentada}
 %La realidad aumentada es una tecnología mediante la cual la percepción del mundo real se complementa con información adicional generada por ordenador en tiempo real. Esta información adicional puede ser desde etiquetas virtuales, representaciones de modelos tridimensionales, o incluso cambios de iluminación. 
 
-La Realidad Aumentada es el conjunto de técnicas que permiten integrar en tiempo real contenido digital a la percepción del mundo real. Según la taxonomía descrita por Milgram y Kishino [16], los entornos de Realidad Mixta son aquellos en los que “se presentan objetos del mundo real y objetos virtuales de forma conjunta en una única pantalla”.
+La Realidad Aumentada es el conjunto de técnicas que permiten integrar en tiempo real contenido digital a la percepción del mundo real. El término fue acuñado en 1990 por Tom Caudell durante el desarrollo de un sistema de Boeing para ayudar a los trabajadores en el ensamblaje de aviones mediante la ayuda de pantallas que mostraban información del montaje. 
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=1.0\textwidth]{augmentedVisor.jpg}
+  \includegraphics[width=0.80\textwidth]{augmentedVisor.jpg}
   \caption{Representación conceptual de la realidad aumentada (James Provost)}
   \label{fig:augmentedVisor}
 \end{figure}
 
-El término Realidad Aumentada fue acuñado en 1990 por Tom Caudell durante el desarrollo de un sistema de Boeing para ayudar a los trabajadores en el ensamblaje de aviones mediante la ayuda de pantallas que mostraban información del montaje. 
-
 %La realidad aumentada se puede aplicar a prácticamente todos los campos. En el sector industrial, para la reparación y mantenimiento de maquinas e instalaciones complejas, visualización de datos o simulación.  En aplicaciones médicas, mostrarían la situación de órganos no visibles durante una cirugía. También se han realizado aplicaciones para diseño de interiores (IKEA), presentaciones de productos, educación, publicidad, turismo, arte y ocio. 
+
+\begin{figure}[t] 
+  \centering
+  \includegraphics[width=1.0\textwidth]{RA1.pdf}
+  \caption{Jerarquía de la \textit{Realidad Mixta}}
+  \label{fig:RA1}
+\end{figure}
+
+Según la taxonomía descrita por Milgram y Kishino [16], los entornos de Realidad Mixta son aquellos en los que “se presentan objetos del mundo real y objetos virtuales de forma conjunta en una única pantalla”.
+
+El paradigma general por el cual se mezcla el mundo real y el virtual se denomina \textit{Realidad Mixta}~\cite{kishino1994taxonomy}. En la Figura \ref{fig:RA1} se muestra la jerarquía en la que se clasifica este tipo de paradigma. A la izquierda, se muestra el caso extremo de \textit{integración nula}, en el que la interacción se realiza únicamente a través de los objetos reales. No existe ningún tipo de dispositivo informático con el cual realizar la interacción.
+
+El siguiente paradigma es el de \textit{Realidad Aumentada}. Este paradigma está más cerca del extremo del \textit{entorno real} que del \textit{virtual} porque se parte del \textit{mundo real} como base, y a partir de él se añaden los objetos virtuales. Este paradigma contempla multitud de ventajas y aplicaciones. Henderson y Feiner llevaron a cabo un estudio evaluando las ventajas de la Realidad Aumentada frente a métodos convencionales en tareas específicas como la realización de procesos de mantenimiento~\cite{henderson2009evaluating}. %En el Apartado \ref{cap:ra:aplicaciones} se detallan más aplicaciones de esta tecnología.
+
+
+Acercándose más hacia el \textit{entorno virtual}, se encuentra el paradigma de la \textit{Virtualidad Aumentada}~\cite{neumann2009modeling}. En un sistema que utilice esta tecnología, se parte de un sistema completamente virtual, que puede ser compartido por varios usuarios, y se interactúa con él a través del mundo real. Algunos proyectos que han utilizado este paradigma se enfocaban como \textit{sistemas colaborativos}, en los que se crean un punto de encuentro virtual (una sala de reuniones, por ejemplo). Algunos de estos proyectos para colaboración son el de Regenbrecht et al. para colaboración~\cite{regenbrecht2004using} y videoconferencia remota~\cite{regenbrecht2003augmented}.
+
+Por último, se encuentran los sistemas de \textit{Realidad Virtual}~\cite{steuer1992defining}, en los que todo es generado por ordenador, y el objetivo es que el usuario se abstraiga lo máximo posible del mundo real, para conseguir una inmersión total en el mundo virtual. Estos sistemas tuvieron un gran auge hace unos años, en su modalidad con \textit{HMD}\footnote{\textit{Head Mounted Display}}, aunque no llegaron a consolidarse completamente. Un proyecto interesante realizado sobre \textit{Realidad Virtual} es \textit{CAVE} de Cruz-Neira et al~\cite{cruz1993surround}. También se realizaron multitud de estudios que probaban la eficacia de este paradigma 
+
+
+
 
 Uno de los principales problemas a resolver es denominado registro. Los objetos del mundo real y virtual deben estar correctamente alineados o la sensación de integración se verá seriamente afectada. Sin un registro preciso, la realidad aumentada no podría ser soportada por muchas aplicaciones, por ejemplo, en medicina para el guiado de una aguja en la realización de una biopsia. 
 

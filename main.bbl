@@ -76,6 +76,13 @@ Andrew~I. Comport, \'{E}ric Marchand, y Fran\c{c}ois Chaumette.
   Mixed and Augmented Reality}, ISMAR '03, páginas 36--, Washington, DC, USA,
   2003. IEEE Computer Society.
 
+\bibitem[CNSD93]{cruz1993surround}
+C.~Cruz-Neira, D.J. Sandin, y T.A. DeFanti.
+\newblock Surround-screen projection-based virtual reality: the design and
+  implementation of the CAVE.
+\newblock En {\em Proceedings of the 20th annual conference on Computer
+  graphics and interactive techniques.}, páginas 135--142. ACM., 1993.
+
 \bibitem[DIIM04]{Datar}
 Mayur Datar, Nicole Immorlica, Piotr Indyk, y Vahab~S. Mirrokni.
 \newblock Locality-sensitive Hashing Scheme Based on P-stable Distributions.
@@ -132,6 +139,13 @@ David~L. Hecht.
 \newblock Printed Embedded Data Graphical User Interfaces.
 \newblock {\em Computer}, 34(3):47--55, Marzo 2001.
 
+\bibitem[HF09]{henderson2009evaluating}
+S.J. Henderson y S.~Feiner.
+\newblock Evaluating the benefits of augmented reality for task localization in
+  maintenance of an armored personnel carrier turre.t.
+\newblock En {\em Mixed and Augmented Reality, 2009. ISMAR 2009. 8th IEEE
+  International Symposium.}, páginas 135--144, 2009.
+
 \bibitem[HS81]{Horn}
 Berthold K.~P. Horn y Brian~G. Schunck.
 \newblock Determining Optical Flow.
@@ -182,6 +196,12 @@ H.~Kato y M.~Billinghurst.
 Tapas Kanungo, Robert~M. Haralick, y Ihsin~T. Phillips.
 \newblock Global and local document degradation models.
 \newblock En {\em ICDAR}, páginas 730--734, 1993.
+
+\bibitem[KM94]{kishino1994taxonomy}
+F.~Kishino y P.~Milgram.
+\newblock A taxonomy of mixed reality visual displays.
+\newblock {\em IEICE Transactions on Information and Systems.},
+  1(12):1321--1329, 1994.
 
 \bibitem[KM09]{Klein}
 Georg Klein y David Murray.
@@ -270,6 +290,11 @@ Tomohiro Nakai, Koichi Kise, y Masakazu Iwamura.
   Document Analysis and Recognition}, ICDAR '09, páginas 146--150, Washington,
   DC, USA, 2009. IEEE Computer Society.
 
+\bibitem[NY09]{neumann2009modeling}
+U.~Neumann y S.~et~al. You.
+\newblock Modeling and video projection for augmented virtual environments.,
+  2009.
+
 \bibitem[OCLF10]{Ozuysal}
 M.~Ozuysal, M.~Calonder, V.~Lepetit, y P.~Fua.
 \newblock Fast Keypoint Recognition Using Random Ferns.
@@ -341,6 +366,18 @@ Edward Rosten y Tom Drummond.
   Computer Vision - Volume 2}, ICCV '05, páginas 1508--1515, Washington, DC,
   USA, 2005. IEEE Computer Society.
 
+\bibitem[RLK{\etalchar{+}}04]{regenbrecht2004using}
+H.~Regenbrecht, T.~Lum, P.~Kohler, C.~Ott, M.~Wagner, W.~Wilke, y E.~Mueller.
+\newblock Using augmented virtuality for remote collaboration.
+\newblock {\em Presence: Teleoperators \& Virtual Environments.},
+  13(3):338--354, 2004.
+
+\bibitem[ROW{\etalchar{+}}03]{regenbrecht2003augmented}
+H.~Regenbrecht, C.~Ott, M.~Wagner, T.~Lum, P.~Kohler, W.~Wilke, y E.~Mueller.
+\newblock An augmented virtuality approach to 3D videoconferencing.
+\newblock En {\em Mixed and Augmented Reality, 2003. Proceedings. The Second
+  IEEE and ACM International Symposium.}, páginas 290--291, 2003.
+
 \bibitem[RRKB11]{Rublee}
 Ethan Rublee, Vincent Rabaud, Kurt Konolige, y Gary Bradski.
 \newblock ORB: An Efficient Alternative to SIFT or SURF.
@@ -368,6 +405,11 @@ Jianbo Shi y Carlo Tomasi.
 \newblock Good features to track.
 \newblock En {\em Proceedings of IEEE Conference on Computer Vision and Pattern
   Recognition}, volume~94, páginas 593--600. IEEE, 1994.
+
+\bibitem[Ste92]{steuer1992defining}
+J.~Steuer.
+\newblock Defining virtual reality: Dimensions determining telepresence.
+\newblock {\em Journal of communication.}, 42(4):73--93, 1992.
 
 \bibitem[UM11]{Uchiyama}
 Hideaki Uchiyama y Eric Marchand.
