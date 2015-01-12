@@ -40,24 +40,24 @@ Los elementos que forman este modelo se definen de la siguiente forma:
 \item \textbf{Plano principal.} Es el plano paralelo al plano imagen y que contiene al centro de proyección. Además, este plano está formado por todos los puntos cuyas proyecciones se corresponden con puntos en el infinito en la imagen.
 \end{itemize}
 
-%Una \textbf{homografía} es una transformación proyectiva que determina una correspondencia entre dos figuras geométricas planas, de forma que a cada uno de los puntos y las rectas de una de ellas le corresponden, respectivamente, un punto y una recta de la otra.
+% Una \textbf{homografía} es una transformación proyectiva que determina una correspondencia entre dos figuras geométricas planas, de forma que a cada uno de los puntos y las rectas de una de ellas le corresponden, respectivamente, un punto y una recta de la otra.
 
-%Una homografía es una matriz (generalmente de 3x3) cuya misión es la de mapear los puntos de una superficie planar bidimensional a otra. Según esta definición, una matriz que transforme los puntos de un plano en puntos del plano de cámara, será considerada una homografía. Esta transformación se realiza en términos de coordenadas físicas.
+% Una homografía es una matriz (generalmente de 3x3) cuya misión es la de mapear los puntos de una superficie planar bidimensional a otra. Según esta definición, una matriz que transforme los puntos de un plano en puntos del plano de cámara, será considerada una homografía. Esta transformación se realiza en términos de coordenadas físicas.
 
-%\begin{figure}[tb]
-%  \begin{minipage}{13.1cm}
-%    \centering
-%    \includegraphics[width=10cm]{homografia.jpg}
-%        \cite{OpenCV}.}{}}{}{\caption{Transformación de un punto P del mundo real a su proyección p
-%        en el plano de cámara utilizando una homografía. (Bradski y Kaehler)}}
-%    \ifthenelse{\equal{FIGhomografia}{}}{}{\label{FIGhomografia}}
-%  \end{minipage}
-%\end{figure}
+% \begin{figure}[tb]
+%   \begin{minipage}{13.1cm}
+%     \centering
+%     \includegraphics[width=10cm]{homografia.jpg}
+%     \cite{OpenCV}.}{}}{}{\caption{Transformación de un punto P del mundo real a su proyección p
+%     en el plano de cámara utilizando una homografía. (Bradski y Kaehler)}}
+%     \ifthenelse{\equal{FIGhomografia}{}}{}{\label{FIGhomografia}}
+%   \end{minipage}
+% \end{figure}
 
-%Se ha introducido el parámetro $s$, el cual es un factor de escala arbitrario (entendiéndose que la homografía está definida bajo ese factor, debido al desconocimiento de las medidas del mundo real). En la figura \ref{FIGhomografia} puede verse la implicación de utilizar la homografía en este escenario.
+% Se ha introducido el parámetro $s$, el cual es un factor de escala arbitrario (entendiéndose que la homografía está definida bajo ese factor, debido al desconocimiento de las medidas del mundo real). En la figura \ref{FIGhomografia} puede verse la implicación de utilizar la homografía en este escenario.
 
-%Podría llegar a pensarse que las funciones de la matriz esencial y de la homografía son las mismas,
-%puesto que ambas realizan transformaciones en la geometría del sistema de visión estereoscópica sin tener en cuenta los parámetros intrínsecos de la cámara. La diferencia reside en que la homografía trabaja sobre planos que son visibles desde la cámara y relacionaría un punto de ese plano con el de su propio plano. La matriz esencial no tiene en cuenta esta restricción y solo es capaz de relacionar un punto en una imagen que se encuentre alineado con otra imagen.
+% Podría llegar a pensarse que las funciones de la matriz esencial y de la homografía son las mismas,
+% puesto que ambas realizan transformaciones en la geometría del sistema de visión estereoscópica sin tener en cuenta los parámetros intrínsecos de la cámara. La diferencia reside en que la homografía trabaja sobre planos que son visibles desde la cámara y relacionaría un punto de ese plano con el de su propio plano. La matriz esencial no tiene en cuenta esta restricción y solo es capaz de relacionar un punto en una imagen que se encuentre alineado con otra imagen.
 
 \subsection{Matriz de proyección}\label{subsec:matproy}
 El modelo \textit{pinhole} \cite{Hartley} fija un sistema de coordenadas proyectivas en el centro óptico. El eje $Z$ de este sistema coincide con el eje principal de la cámara. A partir de ahora nos referiremos a este sistema de coordenadas como sistema de referencia de la cámara. Además, el plano imagen se fija en el plano $Z = f$.
@@ -75,67 +75,66 @@ Por convenio con la notación anterior, las coordenadas de un punto cualquiera s
 \begin{itemize}
 \item $[X_c , Y_c , Z_c ]^T$ Coordenadas de un punto del espacio tridimensional respecto al sistema de referencia de la cámara.
 \item $[X_w , Y_w , Z_w ]^T$ Coordenadas del mismo punto del espacio tridimensional respecto a un sistema de referencia asociado al modelo del objeto. Este nuevo sistema de referencia es distinto al de la cámara.
-\item $[x, y]^T$  Coordenadas del punto proyectado en el plano imagen.
+\item $[u, v]^T$  Coordenadas del punto proyectado en el plano imagen.
 \item $f$  Distancia focal
 \end{itemize}
 
 Mediante relación de semejanza de triángulos, de la figura \ref{fig:pinholeCamera2}: 
 \begin{equation}\label{eq:semejanza}
-\dfrac{x}{f} = \dfrac{X}{Z} \quad \quad \quad \quad \dfrac{y}{f} = \dfrac{Y}{Z} 
+  \dfrac{u}{f} = \dfrac{X}{Z} \quad \quad \quad \quad \dfrac{v}{f} = \dfrac{Y}{Z} 
 \end{equation}
 
 podemos determinar la correspondencia entre un punto cualquiera del espacio y su proyección en el plano imagen:
 \begin{equation}\label{eq:proyeccion}
-  (X_c , Y_c , Z_c )^T \Longrightarrow  (x, y)^T = (f \dfrac{X_c}{Z}, f \dfrac{Y_c}{Z})^T
+  [X_c , Y_c , Z_c ]^T \Longrightarrow  [u, v]^T = [f \dfrac{X_c}{Z}, f \dfrac{Y_c}{Z}]^T
 \end{equation}
 
-Las \textbf{coordenadas homogéneas} son un instrumento empleado para describir un punto en el espacio proyectivo. Consiste en ampliar el plano euclídeo (en el caso bidimensional) al plano proyectivo, es decir, incluirle los puntos impropios o del infinito. De forma que, un punto de dimensiones $(x, y, z)$, se representa por la terna: $(x/w$, $y/w$, $z/w)$ con $w=1$. %Y un punto impropio es aquel donde $w=0$.
+Las \textbf{coordenadas homogéneas} son un instrumento empleado para describir un punto en el espacio proyectivo. Consiste en ampliar el plano euclídeo (en el caso bidimensional) al plano proyectivo, es decir, incluirle los puntos impropios o del infinito. De forma que, un punto de dimensiones $[x, y, z]$, se representa por el cuaternión: $[x/w$, $y/w$, $z/w, w]$ con $w=1$. %Y un punto impropio es aquel donde $w=0$.
 
 Este sistema de coordenadas tiene la particularidad de que permite pasar fácilmente coordenadas de un número de dimensiones a otro. Para ello, almacena las coordenadas con una dimensión adicional, de tal forma que para un espacio de 3D, utilizaríamos 4 coordenadas. El valor de la coordenada adicional indica entre otras cosas, si el punto se encuentra en el infinito, $w=0$, o es un punto cualquiera, $w \neq 0$. En este sistema, si dos coordenadas son proporcionales, se refieren al mismo punto.
 
 Utilizándolas, podemos expresar un punto del espacio tridimensional respecto al sistema de referencia de la cámara de forma matricial:
 \begin{equation} 
-\begin{pmatrix}
+  \begin{bmatrix}
     X_{c} \\
     Y_{c} \\
     Z_{c} \\
     1
-  \end{pmatrix}
+  \end{bmatrix}
   \Longrightarrow
-  \begin{pmatrix}
+  \begin{bmatrix}
     fX_{c} \\
     fY_{c} \\
     Z_{c} \\
-  \end{pmatrix}
+  \end{bmatrix}
   =
   \begin{bmatrix} f & 0 & 0 & 0 \\ 0 & f & 0 & 0 \\ 0 & 0 & 1 & 0 \\\end{bmatrix}
-  \begin{pmatrix} X_{w} \\  Y_{w} \\  Z_{w} \\  1 \\\end{pmatrix}
+  \begin{bmatrix} X_{w} \\  Y_{w} \\  Z_{w} \\  1 \\\end{bmatrix}
 \end{equation}
 y la expresión de relación de correspondencia, queda de la siguiente forma:
 \begin{equation} 
-\begin{pmatrix}
-    X_{w} \\
-    Y_{w} \\
-    Z_{w} \\
+  \begin{bmatrix}
+    u \\
+    v \\
     1
-  \end{pmatrix}
-=
+  \end{bmatrix}
+  =
   \begin{bmatrix} f & 0 & 0 & 0 \\ 0 & f & 0 & 0 \\ 0 & 0 & 1 & 0 \\\end{bmatrix}
-  \begin{pmatrix} X_{c} \\  Y_{c} \\  Z_{c} \\  1 \\\end{pmatrix}
+  \begin{bmatrix} X_{w} \\  Y_{w} \\  Z_{w} \\  1 \\\end{bmatrix}
 \end{equation}
 
 Y de forma abreviada:
 
 \begin{equation}\label{eq:proy}
-\overline{x_w} = P \overline{X_c}   
+  x = P X   
 \end{equation}
 donde:
 \begin{itemize}
 \item $P = diag(f, f, 1) [I|0]$
 \item $diag(f, f, 1)$ es una matriz diagonal.
 \item $[I|0]$ representa una matriz identidad de 3x3 concatenada con un vector columna nulo de dimensión 3.
-\item $\overline{X_c}$  es el vector columna, de dimensión 4, que representa las coordenadas homogéneas del punto del espacio respecto al sistema de referencia de la cámara.
-\item $\overline{x}$  es el vector columna, de dimensión 3, que representan las coordenadas homogéneas del punto de la imagen.
+\item $x$  es el vector columna, de dimensión 3, que representan las coordenadas homogéneas del punto de la imagen.
+\item $X$  es el vector columna, de dimensión 4, que representa las coordenadas homogéneas del punto del espacio respecto al sistema de referencia de la cámara.
 \item A la matriz $P$ de se la denomina \textbf{matriz homogénea de proyección de la cámara}.
 \end{itemize}
 
@@ -143,7 +142,7 @@ donde:
 \subsection{Parámetros intrínsecos de la cámara}
 La matriz de proyección $P$ de la ecuación \ref{eq:proy} permite transformar las coordenadas de un punto 3D del mundo real en píxeles de una imagen. Se construye a partir de una matriz $K$ y un vector de valores nulos:
 \begin{equation}
- P = [K|0] 
+  P = [K|0] 
 \end{equation}
 donde la $K$ es la \textbf{matriz de la cámara}, la cuál está formada por una serie de parámetros, denominados \textbf{parámetros intrínsecos}:
 
@@ -173,10 +172,10 @@ Los \textbf{parámetros intrínsecos} son aquellos que describen las caracterís
 \item El \textbf{factor $\gamma$ (\textit{skew factor})} determina el grado de perpendicularidad de las paredes de los píxeles del sensor. Es inversamente proporcional a la tangente del ángulo que forman los ejes $X$ e $Y$, por lo que  $\gamma$ tendrá un valor nulo si los píxeles son rectangulares. Esto suele ser así en casi todos los sensores utilizados hoy en día. 
 
 \item La \textbf{distancia focal}, es la distancia existente entre el centro óptico y el punto principal. $f_x$ y $f_y$ son dos distancias focales en píxeles. Son proporcionales a la longitud focal $f$ considerada en las ecuaciones (\ref{eq:semejanza}) y (\ref{eq:proyeccion}), según 
-\begin{equation}
-f_x = f S_x \quad \quad  \quad \quad f_y = f S_y
-\end{equation}
-donde: $f$ es la longitud focal física de la lente, en unidades de longitud (milímetros, micras, etc.). $S_x$ y $S_y$ son el número de píxeles por unidad de longitud del sensor, a largo del eje $X$ y del eje $Y$ respectívamente. Como es obvio, si el sensor tiene el mismo número de píxeles por unidad de longitud en todas sus dimensiones, las dos focales $f_x$ y $f_y$ tendrán el mismo valor.
+  \begin{equation}
+    f_x = f S_x \quad \quad  \quad \quad f_y = f S_y
+  \end{equation}
+  donde: $f$ es la longitud focal física de la lente, en unidades de longitud (milímetros, micras, etc.). $S_x$ y $S_y$ son el número de píxeles por unidad de longitud del sensor, a largo del eje $X$ y del eje $Y$ respectivamente. Como es obvio, si el sensor tiene el mismo número de píxeles por unidad de longitud en todas sus dimensiones, las dos focales $f_x$ y $f_y$ tendrán el mismo valor.
 \end{itemize}
 
 \subsection{Distorsión}
@@ -184,7 +183,7 @@ El uso de lentes facilita la entrada de luz, un enfoque adecuado y una mayor ver
 
 La \textbf{distorsión radial}, consiste en el desplazamiento de los píxeles de de la imagen, de tal modo que las líneas situadas en los extremos del encuadre aparentarán salir hacia el exterior o el interior.   
 
-Para la correción de la distorsión radial de las coordenadas de un pixel de la imagen, se utiliza la siguiente fórmula:
+Para la corrección de la distorsión radial de las coordenadas de un píxel de la imagen, se utiliza la siguiente fórmula:
 \begin{equation}
   \begin{split}
     x_{corrected} = x(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)  \\
@@ -200,7 +199,7 @@ La \textbf{distorsión tangencial} se produce porque la lente no se encuentra pe
   \end{split}
 \end{equation}
 
-%Por otra parte, se obtiene un vector con los factores de distorsión de la cámara. Normalmente este vector contiene 5 valores, correspondientes a 3 factores de distorsión radial, denotados como $k_{i}$ y 2 factores de distorsión tangencial, denotados como $p_{j}$. El número de factores de distorsión radial puede verse incrementado hasta 5, dependiendo del algoritmo de calibración que se realice.
+% Por otra parte, se obtiene un vector con los factores de distorsión de la cámara. Normalmente este vector contiene 5 valores, correspondientes a 3 factores de distorsión radial, denotados como $k_{i}$ y 2 factores de distorsión tangencial, denotados como $p_{j}$. El número de factores de distorsión radial puede verse incrementado hasta 5, dependiendo del algoritmo de calibración que se realice.
 De tal forma que tenemos cinco parámetros de distorsión que son representados en OpenCV como una matriz fila con 5 columnas: 
 
 \begin{equation}
@@ -219,10 +218,10 @@ De tal forma que tenemos cinco parámetros de distorsión que son representados 
 \subsection{Parámetros extrínsecos de la cámara}
 En la sección \ref{subsec:matproy} se asumió el hecho de que el centro óptico era el origen de coordenadas del mundo. Esto era así a efectos del cálculo de parámetros intrínsecos, con lo cual el modelo era válido siempre que el sistema no fuera movido de su posición inicial.
 
-Por otro lado, en la mayor parte de las aplicaciones prácticas es necesario que la cámara se mueva o se gire, para captar adecuadamente la escena. Por ello, para poder modelar el sistema con independencia de que su posición haya sido alterada o de que un objeto se pueda referenciar respecto al origen de coordenadas de la cámara, es necesario modificar la ecuación \ref{eq:proy} introduciendo un matriz de transformación $[R|t]$ que contiene los \textbf{parametros extrínsecos} de la cámara. 
+Por otro lado, en la mayor parte de las aplicaciones prácticas es necesario que la cámara se mueva o se gire, para captar adecuadamente la escena. Por ello, para poder modelar el sistema con independencia de que su posición haya sido alterada o de que un objeto se pueda referenciar respecto al origen de coordenadas de la cámara, es necesario modificar la ecuación \ref{eq:proy} introduciendo un matriz de transformación $[R|t]$ que contiene los \textbf{parámetros extrínsecos} de la cámara. 
 
 \begin{equation}
-x = K [R|t] X  
+  x = K [R|t] X  
 \end{equation}
 
 \begin{figure}[h!]
@@ -248,273 +247,273 @@ Donde:
 \begin{itemize}
 
 \item $R$ es una \textbf{matriz de rotación}, que representa un giro de la cámara (o de un objeto respecto de ella). Tendrá una forma distinta dependiendo de respecto a que eje (X, Y, Z) se haga la rotación:
-\begin{equation}
-R_x(\Psi)=\begin{bmatrix}
-1 & 0         & 0        \\ 
-0 & \cos\Psi  & \sin\Psi \\ 
-0 & -\sin\Psi & \cos\Psi
-\end{bmatrix}
-\end{equation}
+  \begin{equation}
+    R_x(\Psi)=\begin{bmatrix}
+      1 & 0         & 0        \\ 
+      0 & \cos\Psi  & \sin\Psi \\ 
+      0 & -\sin\Psi & \cos\Psi
+    \end{bmatrix}
+  \end{equation}
 
-\begin{equation}
-R_y(\varphi)=\begin{bmatrix}
-\cos\varphi & 0 & -\sin\varphi \\ 
-0           & 1 & 0            \\ 
-\sin\varphi & 0 & \cos\varphi
-\end{bmatrix}
-\end{equation}
+  \begin{equation}
+    R_y(\varphi)=\begin{bmatrix}
+      \cos\varphi & 0 & -\sin\varphi \\ 
+      0           & 1 & 0            \\ 
+      \sin\varphi & 0 & \cos\varphi
+    \end{bmatrix}
+  \end{equation}
 
-\begin{equation}
-R_z(\theta)=\begin{bmatrix}
-\cos\theta  & \sin\theta & 0 \\ 
--\sin\theta & \cos\theta & 0 \\ 
-0           & 0          & 1
-\end{bmatrix}
-\end{equation}
+  \begin{equation}
+    R_z(\theta)=\begin{bmatrix}
+      \cos\theta  & \sin\theta & 0 \\ 
+      -\sin\theta & \cos\theta & 0 \\ 
+      0           & 0          & 1
+    \end{bmatrix}
+  \end{equation}
 
-Si el giro se realiza respecto al eje $Z$, tal y como se muestra en la figura \ref{fig:rotatingPoints}, las nuevas coordenadas quedarán de la siguiente forma:
+  Si el giro se realiza respecto al eje $Z$, tal y como se muestra en la figura \ref{fig:rotatingPoints}, las nuevas coordenadas quedarán de la siguiente forma:
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.6\textwidth]{rotatingPoints.png}
-  \caption{Rotación de puntos alrededor del eje Z (Bradski y Kaehler)}
-  \label{fig:rotatingPoints}
-\end{figure}
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\textwidth]{rotatingPoints.png}
+    \caption{Rotación de puntos alrededor del eje Z (Bradski y Kaehler)}
+    \label{fig:rotatingPoints}
+  \end{figure}
 
-\begin{equation}
-\begin{bmatrix}
-X'\\ 
-Y'\\ 
-Z'
-\end{bmatrix}
-=
-\begin{bmatrix}
-\cos\theta  & \sin\theta & 0 \\ 
--\sin\theta & \cos\theta & 0 \\ 
-0           & 0          & 1
-\end{bmatrix}
-\begin{bmatrix}
-X\\ 
-Y\\ 
-Z
-\end{bmatrix}
-\Rightarrow 
-\begin{aligned}
-X'&= X\cos\theta + Y \sin\theta \\ 
-Y'&=-X\sin\theta + Y \cos\theta \\ 
-Z'&= Z
-\end{aligned}
-\end{equation}
+  \begin{equation}
+    \begin{bmatrix}
+      X'\\ 
+      Y'\\ 
+      Z'
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+      \cos\theta  & \sin\theta & 0 \\ 
+      -\sin\theta & \cos\theta & 0 \\ 
+      0           & 0          & 1
+    \end{bmatrix}
+    \begin{bmatrix}
+      X\\ 
+      Y\\ 
+      Z
+    \end{bmatrix}
+    \Rightarrow 
+    \begin{aligned}
+      X'&= X\cos\theta + Y \sin\theta \\ 
+      Y'&=-X\sin\theta + Y \cos\theta \\ 
+      Z'&= Z
+    \end{aligned}
+  \end{equation}
 
 \item $t$ es un \textbf{vector de translación} que representa el cambio de un sistema de coordenadas a otro cuyo origen se desplaza a otra ubicación; en otras palabras, el vector de traslación es el desplazamiento desde el origen del sistema de coordenadas inicial hasta el origen del sistema de coordenadas final. En nuestro caso, como podemos ver en la figura \ref{fig:RT}, el sistema inicial pertenecería al del objeto, y el final, al sistema de coordenadas de la cámara. 
-\begin{equation}
-t = origen_{objeto} - origen_{camara}
-\end{equation}
+  \begin{equation}
+    t = origen_{objeto} - origen_{camara}
+  \end{equation}
 
 
 \end{itemize}
 
-El cálculo aproximado de la matriz de transformacion $[R|t]$ a partir de la información visual capturada se denomina \textbf{\textit{pose estimation}}. La solución para la estimación de la \textit{pose} ha sido propuesta, entre otros métodos, mediante transformada lineal directa (DLT) ó algoritmos Pnp (perspective-n-point).
+El cálculo aproximado de la matriz de transformación $[R|t]$ a partir de la información visual capturada se denomina \textbf{\textit{pose estimation}}. La solución para la estimación de la \textit{pose} ha sido propuesta, entre otros métodos, mediante transformada lineal directa (DLT) ó algoritmos Pnp (perspective-n-point).
 
-%Tanto la matriz de cámara como el vector de distorsión contienen únicamente parámetros intrínsecos, lo que significa que serán constantes. No ocurre lo mismo con los parámetros extrínsecos, que varían en función de la situación de la cámara en el escenario, y que producen una matriz de rotación y un vector de traslación. Estos dos elementos indican la transformación geométrica que hay que realizar sobre la cámara para alcanzar la posición y la rotación finales desde su posición inicial. En la figura \ref{fig:RT} se puede ver gráficamente la implicación de los parámetros extrínsecos.
+% Tanto la matriz de cámara como el vector de distorsión contienen únicamente parámetros intrínsecos, lo que significa que serán constantes. No ocurre lo mismo con los parámetros extrínsecos, que varían en función de la situación de la cámara en el escenario, y que producen una matriz de rotación y un vector de traslación. Estos dos elementos indican la transformación geométrica que hay que realizar sobre la cámara para alcanzar la posición y la rotación finales desde su posición inicial. En la figura \ref{fig:RT} se puede ver gráficamente la implicación de los parámetros extrínsecos.
 
-%Los \textbf{parámetros extrínsecos} son aquellos que definen la posición y la orientación de la cámara con respecto al mundo real.
+% Los \textbf{parámetros extrínsecos} son aquellos que definen la posición y la orientación de la cámara con respecto al mundo real.
 
-%Comúnmente, para la determinación de estos parámetros significa:
-%\begin{itemize}
-%\item Encontrar el \textbf{vector de translación} entre las posiciones relativas al origen de dos sistemas de referencia.
-%\item Encontrar la \textbf{matriz de rotación} que provocan los ejes correspondientes a los dos sistemas de referencia alineados ( ej.: uno sobre otro)
-%\end{itemize}
+% Comúnmente, para la determinación de estos parámetros significa:
+% \begin{itemize}
+% \item Encontrar el \textbf{vector de translación} entre las posiciones relativas al origen de dos sistemas de referencia.
+% \item Encontrar la \textbf{matriz de rotación} que provocan los ejes correspondientes a los dos sistemas de referencia alineados ( ej.: uno sobre otro)
+% \end{itemize}
 
-%El proceso de estimación de pose de un objeto consiste en determinar los parámetros de rotación y translación de dicho objeto a partir de información visual. %El problema se consolida como uno de los retos más destacados en el campo de la visión por computador, surgiendo numerosas alternativas y métodos para solucionarlo.
+% El proceso de estimación de pose de un objeto consiste en determinar los parámetros de rotación y translación de dicho objeto a partir de información visual. %El problema se consolida como uno de los retos más destacados en el campo de la visión por computador, surgiendo numerosas alternativas y métodos para solucionarlo.
 
-%La pose del objeto viene determinada por una posición (3 parámetros: X, Y, Z) y una orientación (3 ángulos: yaw, pitch, roll) que forman un conjunto de 6 grados de libertad (6DOF). La solución para la estimación de la pose ha sido propuesta, entre otros métodos, mediante transformada lineal directa (DLT), algoritmos Pnp (perspective-n-point).
+% La pose del objeto viene determinada por una posición (3 parámetros: X, Y, Z) y una orientación (3 ángulos: yaw, pitch, roll) que forman un conjunto de 6 grados de libertad (6DOF). La solución para la estimación de la pose ha sido propuesta, entre otros métodos, mediante transformada lineal directa (DLT), algoritmos Pnp (perspective-n-point).
 
-%El objetivo es encontrar una correspondencia entre puntos de la imagen en 2D y sus coordenadas en el mundo 3D. A la hora de representar los objetos del espacio observado (3D), los convertimos a un plano de visión (2D), y tenemos que definir cual es la correspondencia entre las coordenadas del espacio y las de la representación. Para facilitar esta conversión, se utiliza el sistema de coordenadas ``homogéneo''. 
+% El objetivo es encontrar una correspondencia entre puntos de la imagen en 2D y sus coordenadas en el mundo 3D. A la hora de representar los objetos del espacio observado (3D), los convertimos a un plano de visión (2D), y tenemos que definir cual es la correspondencia entre las coordenadas del espacio y las de la representación. Para facilitar esta conversión, se utiliza el sistema de coordenadas ``homogéneo''. 
 
-%Las matrices de transformación, utilizadas para pasar de unas dimensiones a otras, suelen incluir 3 tipos de transformaciones \textbf{R}otación, \textbf{T}ranslación y e\textbf{S}calado. Podemos representarlas así:
+% Las matrices de transformación, utilizadas para pasar de unas dimensiones a otras, suelen incluir 3 tipos de transformaciones \textbf{R}otación, \textbf{T}ranslación y e\textbf{S}calado. Podemos representarlas así:
 
-%Para convertir las coordenadas del mundo a coordenadas de pantalla, de espacio tridimensional a bidimensional, los sistemas de visión artificial utilizan la siguiente fórmula:
-%\begin{equation}
-%q=MQ
-%\end{equation}
-%donde:
-%\begin{center}
-%$q=\begin{bmatrix} x \\ y \\ z \end{bmatrix}$, $M=\begin{bmatrix} f_{x} & 0 & c_{x} \\ 0 & f_{y} & c_{y} \\ 0 & 0 & 1 \end{bmatrix}$ y %$Q=\begin{bmatrix} X \\ Y \\ Z \end{bmatrix}$
-%\end{center}
+% Para convertir las coordenadas del mundo a coordenadas de pantalla, de espacio tridimensional a bidimensional, los sistemas de visión artificial utilizan la siguiente fórmula:
+% \begin{equation}
+%   q=MQ
+% \end{equation}
+% donde:
+% \begin{center}
+%   $q=\begin{bmatrix} x \\ y \\ z \end{bmatrix}$, $M=\begin{bmatrix} f_{x} & 0 & c_{x} \\ 0 & f_{y} & c_{y} \\ 0 & 0 & 1 \end{bmatrix}$ y %$Q=\begin{bmatrix} X \\ Y \\ Z \end{bmatrix}$
+% \end{center}
 
-%Por tanto, $q$ representa el espacio bidimensional en coordenadas homogéneas, y $Q$ el espacio tridimensional. $f_{x}$ es la distancia focal en el eje $X$, $f_{y}$ la distancia focal en el eje $Y$, ($c_{x},c_{y}$) marcan el punto principal, el punto donde el eje de visión corta el plano de visión (normalmente suele estar en el centro de la imagen, o muy cerca)
+% Por tanto, $q$ representa el espacio bidimensional en coordenadas homogéneas, y $Q$ el espacio tridimensional. $f_{x}$ es la distancia focal en el eje $X$, $f_{y}$ la distancia focal en el eje $Y$, ($c_{x},c_{y}$) marcan el punto principal, el punto donde el eje de visión corta el plano de visión (normalmente suele estar en el centro de la imagen, o muy cerca)
 
-%Mediante alguna técnica de resolución al problema PnP, se calcula la pose (rotación y traslación) dado un conjunto de puntos de objeto, sus proyecciones en la imagen correspondiente, así como la matriz de cámara y los coeficientes de distorsión. Esta función encuentra una pose que minimiza el error de reproyección, es decir, la suma de los cuadrados de las distancias entre las proyecciones observados y las puntos proyectados
-%La matriz de la cámara se corresponde con sus parámetros intrínsecos. Tanto la matriz como el vector de coeficientes de distorsión se obtienen en un proceso previo de calibración de la cámara y se mantienen fijos y conocidos durante todo el proceso.
-
-
-%usando los parámetros extrínsecos de la cámara, podemos encontrar la relación entre las coordenadas de un punto $P$ en el mundo $(P_w)$ y las coordenadas de la cámara %$\left(P_c\right)$:
-%\begin{equation}
-%  P_c=R\left(P_w-T\right)where R=\begin{pmatrix}
-%    r_{11} & r_{12} & r_{13}\\
-%    r_{21} & r_{22} & r_{23}\\
-%    r_{31} & r_{32} & r_{33}
-%  \end{pmatrix}
-%\end{equation}
-
-%Si $P_c=\begin{pmatrix}{X_c} \\ {Y_c} \\ {Z_c} \end{pmatrix}$ Y $P_w=\begin{pmatrix}{X_w} \\ {Y_w} \\ {Z_w} \end{pmatrix}$, entonces
-%\begin{equation}
-%  \begin{pmatrix} X_{c}\\ Y_{c}\\ z_{c}\end{pmatrix} =\begin{pmatrix}r_{11} & r_{12} & r_{13}\\r_{21} & r_{22} & r_{23}\\r_{31} & r_{32} & r_{33}
-%  \end{pmatrix}\begin{pmatrix}X_{w} - T_{x}\\Y_{w} - T_{y}\\Z_{w} - T_{z}\end{pmatrix}
-%\end{equation}
-%o
-%\begin{equation}
-%  X_c=R^{T}_1\left(P_w-T\right)\\
-%  Y_c=R^{T}_2\left(P_w-T\right)\\
-%  Z_c=R^{T}_3\left(P_w-T\right)
-%\end{equation}
-%donde $R^{T}_i$ corresponde a la fila $i-th$ de la matriz de rotación.
+% Mediante alguna técnica de resolución al problema PnP, se calcula la pose (rotación y traslación) dado un conjunto de puntos de objeto, sus proyecciones en la imagen correspondiente, así como la matriz de cámara y los coeficientes de distorsión. Esta función encuentra una pose que minimiza el error de reproyección, es decir, la suma de los cuadrados de las distancias entre las proyecciones observados y las puntos proyectados
+% La matriz de la cámara se corresponde con sus parámetros intrínsecos. Tanto la matriz como el vector de coeficientes de distorsión se obtienen en un proceso previo de calibración de la cámara y se mantienen fijos y conocidos durante todo el proceso.
 
 
+% usando los parámetros extrínsecos de la cámara, podemos encontrar la relación entre las coordenadas de un punto $P$ en el mundo $(P_w)$ y las coordenadas de la cámara %$\left(P_c\right)$:
+% \begin{equation}
+%   P_c=R\left(P_w-T\right)where R=\begin{pmatrix}
+%     r_{11} & r_{12} & r_{13}\\
+%     r_{21} & r_{22} & r_{23}\\
+%     r_{31} & r_{32} & r_{33}
+%   \end{pmatrix}
+% \end{equation}
 
-%\begin{figure}[h!]
-%  \centering
-%  \includegraphics[width=0.6\textwidth]{extrinsicCamara}
-%  \caption{Transformación geométrica dada por los parámetros extrínsecos entre la posición inicial y final de una cámara.}
-%  \label{fig:FIGextrinsicCam}
-%\end{figure}
-
-%\subsection{Combinación de parámetros extrínsecos e intrínsecos de la cámara}
-
-%La matriz que contiene los parámetros intrínsecos de la cámara:
-%\begin{equation}
-%  M_{in}=\begin{pmatrix}-\frac{f}{s_x} & 0 & 0_{x}\\0 & -\frac{f}{s_y} & o_y\\0 & 0 & 1\end{pmatrix}
-%\end{equation}
-%- La matriz que contiene los parámetros extrínsecos de la cámara:
-%\begin{equation}
-% M_{ex}=\begin{pmatrix}r_{11} & r_{12} & r_{13} & -R_1^TT\\r_{21} & r_{22} & r_{23} & -R_2^TT\\r_{31} & r_{32} & r_{33} & -R_3^TT\end{pmatrix}M_{ex}=\begin{pmatrix}r_{11} & r_{12} & r_{13} & -R_1^TT\\r_{21} & r_{22} & r_{23} & -R_2^TT\\r_{31} & r_{32} & r_{33} & -R_3^TT\end{pmatrix}
-%\end{equation}
-
-%Usar coordenadas homogéneas:
-%\begin{equation}
-%  \begin{pmatrix}x_{h}\\y_{h}\\w \end{pmatrix}=M_{in}M_{ex}\begin{pmatrix}x_{w}\\y_{w}\\z_{w}\\1 \end{pmatrix}=M\begin{pmatrix}x_{w}\\y_{w}\\z_{w}\\1 \end{pmatrix}=\begin{pmatrix}m_{11} &m_{12} & m_{13} & m_{14}\\m_{21} & m_{22} & m_{23} & m_{24}\\m_{31} & m_{32} & m_{33} & m_{34}\\m_{41} & m_{42} & m_{43} & m_{44}\end{pmatrix}\begin{pmatrix}x_{w}\\y_{w}\\z_{w}\\1 \end{pmatrix}
-%\end{equation}
-%
-%La homogeneización es necesaria pra obtener las coordenadas píxel:
-%\begin{equation}
-%  x_{im}=\frac{x_h}{w}=\frac{m_{11}X_w+m_{12}Y_w+m_{13}Z-w+m_{14}}{m_{31}X_w+m_{32}Y_w+m_{33}Z-w+m_{34}}
-%  y_{im}=\frac{y_h}{w}=\frac{m_{21}X_w+m_{22}Y_w+m_{23}Z-w+m_{24}}{m_{31}X_w+m_{32}Y_w+m_{33}Z-w+m_{34}}
-%\end{equation}
-
-%Llamamos M a la proyección de la matriz (es una matriz 3x4)
-%
-%Nota: la relación de los puntos 3D y sus proyecciones 2D pueden ser vistas como una transformación lineal de la proyección espacial $({X_w}, {Y_w}, {Z_x}, 1)^T$ a la proyección del plano $({X_h}, {Y_h}, w)^T$.
+% Si $P_c=\begin{pmatrix}{X_c} \\ {Y_c} \\ {Z_c} \end{pmatrix}$ Y $P_w=\begin{pmatrix}{X_w} \\ {Y_w} \\ {Z_w} \end{pmatrix}$, entonces
+% \begin{equation}
+%   \begin{pmatrix} X_{c}\\ Y_{c}\\ z_{c}\end{pmatrix} =\begin{pmatrix}r_{11} & r_{12} & r_{13}\\r_{21} & r_{22} & r_{23}\\r_{31} & r_{32} & r_{33}
+%   \end{pmatrix}\begin{pmatrix}X_{w} - T_{x}\\Y_{w} - T_{y}\\Z_{w} - T_{z}\end{pmatrix}
+% \end{equation}
+% o
+% \begin{equation}
+%   X_c=R^{T}_1\left(P_w-T\right)\\
+%   Y_c=R^{T}_2\left(P_w-T\right)\\
+%   Z_c=R^{T}_3\left(P_w-T\right)
+% \end{equation}
+% donde $R^{T}_i$ corresponde a la fila $i-th$ de la matriz de rotación.
 
 
-%\subsection{Visión Estereoscópica}
 
-%Un proyector se calibra usando los mismos algoritmos de calibración que una cámara ya que puede considerarse como una ``cámara inversa''. No obstante el hecho de poder aplicar un modelo pin-hole a un proyector no parece tan evidente como en el caso de una cámara. Para la calibración de un proyector es inevitable el uso al menos una cámara. Para calibrar un proyector, ya sea usando el método de Tsai \cite{Tsai}, como el método de Zhang \cite{Zhang99} es necesario obtener un conjunto de coordenadas 3D-2D correspondientes. La \textbf{Visión Estereoscópica} consiste en el empleo de dos vistas del mismo espacio desde diferentes puntos de visionado.
+% \begin{figure}[h!]
+%   \centering
+%   \includegraphics[width=0.6\textwidth]{extrinsicCamara}
+%   \caption{Transformación geométrica dada por los parámetros extrínsecos entre la posición inicial y final de una cámara.}
+%   \label{fig:FIGextrinsicCam}
+% \end{figure}
 
-%\subsubsection{Geometría epipolar}
+% \subsection{Combinación de parámetros extrínsecos e intrínsecos de la cámara}
 
-%La geometría más básica en la que se basa cualquier sistema de visión estereoscópica es la \textbf{geometría epipolar}. Se parte de la base de que en un sistema geométrico de este tipo se tienen una cámara izquierda y una cámara derecha.
+% La matriz que contiene los parámetros intrínsecos de la cámara:
+% \begin{equation}
+%   M_{in}=\begin{pmatrix}-\frac{f}{s_x} & 0 & 0_{x}\\0 & -\frac{f}{s_y} & o_y\\0 & 0 & 1\end{pmatrix}
+% \end{equation}
+% - La matriz que contiene los parámetros extrínsecos de la cámara:
+% \begin{equation}
+%   M_{ex}=\begin{pmatrix}r_{11} & r_{12} & r_{13} & -R_1^TT\\r_{21} & r_{22} & r_{23} & -R_2^TT\\r_{31} & r_{32} & r_{33} & -R_3^TT\end{pmatrix}M_{ex}=\begin{pmatrix}r_{11} & r_{12} & r_{13} & -R_1^TT\\r_{21} & r_{22} & r_{23} & -R_2^TT\\r_{31} & r_{32} & r_{33} & -R_3^TT\end{pmatrix}
+% \end{equation}
 
-%\begin{figure}
-%  \centering
-%  \includegraphics[width=0.7\textwidth]{geometriaEpipolar.pdf}
-%  \caption{Elementos básicos de la geometría epipolar.}
-%  \label{fig:FIGgeomEpipolar}
-%\end{figure}
+% Usar coordenadas homogéneas:
+% \begin{equation}
+%   \begin{pmatrix}x_{h}\\y_{h}\\w \end{pmatrix}=M_{in}M_{ex}\begin{pmatrix}x_{w}\\y_{w}\\z_{w}\\1 \end{pmatrix}=M\begin{pmatrix}x_{w}\\y_{w}\\z_{w}\\1 \end{pmatrix}=\begin{pmatrix}m_{11} &m_{12} & m_{13} & m_{14}\\m_{21} & m_{22} & m_{23} & m_{24}\\m_{31} & m_{32} & m_{33} & m_{34}\\m_{41} & m_{42} & m_{43} & m_{44}\end{pmatrix}\begin{pmatrix}x_{w}\\y_{w}\\z_{w}\\1 \end{pmatrix}
+% \end{equation}
+% 
+% La homogeneización es necesaria pra obtener las coordenadas píxel:
+% \begin{equation}
+%   x_{im}=\frac{x_h}{w}=\frac{m_{11}X_w+m_{12}Y_w+m_{13}Z-w+m_{14}}{m_{31}X_w+m_{32}Y_w+m_{33}Z-w+m_{34}}
+%   y_{im}=\frac{y_h}{w}=\frac{m_{21}X_w+m_{22}Y_w+m_{23}Z-w+m_{24}}{m_{31}X_w+m_{32}Y_w+m_{33}Z-w+m_{34}}
+% \end{equation}
 
-%En la figura \ref{fig:FIGgeomEpipolar} se pueden observar los elementos que componen la geometría epipolar de un sistema estereoscópico. A cada cámara le corresponde un centro de proyección, denotados como $O_{l}$ y $O_{r}$, y un plano proyectivo, $\Pi_{l}$ y $\Pi_{r}$. El punto P, perteneciente al mundo físico tiene una proyección dentro de cada uno de los planos proyectivos. A estas proyecciones se las denomina como $p_{l}$ y $p_{r}$.
-
-%Unos puntos geométricos importantes aquí son los llamados \textbf{epipolos}. Un epipolo $e_l$ (res\-pectivamente $e_r$) en un plano de imagen $\Pi_{l}$ (respectivamente $\Pi_{r}$) se define como la imagen del centro de proyección de la otra cámara $O_{r}$ (respectivamente $O_{l}$). Teniendo presentes estos elementos, existe un plano formado entre el punto P y los dos epipolos $e_{l}$ y $e_{r}$ denominado \textbf{plano epipolar}. Las líneas $p_{l}e_{l}$ y $p_{r}e_{r}$ (líneas que atraviesan los centros de proyección y los correspondientes epipolos), se llaman \textbf{líneas epipolares}.
-
-%Para poder entender la utilidad de estos elementos se parte de que el punto P es visto en la cámara de la derecha. Debido a que la cámara solo ve $p_{r}$ (la proyección de P en $\Pi_{r}$), el punto P podría estar localizado en cualquier lugar de la línea definida por $p_{r}$ y $O_{r}$. Obviamente, esta línea contiene P, pero también contiene un gran número de puntos. Lo interesante de esto es que esta línea se encuentra proyectada en el plano de la imagen izquierda $\Pi_{l}$; de hecho, esa proyección es lo que antes ha sido definido como línea epipolar.
-
-%Con este escenario, pueden extraerse una serie de propiedades:
-
-%\begin{itemize}
-%\item Todo punto 3D visto por ambas cámaras está contenido en el plano epipolar que intersecta cada imagen en una línea epipolar.
-%\item Dado un punto 2D en una imagen, su punto asociado en la otra imagen se encuentra a lo largo de la correspondiente línea epipolar. Esto es lo que se conoce como \textbf{restricción epipolar}.
-%\item La restricción epipolar implica que la búsqueda bidimensional de puntos asociados entre dos vistas se convierte en una búsqueda unidimensional a través de las líneas epipolares una vez conocida la geometría epipolar del sistema estereoscópico.
-%\end{itemize}
+% Llamamos M a la proyección de la matriz (es una matriz 3x4)
+% 
+% Nota: la relación de los puntos 3D y sus proyecciones 2D pueden ser vistas como una transformación lineal de la proyección espacial $({X_w}, {Y_w}, {Z_x}, 1)^T$ a la proyección del plano $({X_h}, {Y_h}, w)^T$.
 
 
-%\subsubsection{Fundamentos matemáticos}
+% \subsection{Visión Estereoscópica}
 
-%Una vez conocidos los elementos que describen un sistema estereoscópico, se mostrará la utilización de dos matrices a través de las cuales pueden realizarse transformaciones sobre el sistema estereoscópico. Estas matrices son la \textit{matriz esencial} y la \textit{matriz fundamental}.
+% Un proyector se calibra usando los mismos algoritmos de calibración que una cámara ya que puede considerarse como una ``cámara inversa''. No obstante el hecho de poder aplicar un modelo pin-hole a un proyector no parece tan evidente como en el caso de una cámara. Para la calibración de un proyector es inevitable el uso al menos una cámara. Para calibrar un proyector, ya sea usando el método de Tsai \cite{Tsai}, como el método de Zhang \cite{Zhang99} es necesario obtener un conjunto de coordenadas 3D-2D correspondientes. La \textbf{Visión Estereoscópica} consiste en el empleo de dos vistas del mismo espacio desde diferentes puntos de visionado.
 
-%\subsubsection{La matriz esencial}
+% \subsubsection{Geometría epipolar}
 
-%Se define la matriz esencial ($E$) de un sistema estereoscópico como aquella que contiene la información de traslación y rotación que relaciona las dos cámaras en el espacio físico.
+% La geometría más básica en la que se basa cualquier sistema de visión estereoscópica es la \textbf{geometría epipolar}. Se parte de la base de que en un sistema geométrico de este tipo se tienen una cámara izquierda y una cámara derecha.
 
-%Esto significa que, conocidas las coordenadas de un punto $p_{l}$ en la imagen izquierda, puede conocerse su punto correspondiente en la imagen derecha $p_{r}$ multiplicando dicho punto por la matriz esencial del sistema, de tal forma que se cumple la siguiente ecuación:
+% \begin{figure}
+%   \centering
+%   \includegraphics[width=0.7\textwidth]{geometriaEpipolar.pdf}
+%   \caption{Elementos básicos de la geometría epipolar.}
+%   \label{fig:FIGgeomEpipolar}
+% \end{figure}
 
-%\begin{equation}
-%  p_{r}^TEp_{l} = 0
-%  \label{esencial}
-%\end{equation}\\
-%Es importante indicar que la matriz esencial no tiene en cuenta los parámetros intrínsecos de la cámara, por ello es por lo que trabaja en coordenadas físicas.
+% En la figura \ref{fig:FIGgeomEpipolar} se pueden observar los elementos que componen la geometría epipolar de un sistema estereoscópico. A cada cámara le corresponde un centro de proyección, denotados como $O_{l}$ y $O_{r}$, y un plano proyectivo, $\Pi_{l}$ y $\Pi_{r}$. El punto P, perteneciente al mundo físico tiene una proyección dentro de cada uno de los planos proyectivos. A estas proyecciones se las denomina como $p_{l}$ y $p_{r}$.
 
-%\subsubsection{La matriz fundamental}
+% Unos puntos geométricos importantes aquí son los llamados \textbf{epipolos}. Un epipolo $e_l$ (res\-pectivamente $e_r$) en un plano de imagen $\Pi_{l}$ (respectivamente $\Pi_{r}$) se define como la imagen del centro de proyección de la otra cámara $O_{r}$ (respectivamente $O_{l}$). Teniendo presentes estos elementos, existe un plano formado entre el punto P y los dos epipolos $e_{l}$ y $e_{r}$ denominado \textbf{plano epipolar}. Las líneas $p_{l}e_{l}$ y $p_{r}e_{r}$ (líneas que atraviesan los centros de proyección y los correspondientes epipolos), se llaman \textbf{líneas epipolares}.
 
-%La matriz esencial contiene toda la información acerca de la geometría de una cámara con respecto de la otra, pero no posee información de las cámaras en sí. En la práctica resulta más útil trabajar en unidades de píxel, ya que estas son las que se conocen en primera instancia al trabajar con imágenes.
+% Para poder entender la utilidad de estos elementos se parte de que el punto P es visto en la cámara de la derecha. Debido a que la cámara solo ve $p_{r}$ (la proyección de P en $\Pi_{r}$), el punto P podría estar localizado en cualquier lugar de la línea definida por $p_{r}$ y $O_{r}$. Obviamente, esta línea contiene P, pero también contiene un gran número de puntos. Lo interesante de esto es que esta línea se encuentra proyectada en el plano de la imagen izquierda $\Pi_{l}$; de hecho, esa proyección es lo que antes ha sido definido como línea epipolar.
 
-%Para conocer la relación entre un píxel en una imagen y su píxel correspondiente en la otra imagen a través de la linea epipolar debe introducirse información de los parámetros intrínsecos de las cámaras. Para hacer esto, cada punto $p$ se sustituye por $q$, aplicando la matriz de cámara al anterior punto $p$, de tal forma que $q=Mp$, o, de forma equivalente, $p=M^{-1}q$. De esta forma, la ecuación \ref{esencial} se convierte en:
+% Con este escenario, pueden extraerse una serie de propiedades:
 
-%\begin{equation*}
-%  q_r^T(M_r^{-1})^TEM_l^{-1}q_l=0
-%\end{equation*}\\
-%Partiendo de esto, se define la matriz fundamental $F$ como:
+% \begin{itemize}
+% \item Todo punto 3D visto por ambas cámaras está contenido en el plano epipolar que intersecta cada imagen en una línea epipolar.
+% \item Dado un punto 2D en una imagen, su punto asociado en la otra imagen se encuentra a lo largo de la correspondiente línea epipolar. Esto es lo que se conoce como \textbf{restricción epipolar}.
+% \item La restricción epipolar implica que la búsqueda bidimensional de puntos asociados entre dos vistas se convierte en una búsqueda unidimensional a través de las líneas epipolares una vez conocida la geometría epipolar del sistema estereoscópico.
+% \end{itemize}
 
-%\begin{equation}
-%  F=(M_r^{-1})^TEM_l^{-1}
-%  \label{defFundamental}
-%\end{equation}\\
-%Sustituyendo:
 
-%\begin{equation}
-%  q_r^TFq_l=0
-%  \label{fundamental}
-%\end{equation}\\
-%En esencia, la matriz $F$ es igual que la matriz $E$, excepto que $F$ opera en coordenadas píxel de la imagen, mientras que $E$ trabaja con coordenadas físicas.
+% \subsubsection{Fundamentos matemáticos}
 
-%Existen un par de propiedades matemáticas interesantes acerca de la matriz fundamental:
+% Una vez conocidos los elementos que describen un sistema estereoscópico, se mostrará la utilización de dos matrices a través de las cuales pueden realizarse transformaciones sobre el sistema estereoscópico. Estas matrices son la \textit{matriz esencial} y la \textit{matriz fundamental}.
 
-%\begin{itemize}
-%\item La matriz $F$ es una matriz de 3x3 que tiene solamente siete grados de libertad, lo que significa que, de los nueve componentes de la matriz, dos pueden ser calculados a partir de los otros siete.
-%\item El rango de la matriz $F$ es 2.
-%\end{itemize}
+% \subsubsection{La matriz esencial}
 
-%Además de estas propiedades, existen otras propiedades geométricas:
+% Se define la matriz esencial ($E$) de un sistema estereoscópico como aquella que contiene la información de traslación y rotación que relaciona las dos cámaras en el espacio físico.
 
-%\begin{itemize}
-%\item Dada una geometría bifocal, la matriz $F$ es función exclusiva de dicha geometría, es decir, es independiente de todos los puntos P de la escena y de las proyecciones $p_l$ y $p_r$ de los puntos de la escena.
-%\item La matriz $F$ define las líneas epipolares a través de las ecuaciones:
+% Esto significa que, conocidas las coordenadas de un punto $p_{l}$ en la imagen izquierda, puede conocerse su punto correspondiente en la imagen derecha $p_{r}$ multiplicando dicho punto por la matriz esencial del sistema, de tal forma que se cumple la siguiente ecuación:
 
-%  \begin{equation}
-%    l_r=Fm_l
-%  \end{equation}
-%  \begin{equation}
-%    l_l=F^Tm_r
-%  \end{equation}
+% \begin{equation}
+%   p_{r}^TEp_{l} = 0
+%   \label{esencial}
+% \end{equation}\\
+% Es importante indicar que la matriz esencial no tiene en cuenta los parámetros intrínsecos de la cámara, por ello es por lo que trabaja en coordenadas físicas.
 
-%\item La matriz $F$ define los epipolos a través de las ecuaciones:
+% \subsubsection{La matriz fundamental}
 
-%  \begin{equation}
-%    Fe_l=
-%    \begin{bmatrix}
-%      0 \\ 0 \\ 0
-%    \end{bmatrix}
-%  \end{equation}
-%  \begin{equation}
-%    F^Te_r=
-%    \begin{bmatrix}
-%      0 \\ 0 \\ 0
-%   \end{bmatrix}
-%  \end{equation}
-%
-%\end{itemize}
+% La matriz esencial contiene toda la información acerca de la geometría de una cámara con respecto de la otra, pero no posee información de las cámaras en sí. En la práctica resulta más útil trabajar en unidades de píxel, ya que estas son las que se conocen en primera instancia al trabajar con imágenes.
+
+% Para conocer la relación entre un píxel en una imagen y su píxel correspondiente en la otra imagen a través de la linea epipolar debe introducirse información de los parámetros intrínsecos de las cámaras. Para hacer esto, cada punto $p$ se sustituye por $q$, aplicando la matriz de cámara al anterior punto $p$, de tal forma que $q=Mp$, o, de forma equivalente, $p=M^{-1}q$. De esta forma, la ecuación \ref{esencial} se convierte en:
+
+% \begin{equation*}
+%   q_r^T(M_r^{-1})^TEM_l^{-1}q_l=0
+% \end{equation*}\\
+% Partiendo de esto, se define la matriz fundamental $F$ como:
+
+% \begin{equation}
+%   F=(M_r^{-1})^TEM_l^{-1}
+%   \label{defFundamental}
+% \end{equation}\\
+% Sustituyendo:
+
+% \begin{equation}
+%   q_r^TFq_l=0
+%   \label{fundamental}
+% \end{equation}\\
+% En esencia, la matriz $F$ es igual que la matriz $E$, excepto que $F$ opera en coordenadas píxel de la imagen, mientras que $E$ trabaja con coordenadas físicas.
+
+% Existen un par de propiedades matemáticas interesantes acerca de la matriz fundamental:
+
+% \begin{itemize}
+% \item La matriz $F$ es una matriz de 3x3 que tiene solamente siete grados de libertad, lo que significa que, de los nueve componentes de la matriz, dos pueden ser calculados a partir de los otros siete.
+% \item El rango de la matriz $F$ es 2.
+% \end{itemize}
+
+% Además de estas propiedades, existen otras propiedades geométricas:
+
+% \begin{itemize}
+% \item Dada una geometría bifocal, la matriz $F$ es función exclusiva de dicha geometría, es decir, es independiente de todos los puntos P de la escena y de las proyecciones $p_l$ y $p_r$ de los puntos de la escena.
+% \item La matriz $F$ define las líneas epipolares a través de las ecuaciones:
+
+%   \begin{equation}
+%     l_r=Fm_l
+%   \end{equation}
+%   \begin{equation}
+%     l_l=F^Tm_r
+%   \end{equation}
+
+% \item La matriz $F$ define los epipolos a través de las ecuaciones:
+
+%   \begin{equation}
+%     Fe_l=
+%     \begin{bmatrix}
+%       0 \\ 0 \\ 0
+%     \end{bmatrix}
+%   \end{equation}
+%   \begin{equation}
+%     F^Te_r=
+%     \begin{bmatrix}
+%       0 \\ 0 \\ 0
+%     \end{bmatrix}
+%   \end{equation}
+%   
+% \end{itemize}
 
 \section{Realidad Aumentada}
-%La realidad aumentada es una tecnología mediante la cual la percepción del mundo real se complementa con información adicional generada por ordenador en tiempo real. Esta información adicional puede ser desde etiquetas virtuales, representaciones de modelos tridimensionales, o incluso cambios de iluminación. 
+% La realidad aumentada es una tecnología mediante la cual la percepción del mundo real se complementa con información adicional generada por ordenador en tiempo real. Esta información adicional puede ser desde etiquetas virtuales, representaciones de modelos tridimensionales, o incluso cambios de iluminación. 
 
 La Realidad Aumentada es el conjunto de técnicas que permiten integrar en tiempo real contenido digital a la percepción del mundo real. El término fue acuñado en 1990 por Tom Caudell durante el desarrollo de un sistema de Boeing para ayudar a los trabajadores en el ensamblaje de aviones mediante la ayuda de pantallas que mostraban información del montaje. 
 
@@ -525,16 +524,18 @@ La Realidad Aumentada es el conjunto de técnicas que permiten integrar en tiemp
   \label{fig:augmentedVisor}
 \end{figure}
 
-%La realidad aumentada se puede aplicar a prácticamente todos los campos. En el sector industrial, para la reparación y mantenimiento de maquinas e instalaciones complejas, visualización de datos o simulación.  En aplicaciones médicas, mostrarían la situación de órganos no visibles durante una cirugía. También se han realizado aplicaciones para diseño de interiores (IKEA), presentaciones de productos, educación, publicidad, turismo, arte y ocio. 
+% La realidad aumentada se puede aplicar a prácticamente todos los campos. En el sector industrial, para la reparación y mantenimiento de maquinas e instalaciones complejas, visualización de datos o simulación.  En aplicaciones médicas, mostrarían la situación de órganos no visibles durante una cirugía. También se han realizado aplicaciones para diseño de interiores (IKEA), presentaciones de productos, educación, publicidad, turismo, arte y ocio. 
 
 \begin{figure}[t] 
   \centering
   \includegraphics[width=1.0\textwidth]{RA1.pdf}
-  \caption{Jerarquía de la \textit{Realidad Mixta}}
+  \caption{Taxonomía de la \textit{Realidad Mixta} según Milgram y Kishino}
   \label{fig:RA1}
 \end{figure}
 
-Según la taxonomía descrita por Milgram y Kishino [16], los entornos de Realidad Mixta son aquellos en los que “se presentan objetos del mundo real y objetos virtuales de forma conjunta en una única pantalla”.
+Uno de los principales problemas a resolver es denominado \textbf{registro}. Los objetos del mundo real y virtual deben estar correctamente alineados o la sensación de integración se verá seriamente afectada. Sin un registro preciso, la realidad aumentada no podría ser soportada por muchas aplicaciones, por ejemplo, en medicina para el guiado de una aguja en la realización de una biopsia. 
+
+% Según la taxonomía descrita por Milgram y Kishino [16], los entornos de Realidad Mixta son aquellos en los que “se presentan objetos del mundo real y objetos virtuales de forma conjunta en una única pantalla”.
 
 El paradigma general por el cual se mezcla el mundo real y el virtual se denomina \textit{Realidad Mixta}~\cite{kishino1994taxonomy}. En la Figura \ref{fig:RA1} se muestra la jerarquía en la que se clasifica este tipo de paradigma. A la izquierda, se muestra el caso extremo de \textit{integración nula}, en el que la interacción se realiza únicamente a través de los objetos reales. No existe ningún tipo de dispositivo informático con el cual realizar la interacción.
 
@@ -545,27 +546,24 @@ Acercándose más hacia el \textit{entorno virtual}, se encuentra el paradigma d
 
 Por último, se encuentran los sistemas de \textit{Realidad Virtual}~\cite{steuer1992defining}, en los que todo es generado por ordenador, y el objetivo es que el usuario se abstraiga lo máximo posible del mundo real, para conseguir una inmersión total en el mundo virtual. Estos sistemas tuvieron un gran auge hace unos años, en su modalidad con \textit{HMD}\footnote{\textit{Head Mounted Display}}, aunque no llegaron a consolidarse completamente. Un proyecto interesante realizado sobre \textit{Realidad Virtual} es \textit{CAVE} de Cruz-Neira et al~\cite{cruz1993surround}. También se realizaron multitud de estudios que probaban la eficacia de este paradigma 
 
-
-
-
-Uno de los principales problemas a resolver es denominado registro. Los objetos del mundo real y virtual deben estar correctamente alineados o la sensación de integración se verá seriamente afectada. Sin un registro preciso, la realidad aumentada no podría ser soportada por muchas aplicaciones, por ejemplo, en medicina para el guiado de una aguja en la realización de una biopsia. 
-
-Las aplicaciones de Realidad Aumentada deben cumplir las siguientes características definidas por Ronald T. Azuma \cite{Azuma}:
+Para distinguir que podemos llamar realidad aumentada y que no, Ronald T. Azuma \cite{Azuma}, define una serie de características que deben cumplir las aplicaciones:
 \begin{itemize}
 \item \textbf{Combinar el mundo real con el virtual.} El resultado final debe mostrar la información sintética sobre las imágenes percibidas del mundo real.
 \item \textbf{Debe ser interactivo en tiempo real.} La integración debe ser realizada \emph{en el momento}, por lo que el cálculo necesario debe realizarse n el menor tiempo posible.
 \item \textbf{La alineación de los elementos virtuales debe realizarse en 3D.} Los objetos sintéticos deben de estar en el espacio tridimensional.
 \end{itemize}
 
-%\subsection{Componentes de un sistema de realidad aumentada}
-%Un sistema de realidad aumentada depende de cuatro componentes físicos:
+% \subsection{Componentes de un sistema de realidad aumentada}
+A la hora de definir un sistema de realidad aumentada, podemos observar que depende de cuatro componentes físicos:
 
-%\begin{itemize}
-%\item \textbf{Elementos de entrada y sensores de orientación.} Proporciona al sistema la información visual, la entrada del usuario y, potencialmente, ayudar a la orientación.
-%\item \textbf{Fuente de datos.} Proporciona información aplicable al medio ambiente para que el sistema aumente la visión del usuario.
-%\item \textbf{Periféricos de retroalimentación de los usuarios.} Principalmente en la forma de producción visual, pero también pueden incluir audio y otras interfaces de usuario.
-%\item \textbf{Unidad de procesamiento.} Combina los datos de los sensores de entrada para determinar la orientación y aumentar la visión del usuario con información de la fuente de datos. Envía el resultado a los periféricos de retroalimentación del usuario.
-%\end{itemize}
+\begin{itemize}
+\item \textbf{Elementos de entrada y sensores de orientación.} Proporciona al sistema la información visual, la entrada del usuario y, potencialmente, ayudar a la orientación.
+\item \textbf{Fuente de datos.} Proporciona información aplicable al medio ambiente para que el sistema aumente la visión del usuario.
+\item \textbf{Periféricos de retroalimentación de los usuarios.} Principalmente en la forma de producción visual, pero también pueden incluir audio y otras interfaces de usuario.
+\item \textbf{Unidad de proceso.} Combina los datos de los sensores de entrada para determinar la orientación y aumentar la visión del usuario con información de la fuente de datos. Envía el resultado a los periféricos de retroalimentación del usuario.
+\end{itemize}
+
+En los siguientes apartados se detallan cada uno de estos elementos, y como se podrá observar, el amplio abanico de aplicaciones en las que situar la realidad aumentada dependiendo de las combinaciones de estos componentes.
 
 \subsection{Elementos de entrada y sensores de orientación}
 Un sistema de realidad aumentada debe ser capaz de conocer su orientación y posición dentro del entorno circundante con el fin de ofrecer una experiencia «aumentada» satisfactoria. La combinación de la orientación y la posición de un observador que se conoce como \emph{pose}. La estimación de la \emph{pose} se definirá con más detalle en la sección 4. La orientación y posición se pueden determinar mediante técnicas de visión por computador, pero hay métodos alternativos para estimar la \emph{pose}  utilizando  sensores diseñados específicamente para medir alguno o todos los parámetros de los seis grados de libertad que componen la \emph{pose}.
@@ -597,7 +595,7 @@ Un problema común en los sistemas de seguimiento visual es que los movimientos 
 \subsubsection{Fuentes de Vídeo}
 La realidad aumentada superpone información sobre lo que el usuario está viendo. Para los sistemas dinámicos en los que la información virtual debe ser mezclada con la imagen real, se requiere un dispositivo de captura, como una cámara digital. Para los propósitos de las aplicaciones de realidad aumentada es preferible una cámara de vídeo. La mayoría de las aplicaciones utilizan una única cámara y se conocen como sistemas monoculares. También existen sistemas estereoscópicos, que  utilizan dos cámaras para determinar la profundidad.
 
-El desarrollo tecnológico en el ámbito de la captura de imagen digital que han mantenido los principales fabricantes en los últimos 10 años, conocido como la «batalla del mega-píxel», ha supuesto un gran avance para disponer de sensores con una gran calidad de imagen y un coste reducido. Actualmente es normal encontrar cámaras de alta resolución en prácticamente todos los dispositivos móviles, permitiendo grabar vídeo en una resolución FullHD ó 4K y obtener imágenes fijas de hasta 7136x5360px.
+El desarrollo tecnológico en el ámbito de la captura de imagen digital que han mantenido los principales fabricantes en los últimos 10 años, conocido como la \textit{«batalla del mega-píxel»}, ha supuesto un gran avance para disponer de sensores con una gran calidad de imagen y un coste reducido. Actualmente es normal encontrar cámaras de alta resolución en prácticamente todos los dispositivos móviles, permitiendo grabar vídeo en una resolución FullHD ó 4K y obtener imágenes fijas de hasta 7136x5360px.
 
 \subsubsection{Entrada táctil}
 En sistemas de realidad aumentada portátiles tales como teléfonos inteligentes o tablets, la pantalla funciona al mismo tiempo como una entrada para manipular objetos directamente en la pantalla y un dispositivo de salida.
@@ -632,8 +630,8 @@ El audio se utiliza principalmente de dos formas diferentes en los sistemas de r
 
 Por ejemplo, el usuario pueda ser capaz de dar comandos de voz y el sistema devuelva retroalimentación con señales de audio (pitidos). Este tipo de audio no direccional es trivial desde el punto de vista tecnológico aportando una nueva dimensión a las aplicaciones móviles. El audio aumentado puede servir a personas con discapacidad visual para ayudar a comprender el entorno. Mediante unos altavoces o un par de auriculares, es bastante simple proporcionar al usuario la información en forma de audio. La síntesis de voz también se puede utilizar para leer información, por ejemplo, leer palabras en voz alta desde un sistema de reconocimiento de texto.
 
-\subsection{Unidad de procesamiento}
-%\subsubsection{Dispositivos móviles: Smartphones,  tablets y SBCs (Single Board Computer)}
+\subsection{Unidad de proceso}
+% \subsubsection{Dispositivos móviles: Smartphones,  tablets y SBCs (Single Board Computer)}
 El teléfono móvil ha evolucionado hacia una plataforma informática móvil (smartphone), en la que desarrollar las actividades habituales de un ordenador personal. El principal inconveniente de estos era la pantalla reducida que disponen lo que ha derivado en el desarrollo de un nuevo dispositivo denominado tablet. 
 
 Las tablets disponen de prácticamente las mismas características que los smartphones (incluso el mismo sistema operativo) pero las pantallas son mayores, sin necesidad de teclado físico ni ratón, con las que se interactúa principalmente mediante la pantalla táctil con los dedos o un stylus.
@@ -644,13 +642,12 @@ Otra tendencia tecnológica es el desarrollo de SBCs, \textit{(Single Board Comp
 En esta sección comentaremos las técnicas que pueden utilizarse para el tratamiento previo de imágenes que se utilizarán para la detección y tracking en sistemas de realidad aumentada. El orden en que se introducen suele ser el aplicado  habitualmente.
 
 La adquisición de imágenes es el primer paso en un sistema de realidad aumentada y es dependiente de la plataforma del sistema. Por norma general, se considera que las imágenes se adquieren con 24 bits, un canal por cada una de sus componentes de color en 8 bits: rojo, verde y azul. También vamos a asumir que las imágenes se adquieren a 30 fotogramas por segundo. Esta suposición esta basada en la transmisión típica con la que trabajan la mayoría de webcams.
-
-\subsection{Preprocesado de las imágenes de entrada}
+% \subsection{Preprocesado de las imágenes de entrada}
 Prácticamente todas las técnicas presentadas procesan y trabajan las imágenes en blanco y negro. Aún realizando la captura en color, normalmente se realizan varios pasos previos para reducir y simplificar la cantidad de información que se tiene que manejar, dejando solo la información esencial.
 
 Por ejemplo, un frame típico obtenido a partir de una webcam o la cámara de un teléfono móvil puede tener una anchura de 640 píxeles y 480 píxeles de altura. Suponiendo que una imagen en color con tres canales (rojo, verde y azul) se obtiene con ocho bits por canal, la cantidad de datos por frame serian 640 x 480 x 3 x 8 = 7.372.800 bits de información. Esto es para una sola imagen. La mayoría de cámaras tienen una tasa de transferencia entre 20 y 30 frames por segundo, lo que significa que para cada frame se debe procesar toda esa información por completo cada 33 milisegundos antes de que llegue el siguiente fotograma. Sería muy costoso (e innecesario), por lo que se utilizan una serie de técnicas como las explicadas a continuación para reducir la cantidad de información requerida en las etapas posteriores.
 
-\subsubsection{Conversión a escala de grises}
+\subsection{Conversión a escala de grises}
 La reducción del número de canales de la imagen (rojo, verde y azul) a un solo canal de ocho bits representados como gris, reduce la cantidad de datos a procesar en un factor de tres. Una imagen en escala de grises representa la intensidad de la imagen. 
 
 No existe un único método para convertir una imagen en color a escala de grises, el proceso más común consiste en recorrer todos los píxeles de la imagen, y para cada píxel de forma individual multiplicar sus componente RGB (rojo, verde y azul), cuyos valores oscilan entre 0 y 255, por unos coeficientes y sumarlos. De esta forma obtenemos la misma luminosidad del píxel tanto en color como en escala de grises.
@@ -659,7 +656,7 @@ Los componentes RGB originales del píxel se sustituyen por el valor resultante 
 
 Los coeficientes que se utilizan son 0.299 para el rojo (R), 0.587 para el verde (G), y 0.114 para el azul (B). Al sumar los tres coeficientes el total vale 1 (0.299 + 0.587 + 0.114), lo que garantiza que el valor resultante de la suma de los productos por los componentes originales del píxel será un valor comprendido también entre 0 y 255.
 
-\subsubsection{Thresholding (umbralización o binarización)}
+\subsection{Thresholding (umbralización o binarización)}
 La umbralización consiste en definir un valor umbral y compararlo con cada uno de los píxeles de la imagen. A los píxeles que estén por debajo del umbral se les asigna un valor, y a los que estén por encima otro. De esta forma se divide toda la población de valores en tan sólo dos grupos, reduciendo considerablemente la complejidad de la información a analizar.
 
 Aplicar un valor umbral a una imagen presenta dos dificultades. La primera es decidir que valor concreto tomar, y la segunda es conseguir que dicho valor sirva para cualquier imagen posible que pueda llegar desde la webcam. Si los píxeles tienen un valor que se encuentra dentro del rango que va de 0 a 255, ¿cúal es el mejor valor para el umbral? ¿128, que está en la mitad del rango? ¿Y por qué no 57? No se puede decidir de antemano sin analizar antes la imagen, ya que el mayor inconveniente que presenta este procedimiento es que es muy sensible a la iluminación. Con poca iluminación los píxeles tienden a tomar valores bajos, oscuros, cercanos al 0, y con mucha iluminación toman valores altos, claros, cercanos al 255. Y peor es el caso cuando la iluminación varía dentro de la propia imagen, con algunas zonas muy oscuras y otras muy claras.
@@ -686,7 +683,7 @@ Este filtro plantea un problema de implementación en los bordes, donde el kerne
 
 A los píxeles que están por debajo del umbral se les asigna un 1, y a los que están por encima un 0. De esta forma se obtiene una imagen "binaria", en el sentido de que sólo tiene dos valores (blanco y negro).
 
-\subsubsection{Corrección de perspectiva y proyección}
+\subsection{Corrección de perspectiva y proyección}
 La captura de documentos mediante cámaras normalmente se realiza sin estar la cámara paralela al plano en el que se encuentra, con lo que obtendrá una imagen con una distorsión de la perspectiva. 
 Si los detectores son tolerantes a la perspectiva no es necesaria una rectificación. Sin embargo, la mayoría de procesadores de OCR son muy sensibles a la variaciones del texto bajo perspectiva y fallan.
 
@@ -694,12 +691,10 @@ Si la deformación de la perspectiva producida es ligera, la rectificación se p
 
 En otros casos, el texto aparecerá sobre superficies curvas, como en los casos de que estemos capturando las páginas de un libro abierto. Estos casos típicos permiten que se realicen suposiciones, como la de utilizar un modelo cilíndrico de para calcular la deformación \cite{Kanungo}. Del mismo modo, si suponemos que el texto aparece como líneas rectas paralelas en la página, podemos utilizar la línea de texto para calcular la deformación que se esta produciendo en la página y obtener la imagen como si estuviese sobre un plano.
 
-\subsubsection{Downsampling}
+\subsection{Downsampling}
 Otra técnica que se utiliza es la de \emph{downsampling} para reducir el número total de píxeles de la imagen. Lo ideal sería que la relación de aspecto de la imagen original se conserve siempre, para ello el número de píxeles se reduce a la mitad en cada iteración. Cada \emph{downsampling} que se realice sobre una imagen lleva como consecuencia la pérdida de datos que reducirá la precisión del tracking y podría influir en la robustez. A la hora de diseñar el sistema se debe decidir si es aceptable una pequeña pérdida de precisión o emplear un enfoque multiresolución, en el que se realiza el tracking completo por primera vez en una imagen reducida y los resultados se refinan con versiones de mayor resolución de la imagen \cite{Klein}.
 
-La teoría sobre los diferentes niveles de resolución está presentado por Adelson \cite{Adelson} y se describe como un conjunto de copias (con filtros paso bajo o paso banda de una imagen), donde cada una de ellas es una representación de la imagen en una escala diferente. Son esencialmente representaciones a escala múltiple de una imagen a partir de la imagen original y con una escala de un factor de dos en cada paso hacia abajo. Este proceso puede ser visualizado como una pirámide con la imagen original en la parte inferior. 
-
-\begin{figure}
+\begin{figure}[h!]
   \centering
   \includegraphics[width=0.8\textwidth]{downsampling.png}
   \caption{Cálculo de las pirámides de Gauss y sus inversas (Laplace). (Bradski y Kaehler)}
@@ -707,11 +702,13 @@ La teoría sobre los diferentes niveles de resolución está presentado por Adel
   \label{fig:pirámides}
 \end{figure}
 
+La teoría sobre los diferentes niveles de resolución está presentado por Adelson \cite{Adelson} y se describe como un conjunto de copias (con filtros paso bajo o paso banda de una imagen), donde cada una de ellas es una representación de la imagen en una escala diferente. Son esencialmente representaciones a escala múltiple de una imagen a partir de la imagen original y con una escala de un factor de dos en cada paso hacia abajo. Este proceso puede ser visualizado como una pirámide con la imagen original en la parte inferior. 
+
 La figura \ref{fig:pirámides} muestra los pasos involucrados en el cálculo de una pirámide de imágenes y la pirámide laplaciana, que contiene toda la información perdida en cada paso. Si la pirámide de la imagen y la pirámide laplaciana están disponibles, la imagen original puede ser perfectamente reconstruida. En cada nivel de la pirámide, la imagen contiene cuatro veces menos píxeles que la capa inferior (Figura \ref{fig:pirescale}) lo que afectará directamente al tiempo total de procesamiento. 
 
-\begin{figure}
+\begin{figure}[h]
   \centering
-  \includegraphics[width=0.5\textwidth]{pyramid.png}
+  \includegraphics[width=0.6\textwidth]{pyramid.png}
   \caption{Pirámide multiresolución. (journal.code4lib.org)}
   \label{fig:pirescale}
 \end{figure}
@@ -740,21 +737,21 @@ Por tanto, el requisito deseable para considerar a un punto de interés es que d
 
 Prácticamente en todos los trabajos sobre detección mediante puntos de interés se pueden establecer las siguientes fases:
 
-\begin{description}
-\item[Extracción] El proceso de extracción consiste en la búsqueda de zonas en la imagen con diferente apariencia que las que están a su alrededor, denominadas características \emph{(features)}. Normalmente las características suelen ser bordes, esquinas o zonas mas brillantes u oscuras en función del algoritmo utilizado en particular. A esta fase también se la denomina detección.
+\begin{itemize}
+\item\textbf{Extracción:} El proceso de extracción consiste en la búsqueda de zonas en la imagen con diferente apariencia que las que están a su alrededor, denominadas características \emph{(features)}. Normalmente las características suelen ser bordes, esquinas o zonas más brillantes u oscuras en función del algoritmo utilizado en particular. A esta fase también se la denomina detección.
 
   Existen muchos algoritmos de detección, que obtienen distintas tipos de características, por ejemplo, el detector de esquinas de Harris\cite{Harris} o el algoritmo FAST \cite{Rosten} que devuelve los píxeles con valores máximos y mínimos en función de sus vecinos mediante técnicas de Machine Learning.
 
-\item[Descripción] Se calcula el vector que describe la característica de un punto significativo para la posterior comparación entre otros puntos de interés. Los enfoques basados en el uso de descripción locales han sido ampliamente investigados y se dividen en dos tipos: el histograma de gradientes y la prueba binaria.
+\item\textbf{Descripción:} Se calcula el vector que describe la característica de un punto significativo para la posterior comparación entre otros puntos de interés. Los enfoques basados en el uso de descripción locales han sido ampliamente investigados y se dividen en dos tipos: el histograma de gradientes y la prueba binaria.
 
   El histograma de gradientes se calcula a partir de la cuantificación de los gradientes dentro de una área local. En SIFT \cite{Lowe}, una zona se divide en subregiones y se calcula el histograma de gradiente en cada una de ellas. Este enfoque es utilizado y mejorado en los trabajos de Ambai \cite{Ambai}, Bay (SURF) \cite{Bay}, y Wagner \cite{Wagner}
 
   Una prueba binaria es una comparación de la intensidad de dos píxeles y produce un resultado binario que representa qué píxel es más brillante. Se realizan cientos de pruebas para calcular un vector de características, ya que solo una de ellas no es lo suficientemente discriminatoria. El tema de investigación principal de este enfoque es el de muestreo eficiente entre dos píxeles y es utilizado en los métodos BRIEF \cite{Calonder}, BRISK \cite{Leutenegger}, y ORB \cite{Rublee}. 
 
-\item[Búsqueda de Coincidencias] Los vectores de características se almacenan en una base de datos. Cuando se busca una coincidencia, se accede a la base datos con los datos del vector de consulta y se devuelve el vector almacenado mas similar.
+\item\textbf{Búsqueda de Coincidencias:} Los vectores de características se almacenan en una base de datos. Cuando se busca una coincidencia, se accede a la base datos con los datos del vector de consulta y se devuelve el vector almacenado más similar.
 
   Si un vector de características es de grandes dimensiones como en SIFT \cite{Lowe}, la búsqueda completa no se podría realizar para tareas en tiempo real. En lugar de ello,  se utilizan técnicas de árboles de búsqueda basado en la aproximación al vecino más cercano \cite{Arya} \cite{Muja}. El costo de la búsqueda de este enfoque depende del número de características almacenados en la base de datos. Otro tipo de búsqueda consiste en mapear el vector de características a un índice de tipo entero \cite{Datar} y almacenarlo en una tabla hash. Este enfoque es teóricamente rápido con $O(1)$, independientemente del tamaño de la base de datos, pero es sensible a errores. Si un vector de características se describe como cadena binaria, se realizará una búsqueda completa en toda la tabla \cite{Calonder}. Para intentar corregir esto, se han planteado la utilización de árboles aleatorios \cite{Lepetit} y estructuras no jerárquicas \cite{Ozuysal}.
-\end{description}
+\end{itemize}
 
 Hay muchas clases de detectores de características, pero los más utilizados son los detectores de esquinas (\emph{corners}), de bordes (\emph{edges}) y de regiones (\emph{blobs}). 
 
@@ -798,7 +795,7 @@ donde  $\textbf{H}_{harris}$ es la \emph{structure tensor},
   \end{bmatrix}
 \end{equation}
 
-$\textbf{H}_{harris}$ is conocida como la \emph{Matriz de Harris}. Un punto de interés se caracteriza por una variación de $S$ en todas la direcciones del vector $(x,y)$. Si definimos $\lambda_1$ y $\lambda_2$  como los autovalores de la matriz descrita arriba, podemos definir entonces la función de autocorrelación $C_{harris}$  como:
+$\textbf{H}_{harris}$ es conocida como la \emph{Matriz de Harris}. Un punto de interés se caracteriza por una variación de $S$ en todas la direcciones del vector $(x,y)$. Si definimos $\lambda_1$ y $\lambda_2$  como los autovalores de la matriz descrita arriba, podemos definir entonces la función de autocorrelación $C_{harris}$  como:
 
 \begin{equation}
   C_{harris} = \lambda_1 \lambda_2 - \kappa \, (\lambda_1 + \lambda_2)^2 = \operatorname{det}(\textbf{H}_{harris}) - \kappa \, \operatorname{trace}^2(\textbf{H}_{harris})
@@ -838,10 +835,10 @@ FAST es algoritmo de detección de esquinas presentado por Rosten y Drummond \ci
 Dado que los 12 puntos deben ser contiguos, la comprobación puede ser acelerada examinando inicialmente soló los píxeles 1, 9, 5 y 13. Un punto de interés sólo puede existir si tres de estos puntos de prueba son todos más brillante o más oscuro que la intensidad de $p$ dado un valor para el umbral. Si más de uno de estos puntos de prueba está  dentro del rango del umbral, $p$ puede ser rechazado de inmediato. Si esta comprobación inicial es satisfactoria, se comprueban el resto de píxeles que quedan en el círculo. Rosten encontró que debido a esta optimización, el algoritmo examina en promedio sólo 3,8 píxeles del círculo para probar si un punto dado es un punto de interés.
 
 De la descripción del algoritmo FAST se puede observar dos potenciales ventajas sobre otros detectores de puntos de interés:
-\begin{description}
-\item[Rapidez.] Todo lo necesario para procesar una imagen completa es un promedio de 3,8 sumas enteras y comparaciones por píxel. En comparación con otros detectores que requieren el cálculo de derivadas parciales, raíces cuadradas y circunvoluciones, FAST es mucho menos complejo computacionalmente.
-\item[Umbralización simple.] El valor del umbral, $t$, es un valor entero que oscila entre 0 y 255 para una imagen en escala de grises de 8 bits. La elección de $t$ influirá directamente en el número, y, posiblemente en la calidad de los puntos de interés detectados. Para aplicaciones en las que es necesario tener un número constante de puntos de interés que deban ser detectados, $t$ puede ser determinado dinámicamente.
-\end{description}
+\begin{itemize}
+\item\textbf{Rapidez.} Todo lo necesario para procesar una imagen completa es un promedio de 3,8 sumas enteras y comparaciones por píxel. En comparación con otros detectores que requieren el cálculo de derivadas parciales, raíces cuadradas y circunvoluciones, FAST es mucho menos complejo computacionalmente.
+\item\textbf{Umbralización simple.} El valor del umbral, $t$, es un valor entero que oscila entre 0 y 255 para una imagen en escala de grises de 8 bits. La elección de $t$ influirá directamente en el número, y, posiblemente en la calidad de los puntos de interés detectados. Para aplicaciones en las que es necesario tener un número constante de puntos de interés que deban ser detectados, $t$ puede ser determinado dinámicamente.
+\end{itemize}
 
 Se debe tener en cuenta que estas características conllevan una serie de desventajas en el uso de FAST: 
 \begin{enumerate}
@@ -854,12 +851,13 @@ El tercer inconvenientes puede ser problema, especialmente si FAST se utiliza pa
 
 En general, es preferible realizar un seguimiento de puntos que se encuentren separados al menos a una cierta distancia entre sí, de modo que las regiones utilizadas para la evaluación no se superpongan. 
 
-FAST prevé este requisito, ofreciendo un paso opcional después de un punto de interés se encuentra el candidato conocido como supresión de no máximos \emph{(non-maximal suppression)}. La supresión de lo no máximos funciona calculando una función de puntuación, $V$ , para cada punto de interés candidato sumando la diferencia de intensidad entre $I(x_p,y_p)$ y cada uno de los píxeles contiguos en el círculo de la prueba que son mas o menos brillante que $I(x_p , y_p)$  dado el  umbral $t$  (aquellos píxeles que pasaron la prueba de 12 puntos). Con la opción de supresión de los no máximos (non-maximal suppression) habilitada, sólo el candidato con la puntuación más alta en una región local es aceptado como un punto de interés. Rosten \cite{Rosten} da la siguiente definición de una función de puntuación $V$:
+FAST prevé este requisito, ofreciendo un paso opcional después de un punto de interés se encuentra el candidato conocido como supresión de no máximos \emph{(non-maximal suppression)}. La supresión de lo no máximos funciona calculando una función de puntuación, $V$ , para cada punto de interés candidato sumando la diferencia de intensidad entre $I(x_p,y_p)$ y cada uno de los píxeles contiguos en el círculo de la prueba que son más o menos brillante que $I(x_p , y_p)$  dado el  umbral $t$  (aquellos píxeles que pasaron la prueba de 12 puntos). Con la opción de supresión de los no máximos (non-maximal suppression) habilitada, sólo el candidato con la puntuación más alta en una región local es aceptado como un punto de interés. Rosten \cite{Rosten} da la siguiente definición de una función de puntuación $V$:
+
 \begin{equation}
   V = max\left( \displaystyle \sum_{u\in S_{bright}} \left | I(x_u,y_u) - I(x_p,y_p) \right | -t , \sum_{u\in S_{dark}} \left | I(x_p,y_p) - I(x_u,y_u) \right | -t \right) 
 \end{equation}
 
-donde $S_{bright}$ y $S_{dark}$ son los conjuntos de píxeles contiguos alrededor de $p$ que son mas brillantes u oscuro que $p$ dado el umbral $t$. Se definen como:
+donde $S_{bright}$ y $S_{dark}$ son los conjuntos de píxeles contiguos alrededor de $p$ que son más brillantes u oscuro que $p$ dado el umbral $t$. Se definen como:
 \begin{equation}
   S_{bright} = {{u|I(x_u , y_u ) \geq I(x_p,y_p) + t}}
 \end{equation}
@@ -872,32 +870,32 @@ La eliminación de los no máximos  puede incurrir en una pequeña penalización
 \subsubsection{Detección de bordes} 
 Muchos de los algoritmos de tracking basado en modelos buscan coincidencia entre los bordes de un objeto del mundo real con los bordes de un modelo conocido para determinar la pose. 
 
-Existen gran variedad de algoritmos de detección de bordes, pero uno de los más populares y de mayor éxito es un método perfeccionado por Canny \cite{Canny}. La figura 4.3 se muestra el resultado de la aplicacion del detector de bordes de Canny. Como se puede ver en esta figura, la forma de un modelo se puede estimar mejor si podemos detectar sus los contornos (tanto exteriores como interiores). El detector devuelve un conjunto de curvas conectadas. El tracking de contornos relacionados con la estructura de un objeto de la imagen en lugar realizar un seguimiento de los píxeles individuales reduce significativamente la cantidad de datos a procesar, que es exactamente el propósito de la detección de características. 
+La base de estos métodos es el cálculo de una característica geométrica a partir de los bordes. En el caso del trabajo de Hagbi \cite{Hagbi}, propone un método para reconocer formas planas y estimar la pose de la cámara a partir del contorno de las formas. Para cada concavidad del contorno, se extraen de las líneas bitangentes, puntos clave invariantes de la proyección. La pose inicial se estima a partir de estos puntos y son refinados mediante la minimización del error de reproyección.
 
-El algoritmo de Canny realiza la siguiente secuencia de pasos para realizar la detección de bordes: 
+Existen gran variedad de algoritmos de detección de bordes, pero uno de los más populares y de mayor éxito es un método perfeccionado por Canny \cite{Canny}. La figura 4.3 se muestra el resultado de la aplicación del detector de bordes de Canny. Como se puede ver en esta figura, la forma de un modelo se puede estimar mejor si podemos detectar sus los contornos (tanto exteriores como interiores). El detector devuelve un conjunto de curvas conectadas. El tracking de contornos relacionados con la estructura de un objeto de la imagen en lugar realizar un seguimiento de los píxeles individuales reduce significativamente la cantidad de datos a procesar, que es exactamente el propósito de la detección de características. 
+
+El \textbf{algoritmo de Canny} realiza la siguiente secuencia de pasos para realizar la detección de bordes: 
 \begin{enumerate}
 \item La imagen se difumina ligeramente utilizando un filtro de Gauss (desenfoque) para reducir el ruido que pueden estar presente debido al sensor de imagen (calidad del sensor, aumento de sensibilidad). 
 \item Se calcula el gradiente de intensidad de la imagen mediante las primeras derivada parciales respecto a $x$ e $y$. 
-\item Un cambio brusco en la intensidad de la imagen podría representar un borde. La busqueda de estas áreas se realiza buscando puntos en los que las derivadas direccionales son máximos locales. 
+\item Un cambio brusco en la intensidad de la imagen podría representar un borde. La búsqueda de estas áreas se realiza buscando puntos en los que las derivadas direccionales son máximos locales. 
 \item Teniendo en cuenta los puntos anteriores como candidatos para bordes, el área alrededor de cada punto se inspecciona para determinar si en realidad se encuentra en un borde y la dirección del gradiente. Esta etapa se denomina supresión de los no máximos (\emph{non-maximal suppression}) y devuelve el conjunto de puntos del borde. 
 \item Los bordes se trazan utilizando umbral de histéresis. La umbralización consiste en imponer un valor umbral, si los píxeles superan ese umbral serán considerados como bordes. Pero aparece un problema si imponemos un umbral muy alto perdemos parte de los bordes, por el contrario si usamos un umbral bajo aparecería ruido, por ello utilizamos la umbralización con histéresis en la que usamos dos umbrales $T_{h}$ y $T_{l}$, siendo $T_{h}$ mayor que $T_{l}$. Después de este paso,se devuelve una imagen binaria donde los píxeles pertenecientes a los bordes están representados por unos y el resto por ceros. 
 \end{enumerate}
 
 La imagen binaria devuelta puede procesarse adicionalmente para encontrar curvas y polígonos, pero esto ya no es parte de la etapa de detector de bordes de Canny.
 
-La base de estos métodos es el cálculo de una caracteristica geometrica a partir de los bordes. En el caso del trabajo de Hagbi \cite{Hagbi}, propone un metodo para recononer formas planas y estimar la pose de la cámara a partir del contorno de las formas. Para cada concavidad del contorno, se extraen de las líneas bitangentes, puntos clave invariantes de la proyección. La pose inicial se estima a partir de estos puntos y son refinados mendiante la minimización del error de reproyección.
-
 \subsubsection{Detección de Regiones}
 Podemos definir una región \emph{(blob)} como una zona de la imagen que tiene propiedades distintas, como el brillo o el color, comparada con otras zonas que la rodean.   
 
-Dada alguna propiedad de interés expresado como una función de la posición en la imagen digital,
+% Dada alguna propiedad de interés expresado como una función de la posición en la imagen digital,
 
 La investigación en este área se centra en algoritmos que podemos agrupar en dos clases principales de detectores de regiones: métodos diferenciales y métodos basados en extremos locales.
 
-Donoser \cite{Donoser} presenta un enfoque para extraer contornos que utiliza MSER (Maximally Stable Extremal Regions) para definir regiones de interes \emph{(blob)}.
+Donoser \cite{Donoser} presenta un enfoque para extraer contornos que utiliza \textbf{MSER} (Maximally Stable Extremal Regions) para definir regiones de interes \emph{(blob)}.
 
-\paragraph{MSER - Maximally Stable Extremal Regions}
-El detector de regiones extremas MSER (Maximally Stable Extremal Regions) selecciona aquellas regiones cuyos píxeles son más brillantes o más oscuros que todos los píxeles de su alrededor \cite{Matas}. De este modo, las regiones quedan definidas por una propiedad extrema de la función de intensidad en la región y su límite exterior. 
+% \paragraph{MSER - Maximally Stable Extremal Regions}
+El \textbf{detector de regiones extremas MSER} (Maximally Stable Extremal Regions) selecciona aquellas regiones cuyos píxeles son más brillantes o más oscuros que todos los píxeles de su alrededor \cite{Matas}. De este modo, las regiones quedan definidas por una propiedad extrema de la función de intensidad en la región y su límite exterior. 
 El algoritmo ordena todos los píxeles de la imagen según su intensidad con un coste computacional de $O(n)$ si el rango de los valores de la imagen $S$ es pequeño, por ejemplo los valores de la imagen en escala de grises $\lbrace 0,\ldots,255\rbrace$, ya que la ordenación se implementa mediante un algoritmo BINSORT. Después de la ordenación, los píxeles se colocan en la imagen (con orden ascendente o descendente) y se van creando regiones de componentes conectados que van creciendo y fusionándose (utilizando un algoritmo de tipo \emph{union-find}, con una complejidad temporal de $O(n\,\log(\log n))$) hasta que todos los píxeles han sido seleccionados. Como resultado final se obtienen diferentes funciones de densidad que describen estructuras de datos que representan a cada una de las áreas de los componentes conectados que contiene la imagen.
 
 Las regiones extremas se calculan buscando aquellos componentes conectados que permanecen constantes durante un número determinado de iteraciones. Para ello, se seleccionan como umbrales de las regiones extremas para las diferentes iteraciones los niveles de intensidad que son mínimos locales del rango de cambio de la función del área. Finalmente, el algoritmo transforma en elipses las regiones extremas, que inicialmente pueden tener cualquier forma. 
@@ -916,7 +914,7 @@ Al igual que con la detección de características , una amplia variedad de algo
 Lowe \cite{Lowe} presenta un método para la extracción de características de la imagen llamado SIFT (Scale Invariant Feature Transform). Este proceso es invariante a cambios en la escala de imagen, traslación y rotación, así también, al menos parcialmente invariante, a cambios en la iluminación y transformaciones proyectivas 3D. Este enfoque transforma una imagen en una gran colección de vectores de características locales llamados  \emph{``SIFT Keys''} que se utilizan para su identificación.
 
 \subsubsection{SURF}
-El descriptor SURF, Speeded-Up Robust Features, fue desarrollado por Herbert Bay \cite{Bay} como un detector de puntos de interés y descriptor robustos. El descriptor SURF guarda cierta similitud con la filosofía del descriptor SIFT \cite{Lowe}, si bien presenta notables diferencias que quedarán patentes con la siguiente exposición sobre su desarrollo. Los autores afirman sin embargo que este detector y descriptor presentan principalmente 2 mejoras resumidas en los siguientes conceptos: 
+El descriptor SURF, Speeded-Up Robust Features, fue desarrollado por Herbert Bay \cite{Bay} como un detector de puntos de interés y descriptores robusto. El descriptor SURF guarda cierta similitud con la filosofía del descriptor SIFT \cite{Lowe}, si bien presenta notables diferencias que quedarán patentes con la siguiente exposición sobre su desarrollo. Los autores afirman sin embargo que este detector y descriptor presentan principalmente 2 mejoras resumidas en los siguientes conceptos: 
 \begin{itemize}
 \item Velocidad de cálculo considerablemente superior sin ocasionar perdida del rendimiento.
 \item Mayor robustez ante posibles transformaciones de la imagen. 
@@ -934,6 +932,7 @@ Las diferencias más originales respecto del descriptor SIFT:
 La primera de las etapas del descriptor SURF es análoga a la del descriptor SIFT en cuanto a la detección de puntos de interés se refiere, si bien el procedimiento para su obtención se basa en diferencias sustanciales que se detallan a continuación. 
 
 El descriptor SURF hace uso de la matriz Hessiana, más concretamente, del valor del determinante de la matriz, para la localización y la escala de los puntos. El motivo para la utilización de la matriz Hessiana es respaldado por su rendimiento en cuanto a la velocidad de cálculo y a la precisión. Lo realmente novedoso del detector incluido en el descriptor SURF respecto de otros detectores es que no utiliza diferentes medidas para el cálculo de la posición y la escala de los puntos de interés individualmente, sino que utiliza el valor del determinante de la matriz Hessiana en ambos casos. Por lo tanto dado un punto $p = (x, y)$ de la imagen $I$ , la matriz Hessiana $H (p, \sigma)$ del punto $p$ perteneciente a la escala $\sigma$ se define como:
+
 \begin{equation}
   H (p, \sigma) = 
   \begin{bmatrix}
@@ -941,23 +940,28 @@ El descriptor SURF hace uso de la matriz Hessiana, más concretamente, del valor
     L_{xy} (p, \sigma) & L_{yy} (p, \sigma)
   \end{bmatrix}
 \end{equation}
+
 donde $L_{xx} (p, \sigma)$ representa la convolución de la derivada parcial de segundo orden de la Gaussiana con la imagen $I$ en el punto $p$. De manera análoga ocurre con los términos $L_{xy} (p, \sigma), L_{yy} (p, \sigma)$ de la matriz. 
 
 A pesar de que los filtros gaussianos son óptimos para el análisis del espacio-escala, se ha implementado una alternativa a los filtros gaussianos en el detector SURF debido a una serie de limitaciones de estos filtros (como la necesidad de ser discretizados, la falta de prevención total del indeseado efecto aliasing, etc.): los filtros tipo caja (de sus siglas en inglés box-filters). Estos nuevos
 filtros aproximan las derivadas parciales de segundo orden de las gaussianas y pueden ser evaluados de manera muy rápida usando imágenes integrales, independientemente del tamaño de éstas. Las imágenes integrales, son calculadas mediante la siguiente fórmula:
+
 \begin{equation}
   I_{\sum}(x,y) = \sum_{i=0}^{i\leq x} \sum_{j=0}^{j\leq y} I(i,j)
 \end{equation}
-donde $(x, y)$ representan la posición del punto en la imagen y $Ii (x, y)$representa la intensidad de la imagen en el punto. Una vez la imagen integral ha sido creada, se puede calcular la suma de
-las intensidades de una región mediante una simple operación:
+
+donde $(x, y)$ representan la posición del punto en la imagen y $Ii (x, y)$representa la intensidad de la imagen en el punto. Una vez la imagen integral ha sido creada, se puede calcular la suma de las intensidades de una región mediante una simple operación:
+
 \begin{equation}
   \sum I = I_{iD} + I_{iA} + I_{iB} + I_{iC}
 \end{equation}
+
 De esta forma, el tiempo necesario para el calculo de las operaciones de convolución es independiente del tamaño de la imagen.
 
 El espacio escala del descriptor SIFT descrito anteriormente, se crea a partir de imágenes suavizadas repetidamente mediante la aplicación de un filtro gaussiano y que posteriormente se submuestrean para alcanzar un nivel más alto dentro de la pirámide de dicho espacio escala. Sin embargo en el caso del detector SURF, debido a la utilización de filtros de tipo caja e imágenes integrales, no es necesario aplicar el mismo filtro iterativamente a la salida de una capa filtrada previamente, sino que se pueden aplicar dichos filtros de cualquier tamaño a la misma velocidad directamente sobre la imagen original. De este modo resulta que el espacio escala es analizado mediante la elevación del tamaño del filtro, en vez de reducir el tamaño de la imagen como es el caso del detector SIFT
 
 Las aproximaciones de las derivadas parciales se denotan como $D_{xx} , D_{xy} , y D_{yy}$. En cuanto al determinante de la matriz Hessiana, éste queda definido de la siguiente manera:
+
 \begin{equation}
   det(H_{aprox}) = D_{xx} D_{yy} - (0,9 D_{xy})^2
 \end{equation}
@@ -985,6 +989,13 @@ El área de interés para el cálculo es el área circular centrada en el punto 
 
 Tras haber realizado todos estos cálculos, se utilizan imágenes integrales nuevamente para proceder al filtrado mediante las máscaras de Haar y obtener así las respuestas en ambas direcciones. Son necesarias únicamente 6 operaciones para obtener la respuesta en la dirección $x$ e $y$. Una vez que las respuestas onduladas han sido calculadas, son ponderadas por una gaussiana de valor $\sigma = 2,5s$ centrada en el punto de interés. Las respuestas son representadas como vectores en el espacio colocando la respuesta horizontal y vertical en el eje de abscisas y ordenadas respectivamente. Finalmente, se obtiene una orientación dominante por cada sector mediante la suma de todas las respuestas dentro de una ventana de orientación móvil cubriendo un ángulo de $\pi/3$ siguiendo las especificaciones recomendadas por el autor. La orientación final del punto de interés será finalmente aquella cuyo vector sea el más grande dentro de los 6 sectores en los que han sido dividida el área circular alrededor del punto de interés. 
 
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.65\textwidth]{SURF2.png}
+  \caption{Respuestas de Haar en las sub-regiones alrededor del punto de interés. (Bay)}
+  \label{fig:surf2}
+\end{figure}
+
 \paragraph{Creación del descriptor }
 Es en esta última etapa del proceso donde se concreta la creación del descriptor SURF. Se construye como primer paso una región cuadrada de tamaño $20s$ alrededor del punto de interés y orientada en relación a la orientación calculada en la etapa anterior. Esta región es a su vez dividida en 4x4 subregiones dentro de cada una de las cuales se calculan las respuestas de Haar de puntos con una separación de muestreo de 5x5 en ambas direcciones. Por simplicidad, se consideran $d_x$ y $d_y$ las respuestas de Haar en las direcciones horizontal y vertical respectivamente relativas a la orientación del punto de interés. En la Figura \ref{fig:surf2} están representadas tanto las respuestas de Haar en cada una de las subregiones como las componentes $d_x$ y $d_y$ uno de los vectores. Para dotar a las respuestas $d_x$ y $d_y$ de una mayor robustez ante deformaciones geométricas y errores de posición, éstas son ponderadas por una gaussiana de valor $\sigma = 3,3s$ centrada en el punto de interés. En cada una de las sub-regiones se suman las respuestas $d_x$ y $d_y$ obteniendo así un valor de $d_x$ y $d_y$ representativo por cada una de las subregiones. 
 Al mismo tiempo se realiza la suma de los valores absolutos de las respuestas $|d_x|$ y $|d_y|$ en cada una de las subregiones, obteniendo de esta manera, información de la polaridad sobre los cambios de intensidad. En resumen, cada una de las subregiones queda representada por un vector $v$ de componentes:
@@ -994,20 +1005,13 @@ Al mismo tiempo se realiza la suma de los valores absolutos de las respuestas $|
 \end{equation}
 y por lo tanto, englobando las 4x4 subregiones, resulta un descriptor SURF con una longitud de 64 valores para cada uno de los puntos de interés identificados.
 
-\begin{figure}
-  \centering
-  \includegraphics[width=0.5\textwidth]{SURF2.png}
-  \caption{Respuestas de Haar en las sub-regiones alrededor del punto de interés. (Bay)}
-  \label{fig:surf2}
-\end{figure}
-
 \paragraph{Matching entre puntos clave}
 
 Esta sección, al igual que en el caso del descriptor SIFT, representa la correspondencia de los puntos clave identificados entre dos imágenes. La estrategia utilizada para establecer las correspondencias entre los puntos clave de ambas imágenes es la de ``el vecino más próximo'' descrita anteriormente. En el caso del descriptor SURF, el umbral relativo es fijado con un valor de 0,7.
 
-\begin{figure}
+\begin{figure}[t]
   \centering        
-  \includegraphics[width=0.5\textwidth]{SURF1.png}
+  \includegraphics[width=0.75\textwidth]{SURF1.png}
   \caption{Estimación de la orientación sobre puntos de interés. (Bay)}
   \label{fig:SURF1}
 \end{figure}
@@ -1015,25 +1019,25 @@ Esta sección, al igual que en el caso del descriptor SIFT, representa la corres
 \section{Tracking}
 En contraste con la detección, que estima la pose de la cámara en una imagen, el tracking es el seguimiento del objeto (y la estimación de la pose de la cámara respecto a ese objeto) en una secuencia de fotogramas.
 
-El procedimiento a seguir es la de identificar ``puntos clave'' visualmente significativos en un frame que podamos encontrar de forma fiable de nuevo en el siguiente. El procedimiento de tracking se basa en encontrar una cantidad suficiente de estas correspondencias de puntos entre los frames.
+El procedimiento a seguir es la de identificar «puntos clave» visualmente significativos en un frame que podamos encontrar de forma fiable de nuevo en el siguiente. El procedimiento de tracking se basa en encontrar una cantidad suficiente de estas correspondencias de puntos entre los frames.
 
 El tracking, es un problema complejo debido a la pérdida de información causada por la proyección del mundo 3D en una imagen 2D, la calidad de la imágenes obtenidas, fondos difíciles de segmentar, oclusiones totales o parciales, cambios en la iluminación y la exigencia de para trabajar en tiempo real. 
 
 Para construir un buen sistema de tracking, es deseable que cumpla con los siguientes requisitos:
 
+\begin{itemize}
+\item\textbf{Robusto.} Incluso en condiciones complicadas, como fondos difíciles de segmentar, cambios de iluminación, oclusiones o movimientos complejos, un algoritmo de tracking debe ser capaz de seguir al objeto de interés.
+
+\item\textbf{Adaptable.} Adicionalmente a los cambios de entornos que se puedan producir, el objeto en sí también puede sufrir cambios. Esto requiere que el algoritmo tenga algún mecanismo de adaptación para el seguimiento del objeto según la apariencia que tenga en cada momento.
+
+\item\textbf{Cómputo en tiempo real.} Para obtener una sensación fluida y que el ojo humano no perciba retrasos en la imagen, al menos debemos trabajar y procesar 15 imágenes por segundo. Por tanto, es necesario que el algoritmo sea rápido y esté optimizado.
+
+\end{itemize}
+
+Desde el punto de la información obtenida para el cálculo de la \textit{pose} de la cámara, las técnicas de tracking se pueden se dividir en dos tipos:
+
 \begin{description}
-\item [Robusto] Incluso en condiciones complicadas, como fondos difíciles de segmentar, cambios de iluminación, oclusiones o movimientos complejos, un algoritmo de tracking debe ser capaz de seguir al objeto de interés.
-
-\item [Adaptable] Adicionalmente a los cambios de entornos que se puedan producir, el objeto en sí también puede sufrir cambios. Esto requiere que el algoritmo tenga algún mecanismo de adaptación para el seguimiento del objeto según la apariencia que tenga en cada momento.
-
-\item [Cómputo en tiempo real] Para obtener una sensación fluida y que el ojo humano no perciba retrasos en la imagen, al menos debemos trabajar y procesar 15 imágenes por segundo. Por tanto, es necesario que el algoritmo sea rápido y esté optimizado.
-
-\end{description}
-
-Desde el punto de la información obtenida para el cálculo de la pose de la cámara, las técnicas de tracking se pueden se dividir en dos tipos:
-
-\begin{description}
-\item [Tracking por detección o búsqueda (by matching).] El cálculo de la posición y orientación de la cámara (camera pose) se realiza en cada frame por correspondencia entre la imagen de entrada y otra de referencia mediante una técnica de detección. La información de anteriores “poses” de la cámara no son tenidas en cuenta para la estimación de la nueva pose. El calculo de la pose mediante arboles aleatorios \cite{Lepetit} y estructuras no jerárquicas \cite{Ozuysal} son ejemplos de este tipo de enfoque.
+\item [Tracking por detección o búsqueda (by matching).] El cálculo de la posición y orientación de la cámara (camera pose) se realiza en cada frame por correspondencia entre la imagen de entrada y otra de referencia mediante una técnica de detección. La información de anteriores “poses” de la cámara no son tenidas en cuenta para la estimación de la nueva pose. El calculo de la \textit{pose} mediante arboles aleatorios \cite{Lepetit} y estructuras no jerárquicas \cite{Ozuysal} son ejemplos de este tipo de enfoque.
 
 \item [Tracking mediante tracking.] Para el calculo, la pose previa es utilizada como pose inicial para el cálculo de la posición y orientación actual. Una vez que se detectado un objeto, se hace un seguimiento de los puntos claves del objetos en el siguiente fotograma \cite{Wagner}, o minimizan la diferencia entre dos imágenes consecutivas \cite{Park} y analizan el cambio no lineal de iluminación producida \cite{Dame}. La mayoría de estos enfoques se basan en la minimización del desplazamiento de la cámara entre dos imágenes sucesivas.
 
@@ -1042,7 +1046,7 @@ Desde el punto de la información obtenida para el cálculo de la pose de la cá
 Otra clasificación de los métodos de tracking disponibles puede dividirse en dos clases: basado en detección de características y basados en detección de modelos.
 
 \subsection{Tracking por detección de características \emph{(feature-based)}}
-En el mundo de la visión artificial una característica (feature) es una zona de la imagen que un algoritmo de tracking puede detectar y seguir a lo largo de múltiples frames. Normalmente las características suelen ser bordes, esquinas, zonas mas brillantes u oscuras en función del algoritmo de tracking en particular.
+En el mundo de la visión artificial una característica (feature) es una zona de la imagen que un algoritmo de tracking puede detectar y seguir a lo largo de múltiples frames. Normalmente las características suelen ser bordes, esquinas, zonas más brillantes u oscuras en función del algoritmo de tracking en particular.
 
 En lugar de utilizar marcadores de referencia, la estimación de la pose de la cámara se puede realizar mediante la extracción de características naturales, como puntos, líneas, bordes o texturas. Esta línea de investigación también ha sido ampliamente estudiado. Park \cite{Park3} presenta un método en el que utiliza las características naturales como una extensión en el tracking de características artificiales. Después de realizar el cálculo de la estimación de la pose de la cámara mediante características visuales conocidos, el sistema sistema adquiere dinámicamente características naturales adicionales y los utiliza para la actualización continua de la estimación de la nueva pose. De esta manera proporciona un seguimiento robusto, incluso cuando las marcas originales originales ya no están a la vista.
 
@@ -1068,7 +1072,7 @@ donde $\epsilon$ contiene la información de las derivadas de orden superior. Si
 donde $(u,v)$, con $u = dx/dt$ y $v = dy/dt$ , corresponde al vector de flujo óptico y, $I_x$ y $I_y$ son las derivadas parciales horizontal y vertical de la imagen, respectivamente. Para cada píxel $(x,y)$ de la imagen, en el tiempo $t$, puede plantearse la ecuación anterior, sin embargo no existe una única solución para esta ecuación. Diferentes restricciones pueden emplearse para estimar el flujo óptico en la imagen. Horn y Shunck en \cite{Horn} restringen el flujo óptico en la imagen a variar suavemente, por lo que la ecuación es minimizada junto a un término de regularización que penaliza los cambios abruptos del flujo. Lucas y Kanade (LK) \cite{LKanade} proponen un método alternativo que se describe a continuación el cual puede ser implementado de forma más eficiente que el propuesto en \cite{Horn}. Las técnicas propuestas en \cite{Horn} y \cite{LKanade} se basan en gradientes espacio-temporales pues minimizan la ecuación anterior. 
 \begin{figure}
   \centering
-  \includegraphics[width=0.8\textwidth]{LK.png}
+  \includegraphics[width=1.0\textwidth]{LK.png}
   \caption{Lucas-Kanade: Seguimiento de puntos. (David Stavens)}
   \label{fig:overviewLK}
 \end{figure}
@@ -1236,7 +1240,7 @@ Los descriptores de LLAH tiene las siguientes características:
   \end{center}
   donde P(A,B,C) es el área de un triángulo con vértices A, B y C.
 \item Un descriptor consta de más de una invariante geométrico. Para aumentar el poder de discriminación de un descriptor, se utilizan múltiples invariantes afines calculados a partir de varios puntos característicos. Cómo un invariante afín se calcula a partir de cuatro puntos, podemos calcular más de una invariante partir de más de cuatro puntos característicos. En concreto, un descriptor es $(r_{(0)},...,r_{_{m}C_{4}-1})$ calculado a partir de los $m$ puntos contiguos donde $r_{(i)}$ es una invariante afín. Se utilizan todas las posibles combinaciones de cuatro puntos $m$.
-\item Se calculan más de un descriptor para cada punto característico. Con el fin de hacer frente a los errores de la extracción de puntos característicos,se calculan múltiples descriptores a partir $n (>m)$ puntos mas cercanos. En concreto, se calculan $_{n}C_{m}$ descriptores, todas las combinaciones posibles de $m$ puntos contiguos sobre $n$ puntos totales.
+\item Se calculan más de un descriptor para cada punto característico. Con el fin de hacer frente a los errores de la extracción de puntos característicos,se calculan múltiples descriptores a partir $n (>m)$ puntos más cercanos. En concreto, se calculan $_{n}C_{m}$ descriptores, todas las combinaciones posibles de $m$ puntos contiguos sobre $n$ puntos totales.
 \end{itemize} 
 
 \begin{figure}
@@ -1265,7 +1269,7 @@ Casi todos los algoritmos de reconocimiento de documentos obtienen grandes resul
 \item[Fondos complejos] El caso ideal para la extracción de texto es que el fondo sea totalmente uniforme y con contraste diferenciado. Una mala iluminación provocará alteraciones de tono y contraste entre texto y fondo, que dificultará la segmentación el texto. 
 \item[Zoom y autoenfoque] Las cámaras actuales están equipadas con sistemas de zoom y autoenfoque. Una captura en la que existan distintos planos de profundidad o una mala iluminación provocará que el sistema de autoenfoque tenga dificultades para estabilizarse y durante ese tiempo las imágenes sean borrosas o fuera de foco.
 \item[Objetos móviles] Por la propia naturaleza de los dispositivos móviles se entiende que o bien el dispositivo o el objeto a fotografiar está en movimiento (o incluso ambos). Si la velocidad de obturación de la cámara no es lo suficientemente rápida, la imagen obtenida estará movida.
-\item[Ruido del sensor] Para compensar entornos con poca luz, las cámaras aumentan la sensibilidad amplificando la señal generada por las celdas del sensor. Como estos elementos tienen una emisión de señal de base mas o menos fija, al capturar una señal lumínica débil y amplificarla, estamos amplificando también una buena porción de la emisión de datos aleatoria, con lo que se mezclará una cantidad de señal aleatoria sin contenido a la señal correspondiente a la imagen. Cuanto mayor sea la amplificación, más ruido se va a generar y peor calidad de imagen vamos a obtener. 
+\item[Ruido del sensor] Para compensar entornos con poca luz, las cámaras aumentan la sensibilidad amplificando la señal generada por las celdas del sensor. Como estos elementos tienen una emisión de señal de base más o menos fija, al capturar una señal lumínica débil y amplificarla, estamos amplificando también una buena porción de la emisión de datos aleatoria, con lo que se mezclará una cantidad de señal aleatoria sin contenido a la señal correspondiente a la imagen. Cuanto mayor sea la amplificación, más ruido se va a generar y peor calidad de imagen vamos a obtener. 
 \item[Compresión de imagen] Normalmente la imagen obtenida por el sensor se almacena comprimida mediante algoritmos con perdida de información como JPEG. La utilización de ratios altos de compresión provoca que se generen artefactos y distorsiones apreciables que restan nitidez a la imagen.
 \item[Algoritmos ligeros] El objetivo final es integrar los algoritmos de análisis en los dispositivos móviles. Se deben implementar algoritmos computacionalmente eficientes ya que en la mayoría de los casos los recursos disponibles como memoria  y la capacidad de computo son limitadas.
 \end{description}
@@ -1273,8 +1277,8 @@ Casi todos los algoritmos de reconocimiento de documentos obtienen grandes resul
 
 
 % Local Variables:
-%  coding: utf-8
-%  mode: latex
-%  mode: flyspell
-%  ispell-local-dictionary: "castellano8"
+% coding: utf-8
+% mode: latex
+% mode: flyspell
+% ispell-local-dictionary: "castellano8"
 % End:
