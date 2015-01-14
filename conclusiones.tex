@@ -4,7 +4,7 @@
 
 \section{Objetivos alcanzados}
 
-El objetivo principal de GrayAR es el desarrollo de los sistemas de captura, tracking, registro e identificación de documentos dentro del proyecto ARgos. Con tal fin, se ha construido un prototipo real basado en una Raspberry Pi, con una cámara de bajo coste y un proyector portátil, que montado sobre un trípode, muestra información visual alineada sobre un documento que se encuentre dentro de la zona de proyección. Para efectuar esta visualización, se tiene en cuenta el posicionamiento 3D relativo entre el documento y el sistema cámara-proyector, para que el registro de la amplificación visual sea perfecto.
+El objetivo principal de GrayAR es el desarrollo de los sistemas de captura, tracking, registro e identificación de documentos dentro del \textit{Proyecto ARgos}. Con tal fin, se ha construido un prototipo real basado en una Raspberry Pi, con una cámara de bajo coste y un proyector portátil, que montado sobre un trípode, muestra información visual alineada sobre un documento que se encuentre dentro de la zona de proyección. Para efectuar esta visualización, se tiene en cuenta el posicionamiento 3D relativo entre el documento y el sistema cámara-proyector, para que el registro de la amplificación visual sea perfecto.
 
 Además, el sistema responde a distintas acciones que el usuario pueda efectuar sobre el espacio físico, ampliando la información relacionada que sea relevante a la acción realizada.
 
@@ -34,7 +34,7 @@ GrayAR proporciona toda la información necesaria al sistema de representación 
 Para complementar a la representación visual, se ha añadido a la Raspberry Pi un amplificador de audio LM386 montado sobre una placa de test con un altavoz de 1W, que hace las funciones de ``tarjeta de sonido'', permitiendo la reproducción de avisos, alertas o lecturas de texto para aquellas personas que necesiten de amplificación auditiva para la utilización del sistema.
   
 \subsection{Se debe basar en componentes de bajo coste}
-Para la construcción del prototipo se han seleccionado aquellos componentes, que dentro de unas prestaciones mínimas requeridas, fuesen lo mas económicos posibles. El coste final (ver Sección 4.4) es muy reducido respecto a otros sistemas que puedan realizan funciones parecidas. El proyector, la parte más cara del sistema con un valor de 325\euro, lo podemos considerar económico, teniendo en cuenta que el precio medio de otros modelos es de 1000\euro.
+Para la construcción del prototipo se han seleccionado aquellos componentes, que dentro de unas prestaciones mínimas requeridas, fuesen lo más económicos posibles. El coste final (ver Sección 4.4) es muy reducido respecto a otros sistemas que puedan realizan funciones parecidas. El proyector, la parte más cara del sistema con un valor de 325\euro, lo podemos considerar económico, teniendo en cuenta que el precio medio de otros modelos es de 1000\euro.
 
 Respecto al software empleado, todos los recursos y bibliotecas utilizadas son de licencia libre, y por tanto no están sujetos a pagos de licencias. 
 
@@ -89,7 +89,7 @@ La implementación, consistiría en los siguientes pasos a realizar \cite{Moreno
 \item Opcionalmente, se puede realizar una optimización conjunta de todos los parámetros (intrínsecos y extrínsecos).
 \end{itemize}
 
-Este método no requiere ningún equipamiento especial y, según sus autores, es mas preciso que otras técnicas de calibrado, ya que utilizan el modelo pinhole completo con distorsión radial. 
+Este método no requiere ningún equipamiento especial y, según sus autores, es más preciso que otras técnicas de calibrado, ya que utilizan el modelo pinhole completo con distorsión radial. 
 
 En base a la experiencia en el desarrollo del proceso de calibrado en GrayAR, esta historia se podría plantear para realizarse en un sprint de 3 ó 4 semanas de duración.  
 

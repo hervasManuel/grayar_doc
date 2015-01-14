@@ -391,6 +391,11 @@ David~Marimón Sanjuan.
   Camera Tracking}.
 \newblock PhD thesis, École Polytechnique Fédérale de Lausanne, 2007.
 
+\bibitem[SB01]{Schwaber}
+Ken Schwaber y Mike Beedle.
+\newblock {\em Agile Software Development with Scrum}.
+\newblock Prentice Hall PTR, Upper Saddle River, NJ, USA, edición 1st, 2001.
+
 \bibitem[SKR99]{Stricker}
 Didier Stricker, Gundrun Klinker, y Dirk Reiners.
 \newblock A Fast and Robust Line-based Optical Tracker for Augmented Reality
@@ -410,6 +415,17 @@ Jianbo Shi y Carlo Tomasi.
 J.~Steuer.
 \newblock Defining virtual reality: Dimensions determining telepresence.
 \newblock {\em Journal of communication.}, 42(4):73--93, 1992.
+
+\bibitem[Str13]{Stroustrup00}
+B.~Stroustrup.
+\newblock {\em The C++ Programming Language}.
+\newblock Addison-Wesley Longman Publishing Co., Inc., Boston, MA, USA,
+  edición 4rd, 2013.
+
+\bibitem[UG09]{Ubeda}
+Raúl Ubeda~González.
+\newblock Métodos ágiles para el desarrollo de software.
+\newblock Master's thesis, Universitad Politécnica de Cataluña, 2009.
 
 \bibitem[UM11]{Uchiyama}
 Hideaki Uchiyama y Eric Marchand.

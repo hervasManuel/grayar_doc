@@ -1,37 +1,44 @@
 \chapter{Método de trabajo}
 \label{chap:metodo}
 
-\drop{E}{n} este capítulo se describe la metodología de desarrollo aplicada, sus ventajas y motivo de elección. También se listan y describen todas las herramientas utilizadas en el desarrollo, ya sean hardware o software.
+\drop{E}{n} este capítulo se describe la metodología de desarrollo aplicada, sus ventajas y motivo de elección. También se presenta la evolución del proyecto en base a la metodología empleada, los hitos conseguidos en cada fase, su complejidad y el tiempo empleado en cada una de ellas, detallando las iteraciones realizadas hasta conseguir la versión final del sistema.
 
-Al final del capitulo se presenta la evolución del proyecto en base a la metodología empleada, los hitos conseguidos en cada fase, su complejidad y el tiempo empleado en cada una de ellas, detallando las iteraciones realizadas hasta conseguir la versión final del sistema. Igualmente se aportará información del rendimiento (profiling) del sistema en diferentes situaciones.
+Para finalizar, se listan y describen todas las herramientas utilizadas en el desarrollo, ya sean hardware o software.
+%Igualmente se aportará información del rendimiento (profiling) del sistema en diferentes situaciones.
 
-\section{Metodologia del desarrollo}
+\section{Metodología del desarrollo}
 Para la construcción de un proyecto de cierta envergadura, como es el caso de un Trabajo Fin de Grado, la aplicación de un marco de trabajo para estructurar, planificar y controlar el proceso, es esencial para desarrollar software de calidad.
 
-Las caŕacteristicas del proyecto, con requisitos con posibilidad de cambios y adaptaciones a lo largo de todo el proceso, el reducido ``equipo de desarrollo'' o la necesidad de obtener versiones incrementales que son testeadas y validas por el director de proyecto, hacen que la elección se decante hacia metodologias ágiles de desarrollo de software.
+Las características del proyecto, con requisitos con posibilidad de cambios y adaptaciones a lo largo de todo el proceso, el reducido «equipo de desarrollo» o la necesidad de obtener versiones incrementales que sean testeadas y validadas por el director de proyecto, hacen que la elección se decante hacia \textbf{metodologías ágiles} de desarrollo de software.
 
-Los métodos ágiles, utilizan prácticas adaptativas (no basadas en predicciones), iterativas, centradas en la gente (clientes y programadores), orientadas a entregas incrementales, con mucha comunicación y necesitan que el cliente esté muy involucrado en el proyecto para recibir su feedback. El feedback continuo es indispensable para evitar que el cliente, con el software acabado, diga ``es lo que pedí, pero no es lo que necesitaba'', algo habitual cuando se utiliza métodos clásicos.
+Las \textbf{metodologías ágiles} \cite{Ubeda}, utilizan prácticas adaptativas (no basadas en predicciones), iterativas, centradas en personas (clientes y desarrolladores), orientadas a entregas incrementales, con mucha comunicación y  necesitan que el cliente esté muy involucrado en el proyecto para recibir su \textit{feedback}. El \textit{feedback} continuo es indispensable para evitar que el cliente, con el software acabado, diga \textit{«es lo que pedí, pero no es lo que necesitaba»}, algo habitual cuando se utilizan métodos clásicos.
 
-En resumen, las principales características a las que deben dar forma los métodos ágiles son:
+En resumen, las principales características a las que deben dar forma las metodologías ágiles son:
 \begin{itemize}
-\item \textbf{Incremental:} versiones pequeñas de software, con ciclos rápidos. 
-\item \textbf{Cooperativo:} desarrolladores y cliente siempre en contacto constante.
-\item \textbf{Directo:} el método en si es fácil de aprender y modificar, bien documentado.
-\item \textbf{Adaptativo:} capaz de tolerar los cambios propuestos por el cliente.
+\item \textbf{Incremental:} Versiones pequeñas de software, con ciclos rápidos. 
+\item \textbf{Cooperativa:} Desarrolladores y cliente siempre en contacto constante.
+\item \textbf{Directa:} El método es fácil de aprender, modificar y está bien documentado.
+\item \textbf{Adaptativa:} Son capaces de tolerar los cambios propuestos por el cliente.
 \end{itemize}
+%Hay que tener en consideración la muy diferente naturaleza de los métodos ágiles. Mientras que Scrum se decanta por la gestión, otros como XP especifican las prácticas a seguir en el equipo, Pragmatic Programming da pautas para desarrollar un buen código, algunos como FDD no abarcan la totalidad del proceso de desarrollo, AgileUP surge como una versión ágil de RUP y propone EUP que es una ampliación para abarcar todo el ciclo de vida del software, etc.
+\section{\textit{Scrum}}
+Scrum está desarrollado para gestionar el proceso de desarrollo de sistemas aplicando ideas de flexibilidad, adaptabilidad y productividad. Sin llegar a describir ninguna técnica de desarrollo de software específica, el objetivo es definir cómo deben funcionar los miembros del equipo para que el sistema sea flexible y se adapte a condiciones altamente cambiantes.
 
-Hay que tener en consideración la muy diferente naturaleza de los métodos ágiles. Mientras que Scrum se decanta por la gestión, otros como XP especifican las prácticas a seguir en el equipo, Pragmatic Programming da pautas para desarrollar un buen código, algunos como FDD no abarcan la totalidad del proceso de desarrollo, AgileUP surge como una versión ágil de RUP y propone EUP que es una ampliación para abarcar todo el ciclo de vida del software, etc.
-
-Scrum se ha desarrollado para gestionar el proceso de desarrollo de sistemas. Aplica ideas de proceso industrial para controlar el desarrollo de los sistemas. Su enfoque reintroduce las ideas de flexibilidad, adaptabilidad y productividad. No define ninguna técnica de desarrollo de software específica para la fase de aplicación. Scrum se centra en cómo deben funcionar los miembros del equipo para que el sistema sea flexible y se adapte a unas condiciones constantemente cambiantes.
+\begin{figure}[t] 
+  \centering
+  \includegraphics[width=1.0\textwidth]{scrum-overview.jpg}
+  \caption{Esquema de trabajo con \textit{Scrum}. (Mark Hoogveld)}
+  \label{fig:scrum}
+\end{figure}
 
 \subsection{Fases de Scrum}
 El proceso de Scrum consta de tres fases: pre-game, desarrollo o game y post-game.
 
-A continuación se detallan las fases de Scrum según Schwaber y Beedle. La fase pre-game incluye dos subfases:
+A continuación se detallan las fases de Scrum según Schwaber y Beedle \cite{Schwaber}. La fase pre-game incluye dos subfases:
 \begin{itemize}
 
 \item \textbf{Pre-game}
-El planteamiento incluye la definición del sistema a desarrollar y asegurar la financiación. Se crea una lista de acumulación o pila de producto, Product Backlog list conteniendo todos los requisitos conocidos hasta el momento. Los requisitos los puede originar el cliente, los programadores o los departamentos de ventas, marketing o atención al cliente. Se priorizan los requisitos y se estima el esfuerzo necesario para su desarrollo. La Product Backlog list se actualiza constantemente con puntos nuevos y más detalles, así como con estimaciones más exactas y el nuevo orden de prioridades. El planning también incluye la definición del equipo del proyecto, herramientas y otros recursos, la valoración de riesgos, necesidades de formación y la aprobación de la gestión de comprobaciones. En cada iteración, el equipo(s) de Scrum revisa la Product Backlog list actualizada. En la jerga de Scrum, se llaman paquetes a los objetos o componentes que necesitan cambiarse en la siguiente iteración.
+El planteamiento incluye la definición del sistema a desarrollar y asegurar la financiación. Se crea una lista de acumulación o pila de producto, \textit{product backlog list} conteniendo todos los requisitos conocidos hasta el momento. Los requisitos los puede originar el cliente, los programadores o los departamentos de ventas, marketing o atención al cliente. Se priorizan los requisitos y se estima el esfuerzo necesario para su desarrollo. La \textit{product backlog list} se actualiza constantemente con puntos nuevos y más detalles, así como con estimaciones más exactas y el nuevo orden de prioridades. El planning también incluye la definición del equipo del proyecto, herramientas y otros recursos, la valoración de riesgos, necesidades de formación y la aprobación de la gestión de comprobaciones. En cada iteración, el equipo(s) de Scrum revisa la Product Backlog list actualizada. En la jerga de Scrum, se llaman paquetes a los objetos o componentes que necesitan cambiarse en la siguiente iteración.
 
 En la fase de la arquitectura, se crea el diseño del sistema a alto nivel basándose en los requisitos actuales del Backlog. En el caso de una mejora a un sistema ya existente, se identifican los cambios necesarios en el backlog así como los problemas que puedan causar. En una reunión se revisa el diseño del plan para cumplir las propuestas. Además, se preparan los contenidos de las versiones que serán lanzadas. 
 
@@ -42,7 +49,7 @@ Esta fase, la parte ágil de Scrum, se trata como una caja negra donde se espera
 Contiene el cierre de la versión. Se entra en esta fase cuando se completan todos los requisitos. En este caso, no se incorpora ni mejora ninguna función. El sistema ya está listo para lanzarse (release) y ahora se integra, se pone a prueba y se documenta.
 \end{itemize}
 
-\subsection{Papeles y responsabilidades}
+\subsection{Roles y responsabilidades}
 Los papeles en Scrum tienen tareas y propósitos diferentes durante el proceso y sus prácticas.
 
 \begin{itemize}
@@ -70,7 +77,7 @@ También se incluyen temas que requieren solución para poder hacer otros puntos
 
 \item \textbf{Sprint Backlog} Es el punto de partida para cada sprint, una lista de puntos de la lista del Product Backlog seleccionados para llevarse a cabo en el próximo sprint. El equipo de Scrum junto con el Scrum Master y el Product Owner seleccionan los puntos en la reunión para planear el Sprint, basándose en los puntos con prioridad y los objetivos de ese sprint. A diferencia del Product Backlog, el Sprint Backlog no se modifica hasta que el sprint (es decir, 30 días) termina.
  
-Cuando todos los puntos del Sprint Backlog están completos, se prepara una nueva iteración del sistema. El registro incluye los valores que representan las horas de trabajo pendiente; en función de esos valores se acostumbra a elaborar un gráfico de quemado (se pueden ver ejemplos en el apartado de Crystal, 2.3), usados también en muchos otros métodos.
+Cuando todos los puntos del Sprint Backlog están completos, se prepara una nueva iteración del sistema. El registro incluye los valores que representan las horas de trabajo pendiente; en función de esos valores se acostumbra a elaborar un gráfico de quemado, usados también en muchos otros métodos.
 \end{itemize}
 \subsubsection{Reuniones}
 \begin{itemize}
@@ -84,63 +91,134 @@ Al final de cada iteración de treinta días hay una demostración a cargo del S
 
 \end{itemize}
 \subsubsection{Sprint}
- El sprint consiste en adaptarse a las condiciones cambiantes del proyecto como requisitos, tiempo, recursos, conocimiento, tecnología, etc. El Equipo de Scrum se organiza para producir un nuevo incremento ejecutable en un sprint que dura aproximadamente un mes natural. Las herramientas activas del equipo son las reuniones para planear el sprint, el Sprint Backlog y las reuniones diarias de Scrum.
+El sprint consiste en adaptarse a las condiciones cambiantes del proyecto como requisitos, tiempo, recursos, conocimiento, tecnología, etc. El Equipo de Scrum se organiza para producir un nuevo incremento ejecutable en un sprint que dura aproximadamente un mes natural. Las herramientas activas del equipo son las reuniones para planear el sprint, el Sprint Backlog y las reuniones diarias de Scrum.
 
-\section{Evolución del proyecto}
+\section{\textit{Extreme Programming}}
+\section{Aplicación de la metodología de desarrollo}
 
-Para la resolución de este proyecto se ha optado por una aproximación en la que se complementan las mejores prácticas y técnicas recomendadas en Scrum, con sus medidas organizacionales como método de gestión y XP, con patrones de diseño y refactorización, como metodología de desarrollo.
+Para la resolución de este proyecto se ha optado por una aproximación en la que se complementan las mejores prácticas y técnicas recomendadas en \textbf{\textit{Scrum}}, con sus medidas organizativas como método de gestión y \textbf{\textit{extreme programming (XP)}}, con patrones de diseño y refactorización, como metodología de desarrollo.
 
-Scrum no requiere o proporciona ninguna práctica específica para el desarrollo del software. Sin embargo, requiere adoptar ciertas pautas y prácticas para evitar el caos causado por imprevistos y complejidades.
-
+%Scrum no requiere o proporciona ninguna práctica específica para el desarrollo del software. Sin embargo, se adoptarán las siguientes pautas y prácticas para evitar el caos causado por imprevistos y complejidades.
+Se adoptarán las siguientes pautas y prácticas de \textbf{\textit{Scrum}} a la hora de gestionar el proceso de desarrollo:
 \begin{itemize}
-\item Equipos auto-dirigidos y auto-organizados. 
-\item Una vez elegida una tarea, no se agrega trabajo extra. En caso que se agregue algo, se recomienda quitar alguna otra cosa.
-\item Iteraciones de 30 días; se admite que sean más frecuentes.
-\item Demostración a participantes externos al final de cada iteración. 
-\item Al principio de cada iteración, planeamiento adaptativo guiado por el cliente.
+\item \textbf{Equipo autodirigido} y auto-organizado. 
+\item Una vez elegida una tarea, \textbf{no se agrega trabajo extra}. %En caso que se agregue algo, se recomienda quitar alguna otra cosa.
+\item \textbf{Iteraciones de 30 días}; se admite que sean más frecuentes.
+\item \textbf{Demostración a participantes externos} al final de cada iteración. 
+\item Al principio de cada iteración, \textbf{planificación adaptativa} guiada por el director.
 \end{itemize}
 
-El  equipo  de  desarrollo  lo  han constituido el autor de este TFG y Santiago Sanchez Sobrino, con  experiencia  práctica y conocimientos teóricos en metodologías ágiles. Debido  al  tamaño  del  equipo  y  condiciones  del  mismo,  las  reuniones  diarias pierden su utilidad. La figura del cliente y el director corresponde a Carlos Gonzalez Morcillo. Director de ambos TFG y creador del proyecto ARgos. 
+El  equipo  de  desarrollo  lo  han constituido el autor de este TFG y Santiago Sánchez Sobrino, con  experiencia  práctica y conocimientos teóricos en metodologías ágiles. Debido  al  tamaño  del  equipo  y  condiciones  del  mismo,  las  reuniones  diarias pierden su utilidad. La figura del cliente y el director corresponde a Carlos González Morcillo, director de ambos TFG's y creador del Proyecto ARgos. 
 
-Al comienzo de cada iteración el equipo se reunirá y creará el Sprint Backlog que consta de un subconjunto de las User Stories del Product Backlog. Estas User Stories son seleccionadas atendiendo a las prioridades o necesidades propuestas por el Director. En esta reunión se descompondrá cada User Story del Iteration Backlog en tareas, estimando el tiempo necesario para llevarlas acabo. 
+Al comienzo de cada iteración el equipo se reunirá y creará la lista de tareas de la iteración (\textit{Sprint Backlog}) que consta de un subconjunto de las \textit{historias de usuario} de la lista de objetivos (\textit{Product Backlog}). Estas historias de usuario son seleccionadas atendiendo a las prioridades o necesidades propuestas por el Director. En esta reunión, se descompondrá cada historia en tareas, estimando el tiempo necesario para llevarlas acabo. 
 
-Las prácticas \emph{XP} que se van a utilizar son: 
+Las prácticas propuestas de \textbf{\textit{XP}} que se van a utilizar son: 
 
 \begin{itemize}
-\item \textbf{Sentarse juntos.} Todo el desarrollo se llevará a cabo en un espacio que permita un trabajo cercano, cooperativo y que facilite la comunicación directa. En las ocasiones en las que ésto no sea posible, se utilizarán medios de videoconferencia como Skype o Hangouts. 
+\item \textbf{Sentarse juntos.} Todo el desarrollo se llevará a cabo en un espacio que permita un trabajo cercano, cooperativo y que facilite la comunicación directa. %En las ocasiones en las que ésto no sea posible, se utilizarán medios de videoconferencia como Skype o Hangouts. 
 
-\item \textbf{Iteraciones cortas.} En la primera  iteración, el equipo se familiarizará con el dominio de aplicación y las tecnologías a utilizar.  También se definirá en buena medida la arquitectura del sistema. 
- 
+\item \textbf{Iteraciones cortas.}  Al trabajar con pequeñas iteraciones, se obtiene el feedback del cliente con mucha frecuencia. Con esto se pretende que el producto final cubra ampliamente sus expectativas y necesidades. 
+
 \item \textbf{Integración continua.} No se utilizarán herramientas que automaticen este proceso, no obstante, debido al tamaño reducido del equipo y a la frecuencia de las integraciones (al menos una al día), esta tarea no resultará demasiado compleja. 
 
 \item \textbf{Diseño incremental.} A pesar de definir buena parte de la arquitectura en las primeras iteraciones, el diseño del sistema evolucionará iteración tras iteración, sometiéndose a sucesivas refactorizaciones para mejorar su calidad.  
 
-\item \textbf{Código compartido.} Todos los miembros del equipo podrán acceder a cualquier parte del código. Sin olvidar que el presente desarrollo ágil se encuentra en el contexto de la elaboración de PFCs y que los alcances deben estar acotados para cada uno de los alumnos. Al  finalizar  cada  iteración  se  destinará  tiempo  a  completar  y  refinar  la  documentación obtenida del proceso
+\item \textbf{Código compartido.} Todos los miembros del equipo podrán acceder a cualquier parte del código. Sin olvidar que el presente desarrollo ágil se encuentra en el contexto de la elaboración de PFCs y que los alcances deben estar acotados para cada uno de los alumnos. Al finalizar cada  iteración se destinará tiempo a completar y refinar la documentación obtenida del proceso.
 
-\item \textbf{Reutilización del código} Uno de los principales objetivos que se persiguen con las metodologías ágiles es entregar proyectos en tiempo y bajo presupuesto. En otras palabras, se pretende minimizar el TTM (Time To Market) para lo que la reutilización del código constituye un aspecto muy importante, no se ha de perder tiempo reinventando la rueda en cada proyecto. Se ha de tratar de obtener diseños con una alta modularidad, Reutilizando, como cajas negras, todos los elementos software que tengamos y necesitemos. De esta forma se consiguen sistemas modulares en los que se reduce el coste de introducir modificaciones, reduciendo el coste de su mantenimiento; Por otro lado se consigue aumentar el repositorio de componentes para futuros proyectos, con todas las ventajas que ello conlleva. 
+\item \textbf{Reutilización del código} Uno de los principales objetivos que se persiguen con las metodologías ágiles es entregar proyectos en tiempo y bajo presupuesto, minimizando el \textit{Time To Market}, por lo que la reutilización del código constituye un aspecto muy importante, no se ha de perder tiempo \textit{«reinventando la rueda»} en cada proyecto. Se deben obtener diseños con una alta modularidad y lo más desacoplados posibles, reutilizando como cajas negras, los elementos software que necesitemos. 
 
-Se ha de tener en cuenta que no todos los elementos en un proyecto son reutilizables, puesto que es inevitable que algunos estén estrechamente ligados a condiciones particulares propias de cada dominio de aplicación, la modularidad tampoco ha de convertirse en una obsesión que obstaculice el avance del proyecto. Recordemos que si se conoce la mejor forma de hacer algo, que así se haga, sino que se haga de la mejor forma conocida para la que se tenga tiempo. 
+%Se ha de tener en cuenta que no todos los elementos en un proyecto son reutilizables, puesto que es inevitable que algunos estén estrechamente ligados a condiciones particulares propias de cada dominio de aplicación, la modularidad tampoco ha de convertirse en una obsesión que obstaculice el avance del proyecto. Recordemos que si se conoce la mejor forma de hacer algo, que así se haga, sino que se haga de la mejor forma conocida para la que se tenga tiempo. 
 \end{itemize}
 
-\subsection{Concepto del software}
-\subsection{Análisis preliminar de requisitos}
-Reunión con ASPRONA
-
-
-\subsection{Diseño general}
-\subsection{Iteraciones}
+\section{Evolución del proyecto}
 En este capítulo se presenta toda la documentación generada para gestionar este proyecto de desarrollo. Esta documentación está estructurada en ocho iteraciones, tal y como se describió en el estudio teórico de las metodologías ágiles. 
 
-\subsubsection{Iteracion 0}
+%\subsection{Concepto del software}
+
+\subsection{Análisis preliminar de requisitos}
+El objetivo de este proyecto es construir un sistema de ayuda a la gestión de documental que permita el tratamiento directo sobre documentos físicos impresos mediante el
+uso de técnicas de visión por computador, síntesis visual y auditiva y técnicas de realidad aumentada
+
+Los requisitos para el sistema serán proporcionados por Carlos González Morcillo, creador e investigador principal del proyecto; la cátedra Indra-UCLM y la fundación Adecco, como financiadores del proyecto y la asociación ASPRONA, que con su experiencia en la atención a personas con discapacidad, propondrán escenarios y funcionalidades que son de utilidad para este colectivo. 
+
+El usuario final del sistema serán personas que necesiten soporte en la gestión documental debido a cualquier tipo de discapacidad.
+
+\subsubsection{Características de los usuarios}
+El fin de esté proyecto es construir un sistema que permita la integración laboral a personas con discapacidad. El tipo de usuarios a los que está dirigido es por tanto personas dentro de un amplio espectro de discapacidades.
+Se debe proporcionar soporte a usuarios con discapacidades sensoriales (visuales y auditivas) e intelectuales.  
+
+\subsubsection{Restricciones}
+
+Debido a las características del sistema se deben tener en cuenta las siguiente restricciones:
+\begin{itemize}
+\item\textbf{Funcional en dispositivos móviles} El prototipo final se construirá sobre un dispositivos con arquitectura ARM con limitaciones de tanto en capacidad de computo como memoria. El sistema deberá estar optimizado para este tipo de dispositivos, obteniendo una respuesta fluida y en tiempo real.   
+  
+\item\textbf{Se debe basar en componentes de bajo coste} Para facilitar la implantación real en el entorno de trabajo, deberá funcionar con componentes de bajo coste, incorporando mecanismos de corrección de distorsión y registro 3D totalmente software.
+\end{itemize}
+
+\subsubsection{Interfaces Hardware}
+\begin{itemize}
+\item La implementación del sistema se realizará sobre una Raspberry Pi Modelo B de 512MB de RAM y arquitectura ARM 
+\item La visualización será a través de un pico-proyector mediante conexión HDMI
+\item El acceso al sistema y conexión a internet se establece por medio de cable ethernet durante el desarrollo y pruebas, siendo la conexión WiFi el tipo de conectividad final
+\end{itemize}
+
+\subsubsection{Requisitos funcionales}
+\paragraph{Definidos en la línea base del proyecto}
+\begin{itemize}
+\item RF-001: Adquisición de imágenes mediante cámara USB
+\item RF-002: Adquisición de imágenes mediante raspiCam
+\item RF-003: Sistema de calibrado de cámaras
+\item RF-004: Sistema de calibrado de proyectores
+\item RF-005: Configuración del sistema mediante argumentos por terminal
+\item RF-006: Captura de imágenes a distintas resoluciones
+\item RF-007: Utilización de un fichero de vídeo como fuente de entrada
+\item RF-008: Grabación de vídeo
+\item RF-009: Sistema de cálculo de homografías
+\end{itemize}
+
+\paragraph{Definidos por ASPRONA}
+\begin{itemize}
+\item RFa-001: Realización de Videoconferencias
+\item RFa-002: Mensajes en Lectura Fácil
+\item RFa-003: Soporte para completar partes de trabajo
+\item RFa-004: Soporte para completar formularios de protocolos de calidad
+\item RFa-005: Guiado para clasificación y archivado de facturas
+\item RFa-006: Entorno configurable por el usuario
+\end{itemize}
+\paragraph{Definidos por Indra/Adecco}
+\begin{itemize}
+\item RFi-001: Reconocimiento de Firmas
+\end{itemize}
+\subsubsection{Requisitos no funcionales}
+
+\begin{itemize}
+\item\textbf{Rendimiento:} El sistema debe funcionar de manera fluida y en tiempo real en dispositivos móviles basados en arquitectura ARM. Sólo existirá un único usuario del sistema simultáneamente y los documentos a tratar también se tratarán de uno en uno.
+\item\textbf{Seguridad:} A parte de la información que se proporcione al usuario directamente, se mantendrá un log donde se registrará toda la actividad realizada en el sistema.
+Debido al carácter experimental del proyecto, no se tendrán en cuenta la aplicación, por lo menos en la primera fases de desarrollo, de técnicas criptográficas para ficheros, bases de datos o comunicaciones.
+\item\textbf{Fiabilidad:} Todo tipo de incidente producido en el sistema debe ser controlado y tratado. 
+\item\textbf{Disponibilidad:} La disponibilidad del sistema debe ser de al menos un 99\% del tiempo que esté en ejecución. En caso de caída del sistema se deben proporcionar mecanismos automáticos para que la maquina y el sistema se reinicien y sean nuevamente operativos sin la necesidad de intervención directa del usuario,
+\item\textbf{Mantenibilidad:} El desarrollo en un dispositivo tan reciente implica que se liberen con relativa frecuencia bibliotecas o controladores, en los que se corrigen bugs y/o mejoran su rendimiento. Seria recomendable hacer una revisión de los módulos actualizados antes de la instalación del sistema para valorar si es relevante el beneficio que aportan y no comprometer el la estabilidad del sistema.  
+\item\textbf{Portabilidad:} El desarrollo se  realizará siguiendo estándares, tecnologías y bibliotecas libres multiplataforma, con el objetivo de que pueda ser utilizado en el mayor número de plataformas posibles tanto software como hardware.
+\end{itemize}
+\subsubsection{Otros requisitos}
+La distribución del proyecto se realizará mediante alguna licencia libre como GPLv3, para ello se utilizarán bibliotecas compatibles con dicha licencia.
+
+
+\subsection{Revisión sistemática de la bibliografía}
 Como punto de partida para la elaboración del estado del arte se realizo una revisión sistemática de las diferentes técnicas para la identificación de documentos y su recuperación de una base de datos. Como resultado de esta revisión se ha podido conocer las técnicas más empleadas, así como sus ventajas e inconvenientes. 
 
-El claro ganador es LLAH (Locally Likely Arrangement Hashing) con casi un 40\% de utilización ya sea con su implementación inicial o implementaciones optimizadas creadas para salvar las limitaciones del algoritmo original, lo que lo hace aún mas potente y versatil.
+El claro ganador es LLAH (Locally Likely Arrangement Hashing) con casi un 40\% de utilización ya sea con su implementación inicial o implementaciones optimizadas creadas para salvar las limitaciones del algoritmo original, lo que lo hace aún más potente y versatil.
 
 Aunque los metodos basados en detección de descriptores de caracteristicas invariantes como SIFT, SURF, aparecen como muy utilizados, realmente no funcionan correctamente en identificación de documentos ya que no presentan zonas de textura y se producen repeticiones de patrones binarios (el propio texto cumple este patron). La mayoria son una variación del proceso inspirado en la metodologia de Lowe [SIFT], y en la que se obtienen buenos resultados sobre documentos semiestructurados realizando una selección de puntos extraidos y una adaptación del algoritmo RANSAC para la validación de supuestos aciertos en la comparación. El algoritmo tiene una tasa elevada de recuperación y precisión, es robusto a las deformaciones que pueda tener la imagen (perspectiva) y no necesita ningun paso previo de segmentación pero, como inconvenientes, no funciona ante grandes secciones de texto y la identificación que realiza es para obtener documentos similares (un ticket, un billete de tren,....) a la imagen utilizada como consulta.
 
-Uno de los puntos del analisis de resultados, indica que al utilizar hardware con distinto rendimiento, es dificil tener mediciones normalizadas para todos los métodos. Como trabajo futuro se puede realizar para el gestor documental, la implementación de varios de los metodos mas utilizados y ofrecer un estudio comparativo completo al ejecutarse en la misma plataforma.
+Uno de los puntos del analisis de resultados, indica que al utilizar hardware con distinto rendimiento, es dificil tener mediciones normalizadas para todos los métodos. Como trabajo futuro se puede realizar para el gestor documental, la implementación de varios de los metodos más utilizados y ofrecer un estudio comparativo completo al ejecutarse en la misma plataforma.
 
 Existen varias implementaciones optimizadas sobre LLAH para salvar las limitaciones iniciales del algoritmo. Sería un trabajo futuro la tarea de buscar sólo las publicaciones que se hayan hecho sobre LLAH e intentar crear una implementación conjunta  con todas las optimizaciones. 
+
+\subsection{Diseño general}
+\subsection{Iteraciones}
+\subsubsection{Iteracion 0}
 
 Elección del Proyector
 
@@ -238,29 +316,30 @@ Para la calibración de un proyector es inevitable el uso al menos de una cámar
 \end{description}
 
 
-\section{Tecnologias y herramientas utilizadas}
+\section{Tecnologías y herramientas utilizadas}
 
 En esta sección se listan y detallan los recursos software y hardware empleados en la construcción de la plataforma. Además de una breve explicación del recurso, se enuncia la versión utilizada y sobre qué plataformas opera.
 
-\subsection{Lenguajes}
-\begin{itemize}
-\item \textbf{C++} - El lenguaje empleado para el desarrollo del proyecto ha sido C++ [Str13], debido a la eficiencia y velocidad de ejecución que proporciona a la hora trabajar en aplicaciones y sistemas en tiempo real. También por ser el estándar referente en bibliotecas gráficas y de visión artificial.
-\end{itemize}
-
 \subsection{Hardware}
 \begin{itemize}
-\item Como plataforma hardware del sistema se dispondrá de una placa Raspberry Pi, 
-\item una cámara USB, 
-\item una cámara Raspberry Pi Board conectada a través de un cable plano de 15 pines MPI al puerto CSI (Camera Serie Interface) de la placa.
-\item un pico-proyector portátil 
-\item Amplificador de Audio LM386 montado en una placa de test con un altavoz de 1W
-\item Dos equipos informáticos para el desarrollo del proyecto. Intel Core i7-2600K 3.4 GHz 4 nucleos y dos hilos por nucleo 16 GB de RAM y Nvidia GeForce GTX 560 Ti
+\item \textbf{Raspberry Pi}Como plataforma hardware del sistema se dispondrá de una placa Raspberry Pi, 
+\item \textbf{Cámara USB} Logitech c500. 
+\item \textbf{Raspberry Pi Camera Board} conectada a través de un cable plano de 15 pines MPI al puerto CSI (Camera Serie Interface) de la placa.
+\item \textbf{Proyector portátil} 
+\item \textbf{Amplificador de Audio} LM386 montado en una placa de test con un altavoz de 1W
+\item \textbf{Equipo informático} para el desarrollo del proyecto. Intel Core i7-2600K 3.4 GHz 4 nucleos y dos hilos por nucleo 16 GB de RAM y Nvidia GeForce GTX 560 Ti
 
 \end{itemize}
 
 \subsection{Software}
-\subsubsection{Sistemas Operativos}
+A continuación se enumeran las diversas herramientas software empleadas y diferenciadas por categorías:
 
+\subsubsection{Lenguajes de programación}
+\begin{itemize}
+\item \textbf{C++} - El lenguaje empleado para el desarrollo del proyecto ha sido C++ \cite{Stroustrup00}, debido a la eficiencia y velocidad de ejecución que proporciona a la hora trabajar en aplicaciones y sistemas en tiempo real. También por ser el estándar referente en bibliotecas gráficas y de visión artificial.
+\end{itemize}
+
+\subsubsection{Sistemas Operativos}
 \begin{itemize}
 \item \textbf{Debian} - Es una distribución de GNU/Linux desarrollada y mantenida por una comunidad de voluntarios. Es una de las famosas y un gran número de distribuciones estan basadas en ella. Para el desarrollo del proyecto se ha utilizado la versión \emph{unstable}. 
 

@@ -1,11 +1,23 @@
 \chapter{Arquitectura}
 \label{chap:arquitectura}
-
-
-En este capítulo se mostrarán los resultados obtenidos al aplicar la metodología descrita en la sección \ref{chap:metodo} a través de un enfoque top-down, comenzando con una descripción general, continuando con las decisiones
+\drop{E}{n} este capítulo se mostrarán los resultados obtenidos al aplicar la metodología descrita en la sección \ref{chap:metodo} a través de un enfoque top-down, comenzando con una descripción general, continuando con las decisiones
 de diseño y terminando con los detalles de implementación. 
 
 \section{Descripción general}
+%\begin{figure}
+%  \centering
+%  \includegraphics[width=1.0\textwidth]{Box_diagram.png}
+%  \caption{Diagrama de la estructura de GrayAR en el contexto de ARgos}
+%  \label{fig:GrayAR_schema}
+%\end{figure}
+
+%\begin{figure} 
+%  \centering
+%  \includegraphics[width=1.0\textwidth]{Flowchart.png}
+%  \caption{Secuencia de Flujo del funcionamiento de GrayAR en el contexto de ARgos}
+%  \label{fig:GrayAR_flowchart}
+%\end{figure}
+
 \section{Módulo de captura}
 El módulo de captura de vídeo se encarga de crear y proporcionar fuentes de vídeo de diversa naturaleza para dar soporte al submódulo de registro (ver Sección 5.5), y al submódulo de representación 2D (ver Sección 5.3.4).
 Es capaz de dar soporte multicámara. Se pueden crear tantas fuentes de vídeo como se disponga en el sistema, que será de alguno de los siguientes tipos: 
@@ -21,18 +33,15 @@ Para la realización de este proyecto se ha compilado una versión de OpenCV con
 
 \subsection{Biblioteca RaspiCam}
 La raspicam no es compatible con \emph{video4linux} y se debe utilizar la API MMAL (Multi-Media Abstraction Layer) sobre OpenMAX, para acceder a los datos de la cámara y transferirlos a la pantalla o codificarlo como imágenes o vídeos.
-El grupo de investigación "Aplicaciones de la Visión Artificial" de la Universidad de Córdoba ha liberado una biblioteca en C++, que haciendo uso de la API anterior, proporciona una interfaz sencilla, sin necesidad de dependencias y compatible con los objetos de OpenCV.
+El grupo de investigación «Aplicaciones de la Visión Artificial» de la Universidad de Córdoba ha liberado una biblioteca en C++, que haciendo uso de la API anterior, proporciona una interfaz sencilla, sin necesidad de dependencias y compatible con los objetos de OpenCV.
 
 El rendimiento que ofrece en el uso de la cámara es de hasta 30 fps para los modos YUV420, RGB y en escala de grises con imágenes de hasta 1280x960 píxeles. En modo BGR y con un tamaño de 1280x960 el rendimiento cae hasta los 14 fps, ya que el proceso de conversión del espacio de color consume bastantes recursos. 
 
 Por defecto, cuando se utiliza esta biblioteca con OpenCV las imágenes obtenidas están en el espacio de color BGR, con lo que el desempeño es menor. Al utilizar una arquitectura cliente-servidor, se decide que la tarea de conversión sea delegada, y sea el servidor el encargado de cambiar al espacio de color de OpenCV cuando la imagen es recibida.
 
-\subsection{Patrones utilizados}
-El diseño de este subsistema corresponde con el patrón «factoría abstracta» [GHJV95], donde VideoCapture desempeña el papel de fábrica abstracta, VideoCaptureUEye y VideoCaptureOpenCV de fábricas concretas, y VideoFile y VideoDevice harían de productos.
-
-
-La instanciación de un VideoCapture se realiza con una fachada (patrón facade), que se corresponde con la clase VideoCaptureFactory. Esta fachada sirve además para mantener una lista de objetos VideoCapture, que serán destruidos al finalizar la ejecución de forma transparente.
-
+%\subsection{Patrones utilizados}
+%El diseño de este subsistema corresponde con el patrón «factoría abstracta» [GHJV95], donde VideoCapture desempeña el papel de fábrica abstracta, VideoCaptureUEye y VideoCaptureOpenCV de fábricas concretas, y VideoFile y VideoDevice harían de productos.
+%La instanciación de un VideoCapture se realiza con una fachada (patrón facade), que se corresponde con la clase VideoCaptureFactory. Esta fachada sirve además para mantener una lista de objetos VideoCapture, que serán destruidos al finalizar la ejecución de forma transparente.
 
 \section{Módulo de calibración}
 Como ya se explicó en el capitulo \ref{chap:antecedentes}, los objetivos de realizar el proceso de calibración son la estimación de los parámetros intrínsecos y extrínsecos de la cámara. Los parámetros intrínsecos se refieren a las características internas de la cámara, como por ejemplo, su distancia focal, distorsión, y el centro de la imagen. Los parámetros extrínsecos describen su posición y orientación dentro de un espacio de referencia. Conocer los parámetros intrínsecos es un primer paso esencial, ya que permite calcular la estructura de la escena en el espacio euclídeo y elimina la distorsión de lentes, la cual afecta a la precisión.
