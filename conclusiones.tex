@@ -8,7 +8,7 @@ El objetivo principal de GrayAR es el desarrollo de los sistemas de captura, tra
 
 Además, el sistema responde a distintas acciones que el usuario pueda efectuar sobre el espacio físico, ampliando la información relacionada que sea relevante a la acción realizada.
 
-Por tanto, el objetivo principal queda satisfecho, como así ocurre también con aquellos objetivos específicos, definidos en el capítulo \ref{chap:objetivos} y detallada su solución entre los capítulos \ref{chap:metodo} y  \ref{chap:resultados}, que exponemos a continuación a modo de resumen.   
+Por tanto, el objetivo principal queda satisfecho, como así ocurre también con aquellos objetivos específicos, definidos en el capítulo \ref{chap:objetivos} y detallada su solución entre los capítulos \ref{chap:metodo} y  \ref{chap:arquitectura}, que exponemos a continuación a modo de resumen.   
 
 \subsection{Captura y preprocesado de imágenes}
 El sistema cuenta con un módulo capaz de obtener imágenes de los distintos tipos de cámaras que se le pueden acoplar, ofreciendo una interfaz común, a pesar de disponer de drivers y APIs diferentes. Se ha provisto de los filtros necesarios para el tratamiento de las imágenes, contando con funciones de escalado, umbralización, detección de bordes y detección de características.
@@ -23,28 +23,28 @@ Estos documentos se proporcionan en el fichero de configuración, así como las 
 \subsection{Implementación de técnicas de tracking y registro}
 Para conseguir una experiencia totalmente inmersiva, se han desarrollado técnicas de tracking y registro que permiten el cálculo de la \emph{pose} (rotación y translación del documento en el espacio 3D) en tiempo real. Esto nos permite, que podamos ofrecer al usuario la información proyectada sobre la hoja de papel, independiente de su posición, rotación o plano en el que se encuentre. Siempre y cuando, no se salga de los límites de la zona de proyección.
 
-\subsection{Utilización de paradigmas de interacción natural con el usuario  (NI)}
+\subsection{Utilización de paradigmas de interacción natural con el usuario  (NUI)}
 El usuario puede interactuar directamente en el espacio físico sin utilizar sistemas de mando tradicionales, como ratones o teclados. Sólo es necesario encender el prototipo, y según el usuario vaya colocando documentos, los desplace por la zona de proyección, realice interacciones señalándolo ó girándolo para mostrar la cara posterior, el sistema responderá automáticamente a la acción realizada. 
 
 La respuesta se le ofrece al usuario amplificada de varias formas (visual y/o auditiva) y siempre adaptada a la escena que se esté produciendo en ese mismo instante.
 
 \subsection{Facilitar la gestión documental a personas con necesidades especiales mediante amplificación de información} 
-GrayAR proporciona toda la información necesaria al sistema de representación (BelfegAR), para que realice el dibujado de la información visual relevante al contexto directamente sobre el espacio del papel.
+GrayAR proporciona toda la información necesaria al sistema de representación \textit{(BelfegAR)}, para que realice el dibujado de la información visual relevante al contexto directamente sobre el espacio del papel.
 
-Para complementar a la representación visual, se ha añadido a la Raspberry Pi un amplificador de audio LM386 montado sobre una placa de test con un altavoz de 1W, que hace las funciones de ``tarjeta de sonido'', permitiendo la reproducción de avisos, alertas o lecturas de texto para aquellas personas que necesiten de amplificación auditiva para la utilización del sistema.
+Para complementar a la representación visual, se ha añadido a la Raspberry Pi un amplificador de audio LM386 montado sobre una placa de test con un altavoz de 1W, que hace las funciones de «tarjeta de sonido», permitiendo la reproducción de avisos, alertas o lecturas de texto para aquellas personas que necesiten de amplificación auditiva para la utilización del sistema.
   
 \subsection{Se debe basar en componentes de bajo coste}
-Para la construcción del prototipo se han seleccionado aquellos componentes, que dentro de unas prestaciones mínimas requeridas, fuesen lo más económicos posibles. El coste final (ver Sección 4.4) es muy reducido respecto a otros sistemas que puedan realizan funciones parecidas. El proyector, la parte más cara del sistema con un valor de 325\euro, lo podemos considerar económico, teniendo en cuenta que el precio medio de otros modelos es de 1000\euro.
+Para la construcción del prototipo se han seleccionado aquellos componentes, que dentro de unas prestaciones mínimas requeridas, fuesen lo más económicos posibles. El coste final (ver Sección 4.4) es muy reducido respecto a otros sistemas que puedan realizan funciones parecidas. El proyector, la parte más cara del sistema con un valor de 350\euro, lo podemos considerar económico, teniendo en cuenta que el precio medio de otros modelos es de 1000\euro.
 
 Respecto al software empleado, todos los recursos y bibliotecas utilizadas son de licencia libre, y por tanto no están sujetos a pagos de licencias. 
 
 \subsection{Dispositivo multiplataforma (hardware y software)}
-El desarrollo de GrayAR se ha realizado exclusivamente en C++, siguiendo el estándar C++11. Los fichero de configuración y de calibrado están en XML. El uso de bibliotecas externas ha sido mínimo, eligiendo las que no poseían dependencias de terceros, y siempre con licencias libres multiplataforma. Estas decisiones garantizan la portabilidad del sistema, tanto hardware como software (sistemas operativos), en forma de paquete único.
+El desarrollo de GrayAR se ha realizado exclusivamente en C++, siguiendo el estándar C++11. Los fichero de configuración y de calibrado están en \acs{XML}. El uso de bibliotecas externas ha sido mínimo, eligiendo las que no poseían dependencias de terceros, y siempre con licencias libres multiplataforma. Estas decisiones garantizan la portabilidad del sistema, tanto hardware como software (sistemas operativos), en forma de paquete único.
 
 
 
 \section{Propuestas de trabajo futuro}
-El proyecto ARgos no ha finalizado aún. GrayAR comprende las funciones de realidad aumentada y visión por computador que se han construido hasta el día de hoy en el proyecto ARgos. Algunas de la propuestas aquí reflejadas serán desarrolladas en la versión final de ARgos y servirán de contexto para la realización de la tesis del Máster en Tecnologías Informáticas Avanzadas prevista para el próximo curso académico. 
+El \textit{Proyecto ARgos} no ha finalizado aún. GrayAR comprende las funciones de realidad aumentada y visión por computador que se han construido hasta el día de hoy en el \textit{Proyecto ARgos}. Algunas de la propuestas aquí reflejadas serán desarrolladas en la versión final de \textit{ARgos} y servirán de contexto para la realización de la tesis del Máster en Tecnologías Informáticas Avanzadas prevista para en este curso académico. 
 
 Debido a la construcción modular y desacoplada del sistema, las ampliaciones o mejoras aquí planteadas son de ámbito local y solo afectarán al subsistema o módulo referido, siendo transparente los cambios realizados para el resto de la aplicación.
  
@@ -69,12 +69,12 @@ Existen varias implementaciones optimizadas sobre LLAH para salvar las limitacio
 \subsection{Estimación inteligente de parámetros en algoritmos de filtrado según la iluminación existente}
 Los algoritmos de filtrado (suavizado de imágenes, detección de bordes,...) se definen a través de parámetros que determinan su comportamiento y el resultado de la imagen obtenida. Normalmente se determinan por decisión humana y permanecen estáticos durante toda la ejecución del programa. Elegidos en función de los mejores resultados obtenidos en unas circunstancias determinadas, las variaciones en la iluminación de la escena provocan que un parámetro que en un principio se pudo considerar óptimo, al instante no sea válido. También nos encontramos el caso de que exista un rango de valores que nos satisfagan.
 
-Se propone por tanto la creación de un sistema mediante técnicas de softcomputing que analice la escena actual y determine qué valores son los más adecuados para obtener un resultado conocido o esperado, en una serie de filtros utilizados en GrayAR.
+Se propone por tanto la creación de un sistema mediante técnicas de \textit{softcomputing} que analice la escena actual y determine qué valores son los más adecuados para obtener un resultado conocido o esperado, en una serie de filtros utilizados en GrayAR.
 
 Las ventajas de realizar esta implementación proporcionaría, que los métodos de detección fuesen más robustos y tolerantes a los cambios de iluminación que se puedan producir durante la utilización del sistema.    
 
 \subsection{Calibrado del sistema cámara-proyector mediante luz estructurada:} 
-Otra técnica para el calibrado de proyectores es el propuesto por Daniel Moreno y Gabriel Taubin, basado luz estructurada, en el paper \textit{``Simple, Accurate, and Robust Projector-Camera Calibration''}. 
+Otra técnica para el calibrado de proyectores es el propuesto por Daniel Moreno y Gabriel Taubin, basado luz estructurada, en el paper \textbf{\textit{«Simple, Accurate, and Robust Projector-Camera Calibration»}}.
 
 La implementación, consistiría en los siguientes pasos a realizar \cite{Moreno}:
 \begin{itemize}
@@ -95,7 +95,7 @@ En base a la experiencia en el desarrollo del proceso de calibrado en GrayAR, es
 
 \subsection{Utilización de cámaras con sensor de profundidad} 
 
-Sustituyendo la cámara principal, por otra equipada con sensores IR capaces de medir la profundidad de la escena, obtendríamos una mayor precisión y la posibilidad de aumentar la variedad de gestos reconocidos. 
+Sustituyendo la cámara principal, por otra equipada con sensores de infrarrojos (\acs{IR}) capaces de medir la profundidad de la escena, obtendríamos una mayor precisión y la posibilidad de aumentar la variedad de gestos reconocidos. 
 
 Por ejemplo, realizar la acción de click (o doble click) con los dedos sobre la superficie de la mesa, ó la simulación de una superficie multitáctil.
 
