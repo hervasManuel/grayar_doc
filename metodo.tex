@@ -93,7 +93,57 @@ Al final de cada iteración de treinta días hay una demostración a cargo del S
 \subsubsection{Sprint}
 El sprint consiste en adaptarse a las condiciones cambiantes del proyecto como requisitos, tiempo, recursos, conocimiento, tecnología, etc. El Equipo de Scrum se organiza para producir un nuevo incremento ejecutable en un sprint que dura aproximadamente un mes natural. Las herramientas activas del equipo son las reuniones para planear el sprint, el Sprint Backlog y las reuniones diarias de Scrum.
 
-\section{\textit{Extreme Programming}}
+\section{\textit{eXtreme Programming}}
+\textit{Extreme Programming}  o programación extrema, surgió como respuesta a la lentitud de los modelos tradicionales de desarrollo. Los orígenes de esta metodología surgieron en 1996, cuando Kent Beck comenzó a trabajar en un proyecto para reemplazar el programa de nóminas para Chrysler. Aunque las tácticas por separado que utiliza XP no son novedosas, la manera de unirlas sí. 
+
+En la primera edición de \textit{XP} (1999), Beck definió 4 valores, 15 principios básicos, y 12 prácticas. Posteriormente el proceso fue revisado y se publicó en 2004 \cite{Beck:2004:EPE:1076267}, en él se detallan 5 valores, 14 principios, 13 prácticas primarias y 11 prácticas secundarias.
+
+\subsection{Valores}
+\begin{itemize}
+\item La mayoría de los problemas y errores provienen de la falta de comunicación. Debe haber \textbf{\textit{comunicación}} entre los miembros del equipo y entre el equipo y los clientes. La comunicación más eficaz es la comunicación directa, interpersonal. También los artefactos deben ser fácilmente entendibles y estar actualizados.
+
+\item «Haz lo más sencillo que podría funcionar». Programar de forma sencilla, que no simplista, requiere experiencia, ideas y trabajo duro. La \textbf{\textit{simplicidad}} favorece la comunicación, reduce la cantidad de código y mejora la calidad. La idea subyacente es que las nuevas funciones se podrán agregar cuando se necesiten si el sistema es simple.
+
+\item Siempre debería poder compararse lo que está programado con lo que se quiere programar, respecto a las funciones que se necesiten. El \textbf{\textit{feedback}} lo proporciona el contacto con el cliente y la disponibilidad de pruebas automatizadas que se desarrollan con el propio proyecto. Cuanto más simple es un sistema, más fácil es conseguir \textit{feedback} sobre él. 
+
+\item \textbf{\textit{Valentía}}. Todos los métodos y procesos son herramientas para combatir y reducir nuestros miedos. Cuanto más miedo tengamos a un proyecto de software, mayores y más pesados serán los métodos que necesitaremos. La comunicación, la simplicidad y el feedback permiten adaptarse a los cambios grandes en los requisitos. También hay que tener valor para desechar código obsoleto.
+
+\item Los cuatro valores anteriores implican un quinto: el \textbf{\textit{respeto}} entre los miembros y por su trabajo.
+\end{itemize}
+
+Los cinco valores no dan consejos específicos sobre cómo gestionar un proyecto, o cómo
+escribir código. Para este propósito, se utilizan las prácticas que se detallan a continuación.
+
+
+\subsection{Prácticas fundamentales}
+– Análisis de requisitos y Planning:
+\begin{itemize}
+\item Se describen todas las funciones del sistema usando \textbf{historias}, descripciones breves de funciones que el cliente podrá ver.
+\item El desarrollo del software se realiza \textbf{semanalmente}. Hay una reunión al principio de cada semana donde el cliente elige, según prioridades y teniendo en consideración el tiempo necesario por los programadores, las historias a programar durante la semana.
+\item Evitar hacer promesas que no puedan cumplirse. 
+\end{itemize}
+– Equipo y Factores Humanos:
+\begin{itemize}
+\item Los equipos de desarrollo deben trabajar en un espacio sin divisiones para facilitar la comunicación.
+\item El equipo debe componerse de miembros con todas las habilidades necesarias para el proyecto, sentido de compañerismo y de ayuda mutua. 
+\item Programación por parejas. El código siempre está escrito por dos programadores en una única máquina.
+\end{itemize}
+– Diseño:
+\begin{itemize}
+\item Diseño Incremental. XP se opone a un gran diseño completo inicial (up-front). El equipo escribe código lo más pronto posible para obtener feedback y mejorar el sistema continuamente. El diseño es indispensable para obtener código bien hecho. La pregunta es cuándo diseñar. XP sugiere hacerlo incrementalmente durante la programación.
+\item Primero las pruebas. Antes de actualizar y añadir código, es necesario escribir las pruebas para verificarlo. 
+\end{itemize}
+– Programar y lanzar versiones:
+\begin{itemize}
+\item El sistema debe construirse y todas las pruebas deben terminarse en diez minutos para ejecutarlo a menudo y obtener feedback. 
+\item Integración continua. Los programadores deben integrar los cambios cada dos horas para evitar problemas mayores al integrar grandes partes.
+\item El código y las pruebas son los únicos artefactos y se han de guardar. Los otros documentos pueden generarse a partir del código y las pruebas.
+\item Cualquiera del equipo debe poder modificar cualquier parte de sistema cuando quiera. 
+\item Sólo hay una versión oficial de sistema. Se puede desarrollar una rama temporal, pero sólo usarse durante unas horas.
+\item Despliegue diario. Cada noche se debe poner nuevo software en producción. Es arriesgado y costoso tener diferentes versiones en producción y en el equipo.
+\end{itemize}
+
+
 \section{Aplicación de la metodología de desarrollo}
 
 Para la resolución de este proyecto se ha optado por una aproximación en la que se complementan las mejores prácticas y técnicas recomendadas en \textbf{\textit{Scrum}}, con sus medidas organizativas como método de gestión y \textbf{\textit{extreme programming (XP)}}, con patrones de diseño y refactorización, como metodología de desarrollo.
