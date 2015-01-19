@@ -486,6 +486,14 @@ hoja de papel, con un tamaño previamente conocido nos permite definir un sistem
 local de cada hoja detectada, de modo que obtengamos la matriz de transformación 4x4 del sistema de
 coordenadas de la hoja al sistema de coordenadas de la cámara.
 
+\begin{figure}[h] 
+  \centering
+  \includegraphics[width=0.98\textwidth]{input.png}
+  \caption{Imagen de entrada en el módulo paperDetector}
+  \label{fig:input}
+\end{figure}
+
+
 El enfoque utilizado es similar al de ArUCo y ARToolkit, mediante un algoritmo de detección de bordes y un
 método de estimación de la orientación. Sobre la imagen obtenida se inicia el primer paso de búsqueda de hojas de
 papel. La imagen se convierte a blanco y negro para facilitar la detección de cuadriláteros;
@@ -497,11 +505,26 @@ suficientemente grande como para ser una hoja de papel. A estas regiones se les 
 de detección de contornos, obteniendo a continuación los vértices y aristas que definen la
 región de la hoja en 2D.
 
+
 \subsection{Conversión a escala de grises (Grayscale)}
 El primer paso en el proceso de detección consiste en convertir el frame capturado por la cámara a
 escala de grises mediante la función \texttt{cv::cvtColor}. Esta función convierte una imagen de un
 espacio de color a otro. La constante \texttt{CV\_BGR2GRAY} sirve para indicar que queremos pasar de
 una imagen BGR (estándar de OpenCV) a otra en escala de grises.
+
+\begin{figure}[h] 
+  \centering
+  \includegraphics[width=0.98\textwidth]{inputGray.png}
+  \caption{Imagen en escala de grises}
+  \label{fig:grayscale}
+\end{figure}
+
+%\begin{figure}[htbp]
+%\centering
+%\subfigure[Original]{\includegraphics[width=0.49\textwidth]{input.png}}
+%\subfigure[Escala de Grises]{\includegraphics[width=0.49\textwidth]{inputGray.png}}
+%\caption{Conversión a escala de Grises} \label{fig:conversionGrises}
+%\end{figure}
 
 \subsection{Umbralización o binarización (Thresholding)}
 La umbralización consiste en definir un valor umbral y compararlo con cada uno de los píxeles de la
@@ -515,11 +538,25 @@ los métodos fijos y adaptativo, pero en una fase de optimización realizada pos
 el método Canny. Este algoritmo proporcionaba bordes más precisos, y es  tolerante a las
 variaciones de iluminación, produciendo menores índices de ruido en la imagen binarizada.
 
+\begin{figure}[h] 
+  \centering
+  \includegraphics[width=0.96\textwidth]{threshold.png}
+  \caption{Binarización por el método de Canny}
+  \label{fig:binarizacion}
+\end{figure}
+
 \subsection{Extracción de contornos}
 El siguiente paso del proceso es la detección de contornos, una operación un tanto distinta a las
 anteriores por dos motivos principales. El primero es que no consiste en iterar aplicando una misma
 función de forma monótona sobre todos los píxeles de la imagen. Y el segundo, es que el resultado que
 se obtiene no es una nueva imagen, sino un colección de conjuntos de puntos sobre la imagen.
+
+\begin{figure}[h] 
+  \centering
+  \includegraphics[width=0.98\textwidth]{contours.png}
+  \caption{Contornos encontrado en la imagen binarizada}
+  \label{fig:contours}
+\end{figure}
 
 Para este paso se parte de la imagen resultante del paso anterior. Es decir, de una imagen que tan
 solo consta de píxeles con valor cero o uno. Sobre ella se aplica un algoritmo que la barre,
@@ -551,6 +588,7 @@ El algoritmo presenta una pequeña dificultad en los bordes de la imagen, y para
 presupone que la imagen está rodeada por los cuatro lados de píxeles con valor 0. Es decir, que el
 buffer que utiliza tiene una fila más por encima y por debajo, y una columna más a derecha e
 izquierda, que la imagen original.
+
 
 
 \subsection{Aproximación a polígonos (Douglas-Peucker)}
@@ -597,11 +635,20 @@ tengan cuatro lados.
 En este punto, en los casos en los que no existan grandes solapamientos sobre el papel, debemos
 obtener una serie de polígonos que se corresponden con las hojas detectadas en la imagen.
 
+
+
 \subsection{Búsqueda de cuadriláteros en el espacio de Hough}
 Mientras se este realizando alguna interacción con el documento, nuestra mano, dedos e incluso parte
 del brazo estarán solapando gran parte de la hoja que queremos detectar. Tras aplicar el detector de
 bordes a la imagen recibida, obtenemos segmentos no conectados que las funciones anteriores no serán
 capaces de clasificar como cuadriláteros candidatos a ser una hoja de papel.
+
+\begin{figure}[h!] 
+  \centering
+  \includegraphics[width=0.98\textwidth]{overlappingThres.png}
+  \caption{Detección erronea al existir solapamiento}
+  \label{fig:overlappingThres}
+\end{figure}
 
 En estos casos, la búsqueda de la hoja de papel en la imagen se realiza mediante detectores de líneas basados
 en la transformada de Hough.
@@ -644,6 +691,13 @@ de buscar curvas concurrentes.
 Las zonas de este espacio donde más líneas se cortan se convierten en parámetros de posibles rectas
 en el espacio de la imagen.
 
+ \begin{figure}[h!] 
+    \centering
+    \includegraphics[width=0.98\textwidth]{overlappingInput3.png}
+    \caption{Imagen de entrada}
+    \label{fig:overlapping}
+  \end{figure}
+
 Se seleccionan un conjunto de las rectas detectadas para ser examinado en función de las siguientes características:
 
 \begin{itemize}
@@ -651,12 +705,34 @@ Se seleccionan un conjunto de las rectas detectadas para ser examinado en funci�
   sistema. Con esta restricción descartaremos aquellos segmentos que sabemos de antemano que no van
   a ser hojas de papel, como por ejemplo, otros objetos que se encuentren en la imagen o los bordes
   de la superficie donde se encuentra en prototipo.
+  \begin{figure}[h!] 
+    \centering
+    \includegraphics[width=0.98\textwidth]{overlapping3All.png}
+    \caption{Segmentos dentro de la zona de proyección}
+    \label{fig:overlappingAll}
+  \end{figure}
+  
 \item El segmento es mayor que un valor umbral.
 \item Sólo se tienen en cuenta los segmentos más próximos a los límites de proyección. El detector
   de Hough puede encontrar rectas en el interior de la hoja de papel que estamos buscando. Así solo
   seleccionaremos los posibles candidatos a formar el borde del papel.
+   \begin{figure}[h!] 
+    \centering
+    \includegraphics[width=0.98\textwidth]{overlapping3External.png}
+    \caption{Segmentos más externos y mayores que un umbral}
+    \label{fig:overlappingExt}
+  \end{figure}
+
+
 \item Los ángulos que formen dos rectas contiguas estará comprendido dentro del rango de 75º a 105º.
 \item Los ángulos que formen dos rectas opuestas deben ser cercanos a 180º ó 360º.
+  \begin{figure}[h!] 
+    \centering
+    \includegraphics[width=0.98\textwidth]{overlapping3Angles.png}
+    \caption{Segmentos que forman 90º ó 180º}
+    \label{fig:overlappingAngles}
+  \end{figure}
+
 \end{itemize}
 
 Tras la selección anterior obtendremos un conjunto de segmentos de rectas extraídas de la
@@ -672,19 +748,13 @@ siguientes criterios:
 
 Para ello se generan las posibles combinaciones de 4 segmentos del conjunto de rectas detectadas y
 se analizan los criterios anteriores.
+\begin{figure}[h!] 
+    \centering
+    \includegraphics[width=0.98\textwidth]{overlappingResult3.png}
+    \caption{Cuadrilatero formado por lo segmentos y que cumple las condiciones}
+    \label{fig:overlappingResult}
+  \end{figure}
 
-\subsection{Filtrado final}
-Aún realizando todos estos descartes, ARgos incorpora un control adicional, ya que debido a que en
-los pasos previos se detectan contornos tanto exteriores como interiores, puede ocurrir que se
-detecten dos cuadriláteros, uno dentro de otro, siendo necesario descartar el más interno.
-ARgos calcula la distancia media entre las esquinas de los polígonos y si encuentra dos que están
-muy cerca descarta el de menor perímetro, que necesariamente será el más interno.
-
-Por último, para el cálculo de las distancias entre esquinas es necesario un paso previo
-en el que las esquinas tienen que estar ordenadas en el sentido contrario de las agujas del reloj
-\textit{(anti-clockwise order)}.
-
-\subsection{Cálculo de parámetros extrínsecos de la cámara}
 Una vez detectadas e identificadas las hojas de papel de la imagen, se procede a calcular los parámetros extrínsecos de la cámara respecto a cada una de ellas. Para la mayoría de los cálculos basta con considerar a la lente como un agujero puntual a través del que pasa la luz a través de un centro de proyección común.
 
 Essential problem in AR: POSE ESTIMATION
@@ -767,82 +837,6 @@ P_{actual} = P_1*0.5 + P_2*0.25 + P_3*0.15 + P_4*0.1
 
 Siendo $P_1$ la percepción más reciente, y el resto las percepciones almacenadas en el histórico. De esta forma, se da más peso a la percepción más actual, pero se tiene en cuenta las anteriores. El resultado es un movimiento más fluido y suave, aunque da la sensación de haber un \textit{delay} al momento de representar la posición. Este retraso es lógico, al tener en cuenta percepciones pasadas.
 
-%\subsection{Tracking mediante filtros de partículas}
-%From the detection result, we have 2D positions of the four corners of the quadrangle. Since we are using a cardboard with known size, and the camera is calibrated, we can compute the relative rotation and translation of the camera to the cardboard. Then, our tracking state at frame k is represented by this relative pose in the following form
-%\begin{equation}
-%q_k = \left \lfloor r_x \quad r_y \quad  r_z \quad  t_x \quad  t_y \quad t_z  \right \rfloor
-%\end{equation}
-
-%Dónde $rx$, $ry$ y $rz$ son los ángulos de rotación a lo largo de los ejes $X$, $Y$, $Z$,
-%respectivamente. $tx$, $ty$ y $tz$ son los ángulos traslación respectivamente a cada uno de sus ejes.
-
-%El filtro de partículas se utiliza para estimar la densidad posterior de la pose de la cámara. La
-%pose se representa como un conjunto de partículas discretas. Cada partícula tiene un peso para
-%indicar el grado de confianza que representar la pose de la cámara.
-
-%Los dos componentes principales de un filtro de partículas son el modelo dinámico del estado y el
-%modelo de observación. El modelo dinámico estado determina cómo las partículas se propagan frame a
-%frame. Es decir, la definición de la densidad $p(q_k|q_{k-1})$. El modelo de observación determina
-%cómo se asignan pesos a las partículas que proporcionan la observación en ese marco. Que la
-%observación en la trama actual sea $y_k$ y la secuencia de la observación hasta el fotograma actual
-%$y_{1: k}$ , el filtro de partículas realiza el seguimiento de forma recursiva por la aproximación
-%de la densidad posterior $p(q_k|y_{1:k})$. La salida del filtro de
-%partículas es un conjunto de las muestras ponderadas $\left \{\left \{ q_k^1 \quad w_k^1 \right \},
-%  \dots, \left \{ q_k^s \quad w_k^s  \right \}\right \}$ donde $S$ es
-%el número de partículas. El diagrama de flujo del filtro de partículas utilizado en nuestro proyecto se muestra en la Figura 4.
-
-%\subsubsection{Modelo dinámico de estado}
-%Dado que la superficie cuadrangular está en movimiento libre, un modelo de paseo aleatorio simple
-%basado en una densidad uniforme $U$ sobre el estado anterior [5] se utiliza. La variable e representa
-%la incertidumbre sobre el movimiento del cuadrilátero detectado.
-
-%\begin{equation}
-%p(q_k|q_{k-1}) = U (q_{k-1} - e, q_{k-1} + e)
-%\end{equation}
-
-%\subsubsection{Modelo de observación}
-%La observación en nuestro algoritmo es (18). Representa el mapa de características del segmento de
-%línea obtenido de la trama de imagen actual.
-
-%\begin{equation}
-%y_k = L = \left \{l_1^k,l_2^k, \dots, l_m^k\right \}
-%\end{equation}
-
-%Para evaluar la probabilidad de cada partícula, lo primero que re-proyecto de las cuatro esquinas
-%del cuadrilátero en el plano de la imagen de acuerdo con la postura representada por la
-%partícula. Luego, se utiliza un algoritmo de coincidencia línea basado en distancias punto de línea
-%y las diferencias angulares para encontrar las mejores líneas que coinciden con las cuatro líneas
-%laterales del cuadrilátero en el marco actual. Entonces, si todas las líneas laterales del
-%cuadrilátero representado por la partícula pueden igualar a un segmento de línea, podemos formar un
-%cuadrilátero por los segmentos de línea coincidentes. Este patio se comprueba mediante los tres
-%primeros criterios en el algoritmo de detección de cuadrilátero.
-
-%Si cualquiera de las líneas laterales no pueden igualar a un segmento de línea en el mapa de entidad
-%de línea o el cuadrángulo formado no puede pasar el procedimiento de comprobación, un peso muy
-%pequeño se le asignará a la partícula. De lo contrario, la partícula puede igualar a un cuadrilátero
-%real en la imagen actual. Para dar un resultado de seguimiento más preciso, se introdujo un esquema
-%de reemplazo en nuestro modelo de observación. Para las partículas que pasan los criterios de
-%coincidencia de línea y cuadrangulares procedimientos de comprobación, las cuatro líneas
-%coincidentes forman un cuadrilátero real en la escena.
-
-%A continuación, las cuatro esquinas del cuadrilátero se calculan a partir de las cuatro
-%líneas. Estas esquinas entonces reemplazar los de la partícula. De esta manera, todas las partículas
-%que sobreviven a partir de los procedimientos de evaluación representarán un cuadrilátero real en la
-%escena. Desde las esquinas se calculan a partir de las líneas, la precisión de seguimiento puede
-%estar en el nivel sub-píxel. La probabilidad se calcula entonces de acuerdo a la suma de los
-%coeficientes de la superposición de:
-
-%\begin{equation}
-%p(y_k | q_k^n) = \sum_{t=1}^{4} r_{1}^t r_2^t
-%\end{equation}
-
-%Los pesos finales de las partículas se dan por la normalización de la suma de los pesos de 1:
-
-%\begin{equation}
-%w_k^n = \dfrac{p(y_k|q_k^n)}{\sum_{n=1}^{S} p(y_k|q_k^n)}
-%\end{equation}
-
-
 \section{Identificación de documentos}
 EL objetivo de este módulo es la identificación rápida de documentos empleando algoritmos de
 recuperación de imágenes, comparando el documento que está siendo analizado con una base de datos de
@@ -901,7 +895,7 @@ ARgos utiliza dos funciones de OpenCV para este paso:
 
 El resultado de este proceso es una imagen de cada una de las hojas de
 papel encontradas. Una para cada cuadrilátero candidato. ARgos utiliza
-un tamaño de 600x420 píxeles para las imágenes destino.
+un tamaño de 600x420 píxeles para las imágenes destino ya que estas dimensiones mantienen la proporcionalidad de tamaño del folio.
 
 Aunque SURF es invariante a la rotación, translación y
 escala, realizar este paso previo nos proporciona varias ventajas. Por
@@ -911,6 +905,15 @@ documento a identificar, estamos eliminado \emph{ruido} que podría
 influir en el resultado de la detección, aumentado la robustez del algoritmo mediante
 el análisis exclusivo de la región a identificar dentro de la imagen
 general.
+
+\begin{figure}[htbp]
+\centering
+\subfigure[Imagen de Entrada]{\includegraphics[width=0.49\textwidth]{input.png}}
+\subfigure[Cuadrilatero extraido]{\includegraphics[width=0.49\textwidth]{warp.png}}
+\caption{Eliminación de la transformación de perspectiva} \label{fig:warp}
+\end{figure}
+
+
 
 \subsection{Extracción de Características}
 
@@ -949,6 +952,16 @@ descriptores se representa como un \textbf{\texttt{cv::Mat}}, donde cada fila
 es un descriptor de un punto clave.
 
 \subsection{Búsqueda de Coincidencias}
+\begin{figure}[htbp]
+\centering
+\subfigure[Parte 1]{\includegraphics[width=0.32\textwidth]{keypoint1.png}}
+\subfigure[Parte 2]{\includegraphics[width=0.32\textwidth]{keypoint2.png}}
+\subfigure[Parte 3]{\includegraphics[width=0.32\textwidth]{keypoint3.png}}
+\caption{Puntos de interes} \label{fig:keypoints}
+\end{figure}
+
+
+
 Para buscar una coincidencia entre varias imágenes, se extraen los
 descriptores de la imagen de consulta y se accede a la estructura de
 descriptores de las imágenes referencia con los
