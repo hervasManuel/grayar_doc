@@ -532,7 +532,7 @@ imagen. A los píxeles que estén por debajo del umbral se les asigna un valor, 
 encima otro. De esta forma se divide toda la población de valores en tan sólo dos grupos, reduciendo
 considerablemente la complejidad de la información a analizar.
 
-En ARgos, se han desarrollado tres soluciones distintas para tratar de resolver este problema del
+En GrayAR, se han desarrollado tres soluciones distintas para tratar de resolver este problema del
 thresholding básico (fijo, adaptativo y el método Canny). En un principio, solo se implementaron
 los métodos fijos y adaptativo, pero en una fase de optimización realizada posteriormente, se incluyo
 el método Canny. Este algoritmo proporcionaba bordes más precisos, y es  tolerante a las
@@ -567,7 +567,7 @@ el algoritmo es capaz de encontrar todos los contornos presentes en la imagen, y
 con uno empieza de nuevo el proceso hasta asegurarse de haber barrido la imagen por completo.
 
 El algoritmo es bastante potente, ya que no sólo es capaz de encontrar los contornos exteriores,
-sino también los interiores a otros, y retornarlos clasificados jerárquicamente. ARgos utiliza la
+sino también los interiores a otros, y retornarlos clasificados jerárquicamente. GrayAR utiliza la
 función \texttt{cv::findContours} que implementa este algoritmo. En la documentación, así como la
 referencia de implementación, se refiere al \textit{paper} original «Topological structural analysis
 of digitized binary images by border following» de Satoshi Suzuki and Keiichi Abe.
@@ -596,7 +596,7 @@ Los contornos de los que se parte para este paso son colecciones de puntos. Todo
 píxeles que forman parte de ellos, ya que no se guardaron sólo las esquinas, sino cada píxel
 individual encontrado. Esto permite tomar algunas decisiones tempranas, como por ejemplo descartar
 los contornos que no tengan un mínimo de puntos. Es decir, aquellos que no son susceptibles de formar
-la hoja de papel. ARgos descarta aquellos que no tengan un área delimitada entre 47000 y 49000
+la hoja de papel. GrayAR descarta aquellos que no tengan un área delimitada entre 47000 y 49000
 píxeles.
 
 Sobre aquellos contornos que cumplan con la restricción de superficie, se calcula la envoltura
@@ -628,12 +628,19 @@ como parámetro divide la lista y el segmento en dos, utilizando el punto encont
 extremo. Y vuelve a empezar el proceso comprobando cada nueva lista contra cada nuevo segmento de
 forma individual, creando nuevas listas y segmentos si fuera necesario, de forma recursiva.
 
-ARgos utiliza como distancia máxima para al algoritmo el 10\% del número de puntos que tiene cada
+GrayAR utiliza como distancia máxima para al algoritmo el 10\% del número de puntos que tiene cada
 contorno de forma individual. Una vez convertidos los puntos a polígonos se descartan los que no
 tengan cuatro lados.
 
 En este punto, en los casos en los que no existan grandes solapamientos sobre el papel, debemos
 obtener una serie de polígonos que se corresponden con las hojas detectadas en la imagen.
+
+\begin{figure}[h] 
+  \centering
+  \includegraphics[width=0.98\textwidth]{douglas.png}
+  \caption{Poligonos en encontrados en la imagen}
+  \label{fig:douglas}
+\end{figure}
 
 
 
@@ -678,14 +685,7 @@ Entonces, es posible asociar a cada recta un par $(\rho,\theta)$ que es único s
 [0,\pi)$ y $\rho \in \mathbb{R}$ ó $\theta \in [0,2\pi)$ y $\rho \geq 0$. El espacio
 $(\rho,\theta)$ se denomina espacio de Hough para el conjunto de rectas en dos dimensiones.
 
-Para un punto arbitrario en la imagen con coordenadas $(x_0,y_0)$, las rectas que pasan por ese punto
-son los pares  $(\rho,\theta)$ con  $\rho=x*\cos \theta + y * \sin \theta$ donde $\rho$ (la
-distancia entre la línea y el origen) está determinado por $\theta$. Esto corresponde a una curva
-sinusoidal en el espacio  $(\rho,\theta)$, que es única para ese punto. Si las curvas
-correspondientes  a dos puntos se intersecan, el punto de intersección en el espacio de Hough
-corresponde  a una línea en el espacio de la imagen que pasa por estos dos puntos. Generalizando, un
-conjunto de puntos que forman una recta, producirán sinusoides que se intersecan en los parámetros
-de esa línea. Por tanto, el problema de detectar puntos colineales se puede convertir en un problema
+Para un punto arbitrario en la imagen con coordenadas $(x_0,y_0)$, las rectas que pasan por ese punto son los pares  $(\rho,\theta)$ con  $\rho=x*\cos \theta + y * \sin \theta$ donde $\rho$ (la distancia entre la línea y el origen) está determinado por $\theta$. Esto corresponde a una curvas sinusoidal en el espacio  $(\rho,\theta)$, que es única para ese punto. Si las curvas correspondientes  a dos puntos se intersecan, el punto de intersección en el espacio de Hough corresponde  a una línea en el espacio de la imagen que pasa por estos dos puntos. Generalizando, un conjunto de puntos que forman una recta, producirán sinusoides que se intersecan en los parámetros de esa línea. Por tanto, el problema de detectar puntos colineales se puede convertir en un problema
 de buscar curvas concurrentes.
 
 Las zonas de este espacio donde más líneas se cortan se convierten en parámetros de posibles rectas
@@ -705,35 +705,35 @@ Se seleccionan un conjunto de las rectas detectadas para ser examinado en funci�
   sistema. Con esta restricción descartaremos aquellos segmentos que sabemos de antemano que no van
   a ser hojas de papel, como por ejemplo, otros objetos que se encuentren en la imagen o los bordes
   de la superficie donde se encuentra en prototipo.
-  \begin{figure}[h!] 
+  
+\item El segmento es mayor que un valor umbral.
+\item Sólo se tienen en cuenta los segmentos más próximos a los límites de proyección. El detector
+  de Hough puede encontrar rectas en el interior de la hoja de papel que estamos buscando. Así solo
+  seleccionaremos los posibles candidatos a formar el borde del papel.
+ \item Los ángulos que formen dos rectas contiguas estará comprendido dentro del rango de 75º a 105º.
+\item Los ángulos que formen dos rectas opuestas deben ser cercanos a 180º ó 360º.
+\end{itemize}
+
+\begin{figure} 
     \centering
     \includegraphics[width=0.98\textwidth]{overlapping3All.png}
     \caption{Segmentos dentro de la zona de proyección}
     \label{fig:overlappingAll}
   \end{figure}
   
-\item El segmento es mayor que un valor umbral.
-\item Sólo se tienen en cuenta los segmentos más próximos a los límites de proyección. El detector
-  de Hough puede encontrar rectas en el interior de la hoja de papel que estamos buscando. Así solo
-  seleccionaremos los posibles candidatos a formar el borde del papel.
-   \begin{figure}[h!] 
+ \begin{figure} 
     \centering
     \includegraphics[width=0.98\textwidth]{overlapping3External.png}
     \caption{Segmentos más externos y mayores que un umbral}
     \label{fig:overlappingExt}
   \end{figure}
 
-
-\item Los ángulos que formen dos rectas contiguas estará comprendido dentro del rango de 75º a 105º.
-\item Los ángulos que formen dos rectas opuestas deben ser cercanos a 180º ó 360º.
-  \begin{figure}[h!] 
+  \begin{figure} 
     \centering
     \includegraphics[width=0.98\textwidth]{overlapping3Angles.png}
     \caption{Segmentos que forman 90º ó 180º}
     \label{fig:overlappingAngles}
   \end{figure}
-
-\end{itemize}
 
 Tras la selección anterior obtendremos un conjunto de segmentos de rectas extraídas de la
 imagen. Cuatro segmentos se consideran que formarán un cuadrilátero candidato si cumplen los
@@ -757,14 +757,14 @@ se analizan los criterios anteriores.
 
 Una vez detectadas e identificadas las hojas de papel de la imagen, se procede a calcular los parámetros extrínsecos de la cámara respecto a cada una de ellas. Para la mayoría de los cálculos basta con considerar a la lente como un agujero puntual a través del que pasa la luz a través de un centro de proyección común.
 
-Essential problem in AR: POSE ESTIMATION
-WHERE to put the CG object
-ORIENTAION of CG object
-SIZE of CG object
+%Essential problem in AR: POSE ESTIMATION
+%WHERE to put the CG object
+%ORIENTAION of CG object
+%SIZE of CG object
 
-(translation)
-(rotation)
-(scaling)
+%(translation)
+%(rotation)
+%(scaling)
 
 Supongamos que se visualiza un objeto que se encuentra a una distancia $x_{1}$ de la lente, y que la
 imagen proyectada por los rayos que salen de la lente se forma a una distancia $x_{2}$ tras la
@@ -800,7 +800,7 @@ tridimensional. $f_{x}$ es la distancia focal en el eje $X$, $f_{y}$ la distanci
 $Y$, ($c_{x},c_{y}$) marcan el punto principal, el punto donde el eje de visión corta el plano de
 visión (normalmente suele estar en el centro de la imagen, o muy cerca).
 
-En ARgos se utiliza la función de OpenCV \texttt{cv::solvePnp}. Está, calcula la \emph{pose} (rotación y
+En GrayAR se utiliza la función de OpenCV \texttt{cv::solvePnp}. Está, calcula la \emph{pose} (rotación y
 traslación) de la hoja de papel, dado un conjunto de puntos del objeto \texttt{(ObjPoints)}, sus proyecciones en
 la imagen correspondiente \texttt{(ImagePoints)}, así como la matriz de la cámara \texttt{(camMatrix)} y los coeficientes
 de distorsión \texttt{(distCoeff)}. Esta función encuentra una \emph{pose} que minimiza el error de reproyección, es
@@ -828,7 +828,6 @@ procesos de detección o errores debido a la naturaleza imprecisa de los método
 Este refinamiento de las percepciones se basa en la capacidad del sistema de almacenar las últimas
 \textit{n} percepciones. Este parámetro es configurable en tiempo de compilación.
 
-
 Cuando se recibe una última percepción, se calcula una media ponderada con las cuatro últimas
 percepciones, de forma que la percepción refinada es la resultante de la siguiente fórmula:
 \begin{equation}
@@ -855,7 +854,7 @@ documentos se pueden dividir en dos categorías:
 \item Basados en \textbf{combinación coincidencias de características locales y la distribución del contenido} dentro de la página.
 \end{itemize}
 
-La solución implementada en ARgos, debido a los requerimientos anteriores, corresponde a la primera
+La solución implementada en GrayAR, debido a los requerimientos anteriores, corresponde a la primera
 de las técnicas. Es la más adecuada para la identificación de documentos estructurados o
 semi-estructurados, como pueden ser el caso de formularios, facturas, billetes de tren o tickets.
 
@@ -879,7 +878,7 @@ región de la imagen que cubre cada una de ellas eliminando la
 transformación de perspectiva, es decir, la deformación que se produce
 en el papel debido a la perspectiva.
 
-ARgos utiliza dos funciones de OpenCV para este paso:
+GrayAR utiliza dos funciones de OpenCV para este paso:
 
 \begin{itemize}
 \item \textbf{\texttt{cv::getPerspectiveTransform}} calcula
@@ -894,7 +893,7 @@ ARgos utiliza dos funciones de OpenCV para este paso:
 \end{itemize}
 
 El resultado de este proceso es una imagen de cada una de las hojas de
-papel encontradas. Una para cada cuadrilátero candidato. ARgos utiliza
+papel encontradas. Una para cada cuadrilátero candidato. GrayAR utiliza
 un tamaño de 600x420 píxeles para las imágenes destino ya que estas dimensiones mantienen la proporcionalidad de tamaño del folio.
 
 Aunque SURF es invariante a la rotación, translación y
@@ -906,7 +905,7 @@ influir en el resultado de la detección, aumentado la robustez del algoritmo me
 el análisis exclusivo de la región a identificar dentro de la imagen
 general.
 
-\begin{figure}[htbp]
+\begin{figure}
 \centering
 \subfigure[Imagen de Entrada]{\includegraphics[width=0.49\textwidth]{input.png}}
 \subfigure[Cuadrilatero extraido]{\includegraphics[width=0.49\textwidth]{warp.png}}
@@ -952,11 +951,11 @@ descriptores se representa como un \textbf{\texttt{cv::Mat}}, donde cada fila
 es un descriptor de un punto clave.
 
 \subsection{Búsqueda de Coincidencias}
-\begin{figure}[htbp]
+\begin{figure}
 \centering
-\subfigure[Parte 1]{\includegraphics[width=0.32\textwidth]{keypoint1.png}}
-\subfigure[Parte 2]{\includegraphics[width=0.32\textwidth]{keypoint2.png}}
-\subfigure[Parte 3]{\includegraphics[width=0.32\textwidth]{keypoint3.png}}
+\subfigure[Parte 1]{\includegraphics[width=0.49\textwidth]{keypoint1.png}}
+\subfigure[Parte 2]{\includegraphics[width=0.49\textwidth]{keypoint2.png}}
+%\subfigure[Parte 3]{\includegraphics[width=0.32\textwidth]{keypoint3.png}}
 \caption{Puntos de interes} \label{fig:keypoints}
 \end{figure}
 
@@ -983,7 +982,7 @@ El método de los k vecinos más cercanos \emph{(K-nn)}, es un clasificador
 supervisado que calcula la probabilidad de que un elemento pertenezca
 a una clase conocida.
 
-Para su utilización en ARgos, se configura la clase \textbf{Flann}
+Para su utilización en GrayAR, se configura la clase \textbf{Flann}
 con dos parámetros que especifican el algoritmo a utilizar y su parametrización.
 
 \begin{itemize}
@@ -1014,6 +1013,32 @@ Finalmente, al comparar todas las imágenes almacenadas con la imagen
 de referencia, la que mayor número de coincidencias haya obtenido, será
 la candidata para devolver su índice como resultado de la identificación.
 
+  \begin{figure}] 
+    \centering
+    \includegraphics[width=0.98\textwidth]{knn1.png}
+    \caption{Busqueda de coincidencias de descriptores Imagen 1}
+    \label{fig:knn1}
+  \end{figure}
+
+
+
+  \begin{figure} 
+    \centering
+    \includegraphics[width=0.98\textwidth]{knn2.png}
+    \caption{Busqueda de coincidencias de descriptores Imagen 2}
+    \label{fig:knn2}
+  \end{figure}
+
+
+
+  \begin{figure} 
+    \centering
+    \includegraphics[width=0.98\textwidth]{knn3.png}
+    \caption{Busqueda de coincidencias de descriptores Imagen 3}
+    \label{fig:knn3}
+  \end{figure}
+
+
 
 \section{Interfaz natural de usuario}
 
@@ -1023,7 +1048,7 @@ estas tecnologías son las basadas en visión por computador y que son
 capaces desde interpretar expresiones naturales como gestos hasta proporcionar información contextual que se
 proyecta dentro del campo de visión del usuario.
 
-En ARgos se ha creado una interfaz de usuario basada en zonas de
+En GrayAR se ha creado una interfaz de usuario basada en zonas de
 resaltado y botones virtuales que son proyectados directamente sobre
 el documento. El usuario podrá interactuar directamente en el espacio físico sin utilizar sistemas de mando o dispositivos de entrada tradicionales como sería un ratón,
 teclado, etc. siendo sustituidos por funciones más naturales como el
@@ -1070,7 +1095,7 @@ Las operaciones morfológicas, consisten en la alteración de los píxeles
 de salida de una imagen dependiendo del valor del píxel de entrada y
 una relación de vecindad definida por un elemento estructural. El
 elemento estructural define el tamaño y la forma con la que se aplica
-la operación. En ARgos se aplica un elemento en forma de elipse de
+la operación. En GrayAR se aplica un elemento en forma de elipse de
 tamaño 7x7 píxeles.
 
 Para finalizar el tratamiento previo, se aplica un \textbf{filtro bilateral}
@@ -1138,8 +1163,7 @@ Z_{const}
 \end{equation}
 donde $M$ es la matriz de la cámara, $R$ la matriz de rotación, $t$ el
 vector de rotación, y $s$ es el factor de escala de la homografía. $Zconst$ representa la altura
-donde se están representado los componentes gráficos en relación al
-papel, en ARgos es 0.
+donde se están representado los componentes gráficos en relación al papel, en GrayAR es 0.
 
 \begin{equation}
 R^{-1} M^{-1} s \begin{bmatrix}

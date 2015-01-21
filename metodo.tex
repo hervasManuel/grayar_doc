@@ -22,8 +22,8 @@ En resumen, las principales características a las que deben dar forma las metod
 \end{itemize}
 %Hay que tener en consideración la muy diferente naturaleza de los métodos ágiles. Mientras que Scrum se decanta por la gestión, otros como XP especifican las prácticas a seguir en el equipo, Pragmatic Programming da pautas para desarrollar un buen código, algunos como FDD no abarcan la totalidad del proceso de desarrollo, AgileUP surge como una versión ágil de RUP y propone EUP que es una ampliación para abarcar todo el ciclo de vida del software, etc.
 \section{\textit{Scrum}}
-Scrum está desarrollado para gestionar el proceso de desarrollo de sistemas aplicando ideas de flexibilidad, adaptabilidad y productividad. Sin llegar a describir ninguna técnica de desarrollo de software específica, el objetivo es definir cómo deben funcionar los miembros del equipo para que el sistema sea flexible y se adapte a condiciones altamente cambiantes.
-
+Scrum ~\cite{Ubeda} está desarrollado para gestionar el proceso de desarrollo de sistemas aplicando ideas de flexibilidad, adaptabilidad y productividad. Sin llegar a describir ninguna técnica de desarrollo de software específica, el objetivo es definir cómo deben funcionar los miembros del equipo para que el sistema sea flexible y se adapte a condiciones altamente cambiantes.
+ 
 \begin{figure}[t] 
   \centering
   \includegraphics[width=1.0\textwidth]{scrum-overview.jpg}
@@ -38,12 +38,15 @@ A continuación se detallan las fases de Scrum según Schwaber y Beedle \cite{Sc
 \begin{itemize}
 
 \item \textbf{Pre-game}
-El planteamiento incluye la definición del sistema a desarrollar y asegurar la financiación. Se crea una lista de acumulación o pila de producto, \textit{product backlog list} conteniendo todos los requisitos conocidos hasta el momento. Los requisitos los puede originar el cliente, los programadores o los departamentos de ventas, marketing o atención al cliente. Se priorizan los requisitos y se estima el esfuerzo necesario para su desarrollo. La \textit{product backlog list} se actualiza constantemente con puntos nuevos y más detalles, así como con estimaciones más exactas y el nuevo orden de prioridades. El planning también incluye la definición del equipo del proyecto, herramientas y otros recursos, la valoración de riesgos, necesidades de formación y la aprobación de la gestión de comprobaciones. En cada iteración, el equipo(s) de Scrum revisa la Product Backlog list actualizada. En la jerga de Scrum, se llaman paquetes a los objetos o componentes que necesitan cambiarse en la siguiente iteración.
+\begin{iitemize}
+\item El \textbf{\textbf{planning}} incluye la definición del sistema a desarrollar y asegurar la financiación. Se crea una lista ó pila de producto, \textit{Product Backlog List} que contiene todos los requisitos conocidos. Estos requisitos pueden ser añadidos por el cliente, los programadores o incluso otras personas relacionadas con el proyecto. Se priorizan los requisitos y se estima el esfuerzo necesario para su desarrollo. El \textit{planning} también incluye la definición del equipo del proyecto, herramientas, valoración de riesgos y necesidades de formación. 
 
-En la fase de la arquitectura, se crea el diseño del sistema a alto nivel basándose en los requisitos actuales del Backlog. En el caso de una mejora a un sistema ya existente, se identifican los cambios necesarios en el backlog así como los problemas que puedan causar. En una reunión se revisa el diseño del plan para cumplir las propuestas. Además, se preparan los contenidos de las versiones que serán lanzadas. 
-
+\item En la fase de \textbf{arquitectura}, se crea el diseño del sistema a alto nivel basándose en los requisitos actuales del \textit{Backlog}. En el caso de una mejora a un sistema ya existente, se identifican los cambios necesarios, así como los problemas que puedan surgir.
+\end{itemize}
 \item \textbf{Game}
-Esta fase, la parte ágil de Scrum, se trata como una caja negra donde se espera lo imprevisible. Las diferentes variables técnicas y de entorno que pueden cambiar (calendario, calidad, requisitos, recursos, tecnologías, herramientas, e incluso métodos de desarrollo) se observan y controlan durante los sprints. En lugar de considerar estos puntos sólo al principio del proyecto, Scrum los controla constantemente para adaptarse a los cambios. En la fase de desarrollo, el sistema funciona en sprints o carreras cortas. Los sprints son ciclos iterativos donde se desarrollan o mejoran las funcionalidades para producir los nuevos incrementos. Cada sprint incluye las fases habituales de desarrollo del software: requisitos, análisis, diseño, desarrollo y entrega. La arquitectura y el diseño del sistema evolucionan durante el desarrollo del sprint. Un sprint dura de una semana a un mes. Puede haber de tres a ocho sprints, por ejemplo, antes de que el sistema esté listo para lanzarse. También puede haber más de un equipo que construya cada incremento.
+Esta fase se trata como una caja negra donde se espera  que ocurra lo imprevisible. Las diferentes variables técnicas y de entorno que pueden cambiar (calendario, calidad, requisitos, recursos, tecnologías, herramientas, e incluso métodos de desarrollo) se observan y controlan durante los \textit{sprints}. En lugar de considerar estos puntos sólo al principio del proyecto, \textit{Scrum} los controla constantemente para adaptarse a los cambios.
+
+Para la fase de desarrollo, el \textit{Scrum} funciona lo que denomina \textit{sprints}. Los \textit{sprints} son ciclos iterativos donde se desarrollan o mejoran las funcionalidades para producir los nuevos incrementos. Cada sprint incluye las fases habituales de desarrollo del software: requisitos, análisis, diseño, desarrollo y entrega. Los \textit{sprint} suelen tener una duración entre una semana a un mes.
 
 \item \textbf{Post-game}
 Contiene el cierre de la versión. Se entra en esta fase cuando se completan todos los requisitos. En este caso, no se incorpora ni mejora ninguna función. El sistema ya está listo para lanzarse (release) y ahora se integra, se pone a prueba y se documenta.
@@ -116,24 +119,26 @@ escribir código. Para este propósito, se utilizan las prácticas que se detall
 
 
 \subsection{Prácticas fundamentales}
-– Análisis de requisitos y Planning:
+\subsubsection{Análisis de requisitos y Planning}
 \begin{itemize}
 \item Se describen todas las funciones del sistema usando \textbf{historias}, descripciones breves de funciones que el cliente podrá ver.
 \item El desarrollo del software se realiza \textbf{semanalmente}. Hay una reunión al principio de cada semana donde el cliente elige, según prioridades y teniendo en consideración el tiempo necesario por los programadores, las historias a programar durante la semana.
 \item Evitar hacer promesas que no puedan cumplirse. 
 \end{itemize}
-– Equipo y Factores Humanos:
+
+\subsubsection{Equipo y Factores Humanos}
 \begin{itemize}
 \item Los equipos de desarrollo deben trabajar en un espacio sin divisiones para facilitar la comunicación.
 \item El equipo debe componerse de miembros con todas las habilidades necesarias para el proyecto, sentido de compañerismo y de ayuda mutua. 
 \item Programación por parejas. El código siempre está escrito por dos programadores en una única máquina.
 \end{itemize}
-– Diseño:
+
+\subsubsection{Diseño}
 \begin{itemize}
 \item Diseño Incremental. XP se opone a un gran diseño completo inicial (up-front). El equipo escribe código lo más pronto posible para obtener feedback y mejorar el sistema continuamente. El diseño es indispensable para obtener código bien hecho. La pregunta es cuándo diseñar. XP sugiere hacerlo incrementalmente durante la programación.
 \item Primero las pruebas. Antes de actualizar y añadir código, es necesario escribir las pruebas para verificarlo. 
 \end{itemize}
-– Programar y lanzar versiones:
+\subsubsection{Programar y lanzar versiones}
 \begin{itemize}
 \item El sistema debe construirse y todas las pruebas deben terminarse en diez minutos para ejecutarlo a menudo y obtener feedback. 
 \item Integración continua. Los programadores deben integrar los cambios cada dos horas para evitar problemas mayores al integrar grandes partes.
@@ -191,19 +196,17 @@ uso de técnicas de visión por computador, síntesis visual y auditiva y técni
 
 Los requisitos para el sistema serán proporcionados por Carlos González Morcillo, creador e investigador principal del proyecto; la cátedra Indra-UCLM y la fundación Adecco, como financiadores del proyecto y la asociación ASPRONA, que con su experiencia en la atención a personas con discapacidad, propondrán escenarios y funcionalidades que son de utilidad para este colectivo. 
 
-El usuario final del sistema serán personas que necesiten soporte en la gestión documental debido a cualquier tipo de discapacidad.
-
 \subsubsection{Características de los usuarios}
-El fin de esté proyecto es construir un sistema que permita la integración laboral a personas con discapacidad. El tipo de usuarios a los que está dirigido es por tanto personas dentro de un amplio espectro de discapacidades.
-Se debe proporcionar soporte a usuarios con discapacidades sensoriales (visuales y auditivas) e intelectuales.  
+Aunque el usuario final del sistema, será cualquier persona que necesite soporte en la gestión documental de documentos impresos, el fin de esté proyecto es construir un sistema que permita la integración laboral a personas con discapacidad. 
+
+El tipo de usuarios a los que está dirigido son, en primer lugar, personas que pueden presentar un amplio espectro de discapacidades. El sistema debe proporcionar soporte a usuarios con discapacidades sensoriales (visuales y auditivas) e intelectuales.  
 
 \subsubsection{Restricciones}
-
-Debido a las características del sistema se deben tener en cuenta las siguiente restricciones:
+Debido a los objetivos del sistema, se deben tener en cuenta las siguiente restricciones:
 \begin{itemize}
-\item\textbf{Funcional en dispositivos móviles} El prototipo final se construirá sobre un dispositivos con arquitectura ARM con limitaciones de tanto en capacidad de computo como memoria. El sistema deberá estar optimizado para este tipo de dispositivos, obteniendo una respuesta fluida y en tiempo real.   
+\item\textbf{Funcional en dispositivos móviles.} El prototipo final se construirá sobre un dispositivos con arquitectura ARM con limitaciones de tanto en capacidad de computo como memoria. El sistema deberá estar optimizado para este tipo de dispositivos, obteniendo una respuesta fluida y en tiempo real.   
   
-\item\textbf{Se debe basar en componentes de bajo coste} Para facilitar la implantación real en el entorno de trabajo, deberá funcionar con componentes de bajo coste, incorporando mecanismos de corrección de distorsión y registro 3D totalmente software.
+\item\textbf{Se debe basar en componentes de bajo coste.} Para facilitar la implantación real en el entorno de trabajo, deberá funcionar con componentes de bajo coste, incorporando mecanismos de corrección de distorsión y registro 3D totalmente software.
 \end{itemize}
 
 \subsubsection{Interfaces Hardware}
@@ -221,10 +224,10 @@ Debido a las características del sistema se deben tener en cuenta las siguiente
 \item RF-003: Sistema de calibrado de cámaras
 \item RF-004: Sistema de calibrado de proyectores
 \item RF-005: Configuración del sistema mediante argumentos por terminal
-\item RF-006: Captura de imágenes a distintas resoluciones
-\item RF-007: Utilización de un fichero de vídeo como fuente de entrada
-\item RF-008: Grabación de vídeo
-\item RF-009: Sistema de cálculo de homografías
+\item RF-006: Implementación de una interfaz natural de usuario
+\item RF-007: Control Gestual
+\item RF-008: Identificación rápida de documentos
+\item RF-006: Sistema de cálculo de homografías
 \end{itemize}
 
 \paragraph{Definidos por ASPRONA}
@@ -236,10 +239,10 @@ Debido a las características del sistema se deben tener en cuenta las siguiente
 \item RFa-005: Guiado para clasificación y archivado de facturas
 \item RFa-006: Entorno configurable por el usuario
 \end{itemize}
-\paragraph{Definidos por Indra/Adecco}
-\begin{itemize}
-\item RFi-001: Reconocimiento de Firmas
-\end{itemize}
+%\paragraph{Definidos por Indra/Adecco}
+%\begin{itemize}
+%\item RFi-001: Reconocimiento de Firmas
+%\end{itemize}
 \subsubsection{Requisitos no funcionales}
 
 \begin{itemize}
