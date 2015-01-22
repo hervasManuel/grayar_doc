@@ -128,38 +128,38 @@ A partir de la matriz de la cámara y el tamaño de la imagen capturada, la clas
 
 OpenGL asume que no existe distorsión en la cámara por lo que a la hora de calcular la matriz de proyección debemos tener en cuenta que los parámetros de la matriz de la cámara deben estar corregidos. De esta forma, se utilizaran dos instancias de la clase \texttt{Instrinsics}: \texttt{distortedIntrinsics} y \texttt{undistortedIntrinsics}. La primera instancia almacena los parámetros ``reales'' mientras que en \texttt{undistortedIntrinsics} se encuentran los parámetros corregidos mediante las funciones \texttt{cv::getOptimalNewCameraMatrix} y \texttt{cv::initUndistortRectifyMap}.
 
-\begin{listing}[
-  float=ht,
-  language = C++,
-  caption  = {Atributos de la clase Calibration},
-  label    = code:Calibration]
-  //Intrinsics
-  Intrinsics distortedIntrinsics;
-  Intrinsics undistortedIntrinsics;
-  cv::Mat distCoeffs;
-  
-  // Calibration parameters
-  vector<vector<cv::Point2f> > imagePoints;
-  vector<vector<cv::Point3f> > objectPoints;
-  float reprojectionError;
-  vector<float> perViewErrors;
-  vector<cv::Mat> boardRotations;
-  vector<cv::Mat> boardTranslations;
-
-  // Pattern Configuration
-  CalibrationPattern patternType;
-  cv::Size patternSize;
-  cv::Size addedImageSize;
-  cv::Size subpixelSize;
-  float squareSize;
- 
-  // Auxiliar calibration variables
-  cv::Mat grayMat;
-  bool fillFrame;
-  cv::Mat undistortBuffer;
-  cv::Mat undistortMapX, undistortMapY;
-  bool ready;
- \end{listing}
+%\begin{listing}[
+%  float=ht,
+%  language = C++,
+%  caption  = {Atributos de la clase Calibration},
+%  label    = code:Calibration]
+%  //Intrinsics
+%  Intrinsics distortedIntrinsics;
+%  Intrinsics undistortedIntrinsics;
+%  cv::Mat distCoeffs;
+%  
+%  // Calibration parameters
+%  vector<vector<cv::Point2f> > imagePoints;
+%  vector<vector<cv::Point3f> > objectPoints;
+%  float reprojectionError;
+%  vector<float> perViewErrors;
+%  vector<cv::Mat> boardRotations;
+%  vector<cv::Mat> boardTranslations;
+%
+%  // Pattern Configuration
+%  CalibrationPattern patternType;
+%  cv::Size patternSize;
+%  cv::Size addedImageSize;
+%  cv::Size subpixelSize;
+%  float squareSize;
+% 
+%  // Auxiliar calibration variables
+%  cv::Mat grayMat;
+%  bool fillFrame;
+%  cv::Mat undistortBuffer;
+%  cv::Mat undistortMapX, undistortMapY;
+%  bool ready;
+% \end{listing}
 
 Aunque el proceso de calibrado para la cámara y el proyector sigue el mismo enfoque, hay ciertas particularidades propias de cada dispositivo en el proceso de calibrado. La clase \texttt{Calibration} implementa toda la funcionalidad común, que es la mayoría, mientras que se han definido las clases \texttt{CameraCalibration} y \texttt{ProjectorCalibration} que heredan de \texttt{Calibration} y terminan de definir los procesos específicos.
 
@@ -167,34 +167,34 @@ Finalmente la clase \texttt{CameraProjectorCalibration} encapsula un objeto de  
 
 \texttt{CalibrationCore} es la encargada de inicializar la calibración de calibrado mediante la configuración establecida y define el proceso a realizar en cada una de las fases que lo compone.  bucle Update/draw
 
-La configuración del proceso:
-\begin{listing}[
-  float=ht,
-  language = C++,
-  caption  = {Configuración de la clase CalibrationCore},
-  label    = code:CalibCore]
-  // Threshold parameters
-  circleDetectionThreshold = 160;
+%La configuración del proceso:
+%\begin{listing}[
+%  float=ht,
+%  language = C++,
+%  caption  = {Configuración de la clase CalibrationCore},
+%  label    = code:CalibCore]
+%  // Threshold parameters
+%  circleDetectionThreshold = 160;
   
-  // Application
-  diffMinBetweenFrames = 4.0; 
-  timeMinBetweenCaptures = 2.0; 
+%  // Application
+%  diffMinBetweenFrames = 4.0; 
+%  timeMinBetweenCaptures = 2.0; 
   
-  //Boards parameters
-  numBoardsFinalCamera = 20;  
-  numBoardsFinalProjector = 20;
-  numBoardsBeforeCleaning = 3;  
-  numBoardsBeforeDynamicProjection = 5; 
-  maxReprojErrorCamera = 0.20;
-  maxReprojErrorProjectorStatic = 0.25;
-  maxReprojErrorProjectorDynamic = 0.43;
-
-  // Image Size
-  projectorFrame.create(cv::Size(800,600), CV_8UC1);
-  
-  // --- INITIAL MODE ---
-  setState(CAMERA); //CAMERA, PROJECTOR_STATIC, DEMO_AR
-\end{listing}
+%  //Boards parameters
+%  numBoardsFinalCamera = 20;  
+%  numBoardsFinalProjector = 20;
+%  numBoardsBeforeCleaning = 3;  
+%  numBoardsBeforeDynamicProjection = 5; 
+%  maxReprojErrorCamera = 0.20;
+%  maxReprojErrorProjectorStatic = 0.25;
+%  maxReprojErrorProjectorDynamic = 0.43;
+%
+%  // Image Size
+%  projectorFrame.create(cv::Size(800,600), CV_8UC1);
+%  
+%  // --- INITIAL MODE ---
+%  setState(CAMERA); //CAMERA, PROJECTOR_STATIC, DEMO_AR
+%\end{listing}
   
 \subsection{Calibración de la cámara}
 En esta primera fase el objetivo es obtener los parámetros intrínsecos de la cámara. De forma continua, el sistema realiza capturas de imagen. Durante este proceso, se debe mostrar a la cámara el patrón impreso en distintas posiciones y orientaciones. 
@@ -205,41 +205,41 @@ Para cada imagen capturada, se realiza el siguiente proceso:
 
 \item Se realiza una \textbf{búsqueda de las esquinas de los cuadrados del patrón de calibración} en la imagen. Para detectar las esquinas se utiliza la función \texttt{cv::findChessboardCorners}. A esta función se le debe proporcionar la imagen actual donde buscar el patrón, las dimensiones del patrón y un vector de \texttt{cv::Point2f} donde se almacenaran los puntos de la imagen de las esquinas detectadas. Adicionalmente, para mejorar esta detección se emplea \texttt{cv::cornerSubPix}, que se encargará de ubicar estas esquinas en medidas de subpíxeles. Si se ha encontrado el tablero de ajedrez en la imagen, el vector de puntos devuelto se guardan en el vector \texttt{imagePoints} junto con las extracciones de los frames anteriores.  
 
-\begin{listing}[
-  float=ht,
-  language = C++,
-  caption  = {Detección de las esquinas del patrón \emph{Chessboard}},
-  label    = code:findChessBoard]
-  cout << "Detecting chessboard ...";
-  found = cv::findChessboardCorners(currentFrame, patternSize, pointBuf, chessFlags);
-
-  // improve corner accuracy
-  if(found) {
-    if(currentFrame.type() != CV_8UC1) 
-    cv::cvtColor(currentFrame, grayMat, CV_RGB2GRAY);
-    else 
-    grayMat = currentFrame;
-    
-    if(refine)
-    // the 11x11 dictates the smallest image space square size allowed
-    // in other words, if your smallest square is 11x11 pixels, then set this to 11x11
-    cv::cornerSubPix(grayMat, pointBuf, subpixelSize,  cv::Size(-1,-1), cv::TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1 ));
-  }
-  
-  imagePoints.push_back(pointBuf);
-\end{listing}
+%\begin{listing}[
+%  float=ht,
+%  language = C++,
+%  caption  = {Detección de las esquinas del patrón \emph{Chessboard}},
+%  label    = code:findChessBoard]
+%  cout << "Detecting chessboard ...";
+%  found = cv::findChessboardCorners(currentFrame, patternSize, pointBuf, chessFlags);
+%
+%  // improve corner accuracy
+%  if(found) {
+%    if(currentFrame.type() != CV_8UC1) 
+%    cv::cvtColor(currentFrame, grayMat, CV_RGB2GRAY);
+%    else 
+%    grayMat = currentFrame;
+%    
+%    if(refine)
+%    // the 11x11 dictates the smallest image space square size allowed
+%    // in other words, if your smallest square is 11x11 pixels, then set this to 11x11
+%   cv::cornerSubPix(grayMat, pointBuf, subpixelSize,  cv::Size(-1,-1), cv::TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1 ));
+% }
+%  
+%  imagePoints.push_back(pointBuf);
+%\end{listing}
 
 \item \textbf{Se generan los puntos de las esquinas del patrón en el sistema de coordenadas globales} \texttt{(objectPoints)} correspondientes a la imagen actual, en funcion del tipo, dimensiones y el valor de la medida real del lado del cuadrado del patrón que se ha impreso a través de la función \texttt{updateObjectPoints}.
-\begin{listing}[
-  float=ht,
-  language = C++,
-  caption  = {Función \texttt{Calibration::updateObjectPoints()}},
-  label    = code:updateObjectPoints]
-  void Calibration::updateObjectPoints() {
-    vector<cv::Point3f> points = createObjectPoints(patternSize, squareSize, patternType);
-    objectPoints.resize(imagePoints.size(), points);
-  }
-\end{listing}
+%\begin{listing}[
+%  float=ht,
+%  language = C++,
+%  caption  = {Función \texttt{Calibration::updateObjectPoints()}},
+%  label    = code:updateObjectPoints]
+%  void Calibration::updateObjectPoints() {
+%    vector<cv::Point3f> points = createObjectPoints(patternSize, squareSize, patternType);
+%    objectPoints.resize(imagePoints.size(), points);
+%  }
+%\end{listing}
 
 \item Para \textbf{realizar la asociación entre los puntos de la imagen y los del objeto} se utiliza la funcion \texttt{cv::calibrateCamera} que estima los parámetros intrínsecos y extrínsecos de la cámara para cada una de las vistas. Recibe los \texttt{objectPoints} y los \texttt{imagePoints } de todas las capturas que llevamos realizadas y el tamaño de la imagen capturada \texttt{(addedImageSize)}, y devuelve la matriz de la cámara \texttt{(cameraMatrix)}, los coeficientes de distorsión \texttt{(distCoeffs)} y un vector con los vectores de rotación \texttt{boardRotations} y traslación \texttt{boardTranslations} que se ha estimado para cada vista del patrón. Es decir, cada rotación del vector k-ésimo junto con el vector correspondiente k-ésimo de la traslación, convierte los puntos del patrón de calibración desde el sistema de coordenadas globales (en el que se especifican los puntos del objeto) al sistema de referencia de la cámara en la vista k-ésima. La función devuelve también el error de reproyección cometido para cada una de las vistas.
 
@@ -261,60 +261,57 @@ Para cada imagen capturada, se realiza el siguiente proceso:
   
 \item Cada cierto número de iteraciones \textbf{se eliminan las calibraciones que tienen un error de reproyección mayor que el umbral definido} en la variable \texttt{maxReprojErrorCamera}
       
-\begin{listing}[
-  float=ht,
-  language = C++,
-  caption  = {Limpieza de calibraciones},
-  label    = code:clean]  
-void Calibration::clean(float maxReprojErrorCamera) {
-  cout << "Cleaning ...";
-   int removed = 0;
-   for(int i = size() - 1; i >= 0; i--) {
-     if(getReprojectionError(i) > maxReprojErrorCamera) {
-       objectPoints.erase(objectPoints.begin() + i);
-       imagePoints.erase(imagePoints.begin() + i);
-       removed++;
-     }
-   }
-   cout << "Done!" << endl;
-   if(size() > 0 && removed > 0) 
-   calibrate();
-}
-\end{listing}
- 
-
-
+%\begin{listing}[
+%  float=ht,
+%  language = C++,
+%  caption  = {Limpieza de calibraciones},
+%  label    = code:clean]  
+%void Calibration::clean(float maxReprojErrorCamera) {
+%  cout << "Cleaning ...";
+%   int removed = 0;
+%   for(int i = size() - 1; i >= 0; i--) {
+%     if(getReprojectionError(i) > maxReprojErrorCamera) {
+%       objectPoints.erase(objectPoints.begin() + i);
+%       imagePoints.erase(imagePoints.begin() + i);
+%       removed++;
+%     }
+%   }
+%   cout << "Done!" << endl;
+%   if(size() > 0 && removed > 0) 
+%   calibrate();
+%}
+%\end{listing}
 \end{itemize}
       
 Alcanzado el número de calibraciones correctas por debajo del error definido, se procede al \textbf{almacenamiento de los últimos parámetros calculados} en un fichero de tipo YAML. Para ello se usa un objeto de tipo \texttt{cv::FileStorage} para escribir el fichero \texttt{calibrationCamera.yml} con la estructura y formato definido.
 
-\begin{listing}[
-  float=ht,
-  language = C++,
-  caption  = {Almacenamiento de los parámetros intrínsecos en un fichero YAML},
-  label    = code:FileStorage]
-  void Calibration::save(string filename, bool absolute) const {
-    if(!ready){
-      cout << "Calibration::save() failed, because your calibration isn't ready yet!"<< endl;
-    }
-    cv::FileStorage fs(filename, cv::FileStorage::WRITE);
-    cv::Size imageSize = distortedIntrinsics.getImageSize();
-    cv::Size sensorSize = distortedIntrinsics.getSensorSize();
-    cv::Mat cameraMatrix = distortedIntrinsics.getCameraMatrix();
-    fs << "cameraMatrix" << cameraMatrix;
-    fs << "imageSize_width" << imageSize.width;
-    fs << "imageSize_height" << imageSize.height;
-    fs << "sensorSize_width" << sensorSize.width;
-    fs << "sensorSize_height" << sensorSize.height;
-    fs << "distCoeffs" << distCoeffs;
-    fs << "reprojectionError" << reprojectionError;
-    fs << "features" << "[";
-    for(int i = 0; i < (int)imagePoints.size(); i++) {
-      fs << "[" << imagePoints[i] << "]";
-    }
-    fs << "]";
-  }
-\end{listing}
+%\begin{listing}[
+%  float=ht,
+%  language = C++,
+%  caption  = {Almacenamiento de los parámetros intrínsecos en un fichero YAML},
+%  label    = code:FileStorage]
+%  void Calibration::save(string filename, bool absolute) const {
+%    if(!ready){
+%      cout << "Calibration::save() failed, because your calibration isn't ready yet!"<< endl;
+%    }
+%    cv::FileStorage fs(filename, cv::FileStorage::WRITE);
+%    cv::Size imageSize = distortedIntrinsics.getImageSize();
+%    cv::Size sensorSize = distortedIntrinsics.getSensorSize();
+%    cv::Mat cameraMatrix = distortedIntrinsics.getCameraMatrix();
+%    fs << "cameraMatrix" << cameraMatrix;
+%    fs << "imageSize_width" << imageSize.width;
+%    fs << "imageSize_height" << imageSize.height;
+%    fs << "sensorSize_width" << sensorSize.width;
+%    fs << "sensorSize_height" << sensorSize.height;
+%    fs << "distCoeffs" << distCoeffs;
+%    fs << "reprojectionError" << reprojectionError;
+%    fs << "features" << "[";
+%    for(int i = 0; i < (int)imagePoints.size(); i++) {
+%      fs << "[" << imagePoints[i] << "]";
+%    }
+%    fs << "]";
+%  }
+%\end{listing}
 
 Una vez finalizada la calibración de la cámara, el sistema continua para obtener los parámetros intrínsecos del proyector.
 
@@ -325,30 +322,30 @@ En esta fase, el sistema proyecta continuamente un patrón de círculos asimétr
 
 En primer lugar, Se carga el fichero con los parámetros intrínsecos de la cámara y se establecen los puntos del patrón asimétrico en la imagen que se va a proyectar \texttt{(imagePoints)} y en el sistema de referencia global \texttt{(objectPoints)} utilizando parámetros y distancias fijas.  
 
-\begin{listing}[
-  float=ht,
-  language = C++,
-  caption  = {Inicialización de la fase de calibrado del proyector},
-  label    = code:ProjectorStatic]
-calibrationCamera.load("calibrationCamera.yml",false);
-camProjCalib.resetBoards();
-calibrationCamera.setupCandidateObjectPoints();
-calibrationProjector.setStaticCandidateImagePoints();
-\end{listing}
+%\begin{listing}[
+%  float=ht,
+%  language = C++,
+%  caption  = {Inicialización de la fase de calibrado del proyector},
+%  label    = code:ProjectorStatic]
+%calibrationCamera.load("calibrationCamera.yml",false);
+%camProjCalib.resetBoards();
+%calibrationCamera.setupCandidateObjectPoints();
+%calibrationProjector.setStaticCandidateImagePoints();
+%\end{listing}
 
 Se busca el patrón asimétrico en la imagen capturada, para ello se utiliza la funcion \texttt{cv::findCirclesGrid} que intenta determinar si la imagen de entrada contiene una cuadrícula de círculos. Si es así, la función localiza los centros de los círculos. Para la detección de los círculos esta función se apoya en un detector de regiones \emph{(Blob detector)} que configuramos mediante los siguiente parámetros para adaptar la búsqueda en función del tamaño de la imagen y el tamaño de las regiones que se van a detectar.
 
-\begin{listing}[
-  float=ht,
-  language = C++,
-  caption  = {Parametrización del \emph{Blob Detector}},
-  label    = code:BlobDetector]
-cv::SimpleBlobDetector::Params params;
-params.minArea = 10;
-params.minDistBetweenBlobs = 5;
-cv::Ptr<cv::FeatureDetector> blobDetector = new cv::SimpleBlobDetector(params);
-bool bProjectedPatternFound = cv::findCirclesGrid(processedImg, calibrationProjector.getPatternSize(), circlesImgPts, cv::CALIB_CB_ASYMMETRIC_GRID | cv::CALIB_CB_CLUSTERING, blobDetector);
-\end{listing}
+%\begin{listing}[
+%  float=ht,
+%  language = C++,
+%  caption  = {Parametrización del \emph{Blob Detector}},
+%  label    = code:BlobDetector]
+%cv::SimpleBlobDetector::Params params;
+%params.minArea = 10;
+%params.minDistBetweenBlobs = 5;
+%cv::Ptr<cv::FeatureDetector> blobDetector = new cv::SimpleBlobDetector(params);
+%bool bProjectedPatternFound = cv::findCirclesGrid(processedImg, calibrationProjector.getPatternSize(), circlesImgPts, cv::CALIB_CB_ASYMMETRIC_GRID | cv::CALIB_CB_CLUSTERING, blobDetector);
+%\end{listing}
 
 Se aplica una binarización de la imagen de entrada que permite la segmentación de los círculos proyectados y realizar una separación del patrón de tablero de ajedrez.
 
