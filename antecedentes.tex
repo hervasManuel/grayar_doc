@@ -462,9 +462,9 @@ En otros casos, el texto aparecerá sobre superficies curvas, como en los casos 
 \subsection{Downsampling}
 Otra técnica que se utiliza es la de \emph{downsampling} para reducir el número total de píxeles de la imagen. Lo ideal sería que la relación de aspecto de la imagen original se conserve siempre, para ello el número de píxeles se reduce a la mitad en cada iteración. Cada \emph{downsampling} que se realice sobre una imagen lleva como consecuencia la pérdida de datos que reducirá la precisión del \textit{tracking} y podría influir en la robustez. A la hora de diseñar el sistema se debe decidir si es aceptable una pequeña pérdida de precisión o emplear un enfoque multiresolución, en el que se realiza el \textit{tracking} completo por primera vez en una imagen reducida y los resultados se refinan con versiones de mayor resolución de la imagen \cite{Klein}.
 
-\begin{figure}[h!]
+\begin{figure}
   \centering
-  \includegraphics[width=0.8\textwidth]{downsampling.png}
+  \includegraphics[width=0.9\textwidth]{downsampling.png}
   \caption{Cálculo de las pirámides de Gauss y sus inversas (Laplace). (Bradski y Kaehler)}
 
   \label{fig:pirámides}
@@ -474,7 +474,7 @@ La teoría sobre los diferentes niveles de resolución está presentado por Adel
 
 La figura \ref{fig:pirámides} muestra los pasos involucrados en el cálculo de una pirámide de imágenes y la pirámide laplaciana, que contiene toda la información perdida en cada paso. Si la pirámide de la imagen y la pirámide laplaciana están disponibles, la imagen original puede ser perfectamente reconstruida. En cada nivel de la pirámide, la imagen contiene cuatro veces menos píxeles que la capa inferior (Figura \ref{fig:pirescale}) lo que afectará directamente al tiempo total de procesamiento. 
 
-\begin{figure}[h]
+\begin{figure}
   \centering
   \includegraphics[width=0.6\textwidth]{pyramid.png}
   \caption{Pirámide multiresolución. (journal.code4lib.org)}
