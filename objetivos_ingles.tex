@@ -1,53 +1,45 @@
-\chapter{Objetivos}
+\chapter{Objectives}
 \label{chap:objetivos_eng}
 
-\drop{H}{oy} en día, la mayor parte de la producción de información en forma de documentos se realiza por medio de herramientas informáticas. Actualmente, en la administración pública se está extendiendo el uso de la firma electrónica, que garantiza la autenticidad del documento digital, pero todavía hay un gran número de personas que no lo utilizan. Es un caso muy habitual que muchos formularios, aún encontrándose en formato digital, se presenten los documentos sobre un soporte físico. %En estos casos para conseguir una gestión eficaz y ágil, es necesario digitalizar previamente estos documentos para incorporarlos al sistema que tenga implementado la organización.
+\drop{N}{owadays}, the largest portion of the information production of documents is carried out using IT tools. Currently, the use of the electronic signature, what guarantees the authenticity of the digital document, is being spread in the public administration, but there is still a large number of people who don't use this procedure. It is very common that in many forms, even being in digital format, documents are presented in a physical medium.
+
 \begin{figure}[h!]
   \begin{center}
       \includegraphics[width=0.85\textwidth]{argos.png}
-      \caption{Esquema de componentes funcionales de ARgos}
+      \caption{Functional components of \textit{ARgos}}
       \label{fig:diagrama_argos_eng}
     \end{center}
 \end{figure}
-   
-Según lo anterior, sería deseable disponer de una herramienta que permitiera el tratamiento directo sobre estos documentos «físicos». \textit{ARgos} es, un proyecto de la Cátedra INDRA-UCLM que pretende la construcción de un sistema de ayuda a la gestión de documentos impresos mediante el uso de técnicas de visión por computador, síntesis visual y auditiva y técnicas de realidad aumentada. En la figura \ref{fig:diagrama_argos_eng} se recogen los componentes funcionales del sistema.
+
+According to the above, it would be desirable to have a tool that could be able to manage these \textit{«physical»} documents directly. \textit{ARgos} is an INDRA-UCLM Chairs Project that expects the construction of a support system for the management of printed documents using a computer vision system, visual and hearing synthesis and augmented reality techniques. The functional components of the system are shown in the figure \ref{fig:diagrama_argos_eng}.
+
+GrayAR, the proposed end-of-degree project, will discuss the development of the recording, tracking and registration systems and the identification of documents that belong to the \textit{ARgos Project}, whereas the representation part, the delegation of tasks and scripting will be developed by Santiago Sánchez Sobrino in his final year work \textit{«BelfegAR: Platform for the 3D graphic display and delegation of tasks in documental management with augmented reality»}. The specific objectives to be developed are summarised below.
 
 
-%\subsection{Objetivos específicos}
-GrayAR, el Trabajo Fin de Grado propuesto, abordará el desarrollo de los sistemas de captura, tracking y registro, e identificación de documentos dentro del \textit{Proyecto ARgos}, mientras que la parte de representación, delegación de tareas y scripting será realizada por Santiago Sánchez Sobrino en su TFG \textit{«BelfegAR: Plataforma para el despliegue gráfico 3D y delegación de tareas en gestión documental con realidad aumentada»}. Los objetivos específicos a desarrollar se resumen a continuación.   
+\section{General/Overall objective}
+The system uses a low-cost camera as an input in the vision-by-computer module and a portable projection screen to show the visual information, directly aligned with the document of the physical world. It will respond to the requests done by the user in the physical space, expanding information related to the desired action.
 
-\section{Objetivo general}
-El sistema emplea una cámara de bajo coste como entrada al módulo de visión por computador y un cañón de proyección portátil para mostrar información visual, directamente alineada sobre el documento del mundo físico. Responderá a las peticiones que el usuario realice sobre el espacio físico, ampliando información relacionada que sea relevante a la acción que quiera realizar.
+The processing unit will take the images taken by the camera as an input and it will generate the output for the projection screen. This output must take into account the relative 3D position between the document and the projection screen to have a perfect register of the visual amplification. The document will be able to move in a specific region of the desktop and the amplification must be perfectly aligned in the physical area. A computer on Raspberry Pi board with ARM architecture will be used. 
 
-La unidad de proceso se encargará de tomar como entrada las imágenes obtenidas por la cámara y generar la salida para el cañón de proyección. Esta salida deberá tener en cuenta el posicionamiento 3D relativo entre el documento y el cañón para que el registro de la amplificación visual sea perfecto. El documento podrá moverse dentro de una región del escritorio y la amplificación deberá quedar perfectamente alineada en el espacio físico. Se utilizará un computador en placa Raspberry Pi con arquitectura \acs{ARM}.
+\section{Specific objectives}
+\subsection{Image capture and processing}
+We must provide the system with a module to obtain the images and apply a previous process, as it can be the scaling process, thresholding process, edge detection or characteristics detection  \cite{Ortiz} \cite{Bay}. Another task to be done is the calculation of the distortion due to the perspective projection using the extrinsic and intrinsic parameters of the camera. 
 
-\section{Objetivos específicos}
-
-\subsection{Captura y preprocesado de imágenes}
-Deberemos proveer al sistema de un módulo para obtener las imágenes y aplicarle el procesado previo necesario, como puede ser el escalado, umbralización, detección de bordes o detección de características \cite{Ortiz} \cite{Bay}. Otra tarea a realizar es calcular la distorsión debida a la proyección en perspectiva mediante los parámetros extrínsecos e intrínsecos de la cámara.
-
-\subsection{Sistema de identificación de documentos}
-GrayAR contará con un sistema de identificación rápida empleando algoritmos de recuperación de imágenes y comparará el documento que está siendo analizado con una base de datos de documentos conocidos por el sistema.
-
-\subsection{Implementación de técnicas de tracking y registro}
-Para el correcto alineado de la información mostrada, el módulo de tracking y registro contará con funciones de cálculo de \emph{pose} (rotación y translación del objeto en el espacio 3D) en tiempo real y algoritmos para la estimación y descripción del movimiento como \textit{Optical Flow} \cite{LKanade}.   
-
-\subsection{Utilización de paradigmas de interacción natural con el usuario  (NUI)}
-El usuario podrá interactuar directamente en el espacio físico sin utilizar sistemas de mando o dispositivos de entrada tradicionales como sería un ratón, teclado, etc. siendo sustituidos por funciones más naturales como el uso de movimientos gestuales con las manos.
-
-\subsection{Facilitar la gestión documental a personas con necesidades especiales mediante amplificación de información} 
-Contará con diferentes modos de amplificación de la información del mundo real. Por un lado, la información visual se amplificará empleando el cañón de proyección que mostrará información relevante al contexto directamente sobre el espacio del papel, así como otras fuentes de información visual adicionales. 
-
-\subsection{Se debe basar en componentes de bajo coste}
-Para facilitar la implantación real en el entorno de trabajo, deberá funcionar con componentes de bajo coste, incorporando mecanismos de corrección de distorsión y registro 3D totalmente software.
-
-\subsection{Dispositivo multiplataforma (hardware y software)}
-El desarrollo de GrayAR se realizará siguiendo estándares, tecnologías y bibliotecas libres multiplataforma, con el objetivo de que pueda ser utilizado en el mayor número de plataformas posibles tanto hardware (x86, x86-64 y ARM) como software (GNU/Linux, Windows y Mac).
+\subsection{System of document identification}
+GrayAR will have a rapid identification system which will use image-retrieval algorithms and it will compare the document which is being analysed with a document database, known for the system. 
 
 
-% Local Variables:
-%  coding: utf-8
-%  mode: latex
-%  mode: flyspell
-%  ispell-local-dictionary: "castellano8"
-% End:
+\subsection{Implementation of tracking and registration techniques}
+The tracking and registration module will have real-time pose calculation features (rotation and translation of the object in the 3D space) and algorithms to estimate and describe the movement, such as \textit{Optical Flow} \cite{LKanade}, all this to get the proper alignment of the displayed information.
+
+\subsection{Use of Natural User Interface (NUI) paradigms}
+The user will directly interact with the physical space without using control systems or traditional input devices such as mouse, keyboard, etc. These devices will be replaced by natural functions such as simple gestures of the user’s hands. 
+
+\subsection{Facilitation of document management for people with special needs using amplification of the information}
+GrayAR will have different ways to amplify the real world information. On the one hand, the visual information will be augmented using a projection screen that will show relevant information directly on the paper space, as well as other additional sources of visual information. 
+
+\subsection{It has to be based on low-cost components}
+GrayAR must operate with low-cost components to facilitate the deployment at scale, incorporating totally-software correction and 3D registration mechanisms. 
+
+\subsection{Multi-platform device (hardware and software)}
+The GrayAR development will be made following multi-platform free standards, technologies and libraries, with the aim of using it in the largest number of possible platforms, hardware (x86, x86-64 y ARM) as well as software (GNU/Linux, Windows y Mac).

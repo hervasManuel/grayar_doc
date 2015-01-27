@@ -65,7 +65,7 @@ El coste obtenido es meramente informativo, ya que a la hora de calcular un pres
     \hline
     Altavoz WaveShare LM386 & 1 & \EUR{10} \\
     \hline
-    Webcam Logitech HD C270 & 1 & \EUR{26} \\
+    Webcam Logitech HD C525 & 1 & \EUR{26} \\
     \hline
     \textbf{Total} & & \EUR{46.089,7} \\
     \hline
@@ -86,11 +86,13 @@ La elección de la cámara era un factor muy importante para garantizar la viabi
 
 En principio se utilizaron cámaras USB, pero la utilización de drivers \textit{video4linux} para la captura de las ímagenes, no tenia el rendimiento esperado, presentado las imágenes con \textit{lag} de hasta 2 segundos.
 
+La elección final, fue la utilización de la Raspberry Pi Camera Board, que ofrece una tasa de 29,5 FPS hasta una resolución de 1280x960 a escala de grises y 14 FPS con esa misma resolución, pero esta vez en el espacio de color BGR (propio de OpenCV).
+
 En la figura \ref{fig:camaras_chart} se muestran las medidas realizadas, en frames por segundo (FPS), del proceso de captura y representación en vivo de los fotogramas capturados. No se realizar ningún tratamiento adicional a la imagen.
 
 \begin{figure}
   \begin{center}
-    \includegraphics[width=1.0\textwidth]{camaras_chart.png}
+    \includegraphics[width=1.0\textwidth]{camaras-chart.png}
     \caption{\textit{Profiling} de cámaras}
     \label{fig:camaras_chart}
   \end{center}
@@ -117,7 +119,7 @@ En la figura \ref{fig:historic_chart} se muestran diferentes valores de la compo
 
 \begin{figure}
   \begin{center}
-    \includegraphics[width=1.0\textwidth]{camaras_chart.png}
+    \includegraphics[width=1.0\textwidth]{trayectoria_chart.png}
     \caption{Comparativa de la trayectoria (eje $X$) de una hoja de papel detectada a largo de 40 frames}
     \label{fig:historic_chart}
   \end{center}
@@ -126,11 +128,11 @@ En la figura \ref{fig:historic_chart} se muestran diferentes valores de la compo
 \subsection{Rendimiento general del sistema en cada una de las iteraciones}
 En cada iteración el software crecía en funcionalidades y complejidad. La Raspberry Pi tenía que soportar, cada vez, una carga superior. Además, se le debe añadir las tareas de \textit{Belfegar}, que tambien crecía iteración tras iteración.
 
-En la figura \ref{fig:iteration_chart} se muestra el rendimiento medido del sistema, en FPS, al finalizar cada \textit{sprint}. A partir de la iteración X, se puede observar el aumento experimentado por el sistema, y que corresponde con la migración de los subsistemas más complejos al servidor.
+En la figura \ref{fig:iteration_chart} se muestra el rendimiento medido del sistema, en FPS, al finalizar cada \textit{sprint}. Se puede observar los malos resultados de la primera iteración al utilizar una cámara web y la recuperación experimentado en el sistema a partir de la iteración 5, que corresponde con la migración de los subsistemas más complejos al servidor.
 
 \begin{figure}
  \begin{center}
-    \includegraphics[width=1.0\textwidth]{camaras_chart.png}
+    \includegraphics[width=1.0\textwidth]{rendimiento_grayar.png}
     \caption{Tasa de frames del sistema al finalizar cada una de las iteraciones}
     \label{fig:iteration_chart}
   \end{center}
@@ -143,7 +145,7 @@ Para obtener un conjunto compacto y reducido, se acopla la Raspberry Pi sobre el
 
 \begin{figure}
   \begin{center}
-    \includegraphics[width=0.98\textwidth]{ARgos_hardware.png}
+    \includegraphics[width=1.0\textwidth]{ARgos_hardware.png}
     \caption{Hardware de \textit{ARgos}.}
     \label{fig:ARgos_hardware}
   \end{center}
@@ -153,7 +155,7 @@ Finalmente, el sistema se monta sobre un trípode y se dirige en dirección a la
 
 \begin{figure}
   \begin{center}
-    \includegraphics[width=0.98\textwidth]{argos_user.png}
+    \includegraphics[width=1.0\textwidth]{argos_user.png}
     \caption{Ubicación del prototipo en un escenario real}
     \label{fig:ARgos_user}
   \end{center}
@@ -176,7 +178,7 @@ Para el cliente (y detallando el registro correspondiente a \textit{ARgos}), el 
 
 \begin{figure}[!h]
   \begin{center}
-    \includegraphics[width=1.0\textwidth]{Client_init.png}
+    \includegraphics[width=0.92\textwidth]{Client_init.png}
     \caption{Inicialización del cliente.}
     \label{fig:Client_init}
   \end{center}
@@ -184,7 +186,7 @@ Para el cliente (y detallando el registro correspondiente a \textit{ARgos}), el 
 
 \begin{figure}[!h]
   \begin{center}
-    \includegraphics[width=1.0\textwidth]{Server_init.png}
+    \includegraphics[width=0.92\textwidth]{Server_init.png}
     \caption{Inicialización del servidor.}
     \label{fig:Server_init}
   \end{center}
@@ -194,7 +196,7 @@ Una vez arrancado el sistema, el proyector muestra una imagen con información s
 
 \begin{figure}
   \begin{center}
-    \includegraphics[width=0.9\textwidth]{ARgos_intro.png}
+    \includegraphics[width=0.92\textwidth]{ARgos_intro.png}
     \caption{Arranque de \textit{ARgos}.}
     \label{fig:ARgos_intro}
   \end{center}
@@ -205,7 +207,7 @@ Al finalizar la introducción, el sistema avanza hacia el próximo estado entran
 
 \begin{figure}
   \begin{center}
-    \includegraphics[width=0.9\textwidth]{ARgos_waiting.png}
+    \includegraphics[width=0.92\textwidth]{ARgos_waiting.png}
     \caption{\textit{ARgos} esperando documentos.}
     \label{fig:ARgos_waiting}
   \end{center}
@@ -215,7 +217,7 @@ A partir de este momento, el usuario puede empezar a colocar los documentos sobr
 
 \begin{figure}
   \begin{center}
-    \includegraphics[width=0.9\textwidth]{ARgos_facture1.png}
+    \includegraphics[width=0.92\textwidth]{ARgos_facture1.png}
     \caption{Primer documento detectado y componentes gráficos desplegados.}
     \label{fig:ARgos_facture1}
   \end{center}
@@ -225,7 +227,7 @@ Después, el usuario coloca un segundo documento. Para este caso, el sistema ren
 
 \begin{figure}
   \begin{center}
-    \includegraphics[width=0.9\textwidth]{ARgos_facture2.png}
+    \includegraphics[width=0.92\textwidth]{ARgos_facture2.png}
     \caption{Segundo documento detectado y componentes gráficos desplegados.}
     \label{fig:ARgos_facture2}
   \end{center}
@@ -233,7 +235,7 @@ Después, el usuario coloca un segundo documento. Para este caso, el sistema ren
 
 \begin{figure}
   \begin{center}
-    \includegraphics[width=0.9\textwidth]{ARgos_facture2_1.png}
+    \includegraphics[width=0.92\textwidth]{ARgos_facture2_1.png}
     \caption{Información mostrada al pulsar un botón de interacción.}
     \label{fig:ARgos_facture2_1}
   \end{center}
@@ -245,7 +247,7 @@ La Figura~\ref{fig:ARgos_videostream2} muestra como se han empezado a recibir fo
 
 \begin{figure}
   \begin{center}
-    \includegraphics[width=0.9\textwidth]{pulsacion.png}
+    \includegraphics[width=0.92\textwidth]{pulsacion.png}
     \caption{Tercer documento detectado e interacción con los botones virtuales.}
     \label{fig:ARgos_facture3}
   \end{center}
@@ -253,18 +255,18 @@ La Figura~\ref{fig:ARgos_videostream2} muestra como se han empezado a recibir fo
 
 \begin{figure}
   \begin{center}
-    \includegraphics[width=0.9\textwidth]{ARgos_videostream2.png}
+    \includegraphics[width=0.92\textwidth]{ARgos_videostream2.png}
     \caption{Videollamada posicionada y alineada sobre la superficie del documento.}
     \label{fig:ARgos_videostream2}
   \end{center}
 \end{figure}
 
 Durante toda la ejecución del sistema se realiza un registro de los eventos ocurridos. La Figura~\ref{fig:Client_loop} y la Figura~\ref{fig:Server_listening} muestran respectivamente los registros de eventos del cliente y
-del servidor mientras se ejecuta el bucle principal del sistema. En ellos se puede apreciar las matrices de transformación de cada documento detectado o la comunicación realizada entre cliente y servidor.
+del servidor mientras se ejecuta el bucle principal del sistema. En ellos, se puede apreciar las matrices de transformación de cada documento detectado o la comunicación realizada entre cliente y servidor.
 
 \begin{figure}
   \begin{center}
-    \includegraphics[width=1.0\textwidth]{Client_loop.png}
+    \includegraphics[width=0.92\textwidth]{Client_loop.png}
     \caption{Registro de eventos del cliente mientras se ejecuta el bucle principal del sistema.}
     \label{fig:Client_loop}
   \end{center}
@@ -272,7 +274,7 @@ del servidor mientras se ejecuta el bucle principal del sistema. En ellos se pue
 
 \begin{figure}
   \begin{center}
-    \includegraphics[width=1.0\textwidth]{Server_listening.png}
+    \includegraphics[width=0.92\textwidth]{Server_listening.png}
     \caption{Registro de eventos del servidor mientras se ejecuta el bucle principal del sistema.}
     \label{fig:Server_listening}
   \end{center}
