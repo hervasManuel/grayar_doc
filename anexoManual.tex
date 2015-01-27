@@ -1,12 +1,12 @@
 \chapter{Manual de usuario}
 \label{chap:anexo_manual}
 
-El presente anexo constituye un manual de usuario, que abarca desde la instalación del sistema hasta
-su uso.
+El presente anexo constituye un manual de usuario, incluye la instalación del sistema con sus dependencias, hasta
+su configuración inicial y puesta en marcha.
 
 \section{Instalación del cliente}
 
-Suponiendo que contamos con una Raspberry Pi con la distribución Raspbian correctamente instalada,
+Suponiendo que contamos con una Raspberry Pi con la distribución \textit{Raspbian} correctamente instalada,
 la instalación de la aplicación cliente se divide en dos fases; instalación de dependencias y
 compilación del sistema.
 
@@ -135,7 +135,7 @@ $ make
 
 \section{Guía de uso}
 
-En este apartado, se introduce el funcionamiento del sistema de tal forma que sirva de guía al
+En este apartado, se introduce el funcionamiento del sistema de tal forma que sirva de guía rápida al
 usuario.
 
 \subsection{Instalación de recursos}
@@ -156,8 +156,8 @@ existentes:
 \subsection{Calibración del sistema}
 
 El proceso de calibrado del sistema se ha creado como una utilidad independiente del sistema
-principal de ARgos. Una vez calibrado el sistema, la aplicación proporciona los ficheros XML, con
-los parámetros intrínsecos y extrínsecos, que necesita ARgos para el calculo del registro.
+principal de \textit{ARgos}. Una vez calibrado el sistema, la aplicación proporciona los ficheros XML, con
+los parámetros intrínsecos y extrínsecos, que necesita \textit{ARgos} para el calculo del registro.
 
 \subsection{Descripción de documentos}
 
@@ -183,9 +183,6 @@ en la carpeta \texttt{data} del servidor y presenta una estructura tal que:
     <paper id="1" description="Sinovo"
       scriptFileName="SinovoScript.ars"
       descriptorFileName="sinovo-.jpg" />
-    <paper id="2" description="Active"
-      scriptFileName="ActiveScript.ars"
-      descriptorFileName="active-.jpg" />
   </argos_papers>
   <output_display type="projector" />
 </config>

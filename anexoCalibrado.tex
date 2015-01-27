@@ -1,92 +1,43 @@
-\chapter{Manual de calibración}
+\chapter{Manual de \textit{calibrationToolBox}}
 
-El proceso de calibrado del sistema se ha creado como una utilidad independiente del sistema principal de ARgos. Una vez calibrado el sistema, la aplicación proporciona los ficheros XML, con los parámetros intrínsecos y extrínsecos, que necesita ARgos para el calculo del registro.
+El proceso de calibrado del sistema se ha creado como una utilidad independiente del sistema principal de \textit{ARgos}. Una vez calibrado, la aplicación proporciona los ficheros YAML, con los parámetros intrínsecos y extrínsecos, que necesita \textit{ARgos} para el calculo del registro.
 
-El proceso de calibrado de la cámara esta basado esencialmente por el enfoque de Zhang. Se utiliza un patrón tipo tablero de ajedrez, en la que se alternan cuadrados blancos y negros, de dimensiones conocidas. El patrón se imprime y se pega sobre una superficie plana rígida. Se debe dejar una zona despejada a continuación del tablero de ajedrez, ya que en esta zona se proyectará el patrón que utiliza el proyector para su calibrado.  
+El proceso está separado en una aplicación cliente \textit{(calibrationToolBox\_client)} que está alojada en la Raspberry Pi, y otra aplicación servidor \textit{(calibrationToolBox\_server)} que se podría ejecutar en cualquier otro equipo.
 
-A continuación, colocamos la superficie bajo la cámara, en distintas orientaciones y distancias, para obtener una serie de imágenes en los que se encuentre visible el patrón. 
+En un principio se diseñó como un único programa que ejecutaba en la Raspberry Pi, pero si se tomaban muchas capturas para conseguir una calibración más precisa, el sistema se ralentizaba, y el tiempo de calibrado crecía excesivamente.  
 
-Cuando el proceso disponga de al menos 20 imágenes válidas, realizará los cálculos para obtener los parámetros intrínsecos de cámara y los grabará en el fichero \texttt{calibrationCamera.xml}
+Se ha empleado esencialmente el enfoque de Zhang~\cite{Zhang} para calibrado de cámaras. Se utiliza un patrón tipo tablero de ajedrez, en la que se alternan cuadrados blancos y negros, de dimensiones conocidas. El patrón se imprime y se pega sobre una superficie plana rígida. Se debe dejar una zona despejada a continuación del tablero de ajedrez, ya que en esta zona se proyectará el patrón que utiliza el proyector para su calibrado. Se debe prestar atención en que orientación es pegado, ya que si se colocase al revés, la proyección dinámica se realizaría fuera del panel.
 
-El siguiente paso consiste en calibrar el proyector. Se proyecta un patrón de círculos asimétrico, en una posición fija. Colocar la superficie de tal forma que el patrón proyectado quede junto al del tablero de ajedrez. Volver a mover el patrón por espacio de proyección hasta que el sistema adquiera 5 imágenes. En ese momento, la calibración pasa al modo dinámico, y los puntos proyectados se generan en función de la posición que tenga tablero de ajedrez. 
+Antes de iniciar el proceso de calibrado, debemos definir los parámetros de configuración;
 
-Tras capturar 15 imágenes con los puntos dinámicos, se realizan los cálculos de los parámetros intrínsecos del proyector, y finalmente, de los parámetros extrínsecos (matrices de rotación y translación) entre la cámara y el proyector. 
+\begin{itemize} 
+\item Tomamos la medida del lado de un cuadrado para proporcionarla al programa de calibrado, de esta forma las unidades de medida del sistema de referencia se corresponden a medidas reales. 
 
-Los parámetros de calibrado se almacenan en los ficheros \texttt{calibrationProjector.xml} y \texttt{cameraProjectorExtrinsics.xml}.
+\item Además del tamaño del lado debemos indicar el número de esquinas en vertical y horizontal que tiene el patrón que estamos utilizando. Gracias a esto, no estamos atados a realizar el calibrado con un patrón particular, que tenga unas medidas concretas. Basta indicar las características del patrón que vamos a utilizar para realizar un calibrado correcto.
 
-Mientras que la cámara y el proyector mantengan su posición y rotación entre ellos, no es necesario realizar una nueva calibración y es posible mover todo el sistema.
+\item Los otros dos parámetros de la configuración, corresponden al desplazamiento (en los ejes $X$ e $Y$) de la proyección del patrón de círculos asimétrico. El objetivo es ajustar la visualización de la proyección para que el patrón proyectado aparezca junto al patrón impreso. 
 
+\item Los últimos parámetros son las dimensiones de las imágenes, tanto de la cámara como del proyector. Se pueden utilizar resoluciones distintas, pero en GrayAR, se he optado por utilizar la misma en ambos dispositivos.  
+\end{itemize}
 
-El proceso de calibrado de la cámara esta basado esencialmente por el enfoque de Zhang
-~\cite{Zhang}. Se utiliza un patrón tipo tablero de ajedrez, en la que se alternan
-cuadrados blancos y negros, de dimensiones conocidas. El patrón se imprime y se pega sobre una
-superficie plana rígida. Se debe dejar una zona despejada a continuación del tablero de ajedrez, ya
-que en esta zona se proyectará el patrón que utiliza el proyector para su calibrado.
+A continuación, colocamos la superficie bajo la cámara, en distintas orientaciones y distancias, para obtener una serie de imágenes en los que se encuentre visible el patrón.
 
-A continuación, colocamos la superficie bajo la cámara, en distintas orientaciones y distancias,
-para obtener una serie de imágenes en los que se encuentre visible el patrón.
+Cuando el proceso disponga de al menos 20 imágenes válidas, realizará los cálculos para obtener los parámetros intrínsecos de cámara y los grabará en el fichero \textbf{calibrationCamera.yml}
 
-Cuando el proceso disponga de al menos 20 imágenes válidas, realizará los cálculos para obtener los
-parámetros intrínsecos de cámara y los grabará en el fichero \textbf{calibrationCamera.xml}
+Se considera una captura válida aquella que al aplicar los cálculos de calibrado, devuelve un error de reproyección menor de 0.25. 
 
-El siguiente paso consiste en calibrar el proyector. Se proyecta un patrón de círculos asimétrico,
-en una posición fija. Colocar la superficie de tal forma que el patrón proyectado quede junto al del
-tablero de ajedrez. Volver a mover el patrón por espacio de proyección hasta que el sistema adquiera
-5 imágenes. En ese momento, la calibración pasa al modo dinámico, y los puntos proyectados se
-generan en función de la posición que tenga tablero de ajedrez.
+El siguiente paso consiste en calibrar el proyector. Al comienzo de este estado, se proyecta un patrón de círculos asimétrico, en una posición fija.
 
-Tras capturar 15 imágenes con los puntos dinámicos, se realizan los cálculos de los parámetros
-intrínsecos del proyector, y finalmente, de los parámetros extrínsecos (matrices de rotación y
-traslación) entre la cámara y el proyector.
+Colocar la superficie, de tal forma, que el patrón proyectado quede junto al del tablero de ajedrez. Volver a mover el patrón el espacio de la  proyección hasta que el sistema adquiera 5 imágenes más. Para la aceptación de estas 5 imágenes, el error de reproyección cometido no debe ser mayor de 0.35.
 
-Los parámetros de calibrado se almacenan en los ficheros \textbf{calibrationProjector.xml} y
-\textbf{cameraProjectorExtrinsics.xml}.
+En ese momento, la calibración pasa al modo dinámico, y los puntos proyectados se generan en función de la posición que se encuentre el tablero de ajedrez.
 
-Mientras que la cámara y el proyector mantengan su posición y rotación entre ellos, no es necesario
-realizar una nueva calibración y es posible mover todo el sistema.
+Tras capturar 15 imágenes con los puntos dinámicos, se refinan los cálculos correspondientes a los parámetros intrínsecos del proyector, y finalmente, se calculan los parámetros extrínsecos (matrices de rotación y traslación) entre la cámara y el proyector.
 
-Una vez realizada la calibración se iniciará un test para comprobar que se ha hecho
-correctamente. El test consiste en proyectar un círculo sobre las cuatro esquinas exteriores del
-patrón de tablero de ajedrez. Al mover el patrón los puntos proyectados deben siempre permanecer
-alineados con las esquinas.
+Los parámetros de calibrado se almacenan en los ficheros \textbf{calibrationProjector.yml} y \textbf{cameraProjectorExtrinsics.yml}.
 
------------------------
-ExampleCameraProjectorCalibration
+Una vez realizada la calibración se iniciará un test para comprobar que se ha hecho correctamente. El test consiste en proyectar un círculo sobre las cuatro esquinas exteriores del patrón de tablero de ajedrez. Al mover el patrón los puntos proyectados deben siempre permanecer alineados con las esquinas.
 
-How to use:
+Tanto el número de imágenes que se deben detectar antes de pasar a la siguiente fase, como los errores de reproyección máximos permitidos por la cámara y el proyector, son también configurables. Tras realizar numerosas pruebas variando estos parámetros, los mejores resultados manteniendo el compromiso \textit{precisión-tiempo de calibrado-consumo de recursos}, se llega a la conclusión que los valores antes descritos son los que mejor se ajustan. 
 
-Print the chessboard8x5.pdf and glue it to a larger white board as in the video (https://www.youtube.com/watch?v=pCq7u2TvlxU). Note the orientation of the pattern: if you glue it the other way, the dynamically projected pattern will be outside the board).
-
-The actual size of the board is not important. If you want to get real distances (say, in cm or mm in the extrinsics), then you want to measure the size of the elemental squares and indicate it in the .yml file settingsPatternCamera.yml:
-
-YAML:1.0 xCount: 4 yCount: 5 squareSize: 30 -- here, size in cm or mm of the elemental square posX: 400 posY: 250 patternType: 2 color: 255
-
-Also, check some comments on the header of the testApp.h file. In particular, it is important that you define the size of the computer screen and the projector screen:
-define COMPUTERDISPWIDTH 1440
-define COMPUTERDISPHEIGHT 900
-
-// RESOLUTION OF CAMERA AND PROJECTOR:
-define PROJWIDTH 800
-define PROJHEIGHT 600
-
-// Resolution of the camera (or at least resolution at which we want to calibrate it):
-define CAMWIDTH 640
-define CAMHEIGHT 480
-
-The process goes in three phases:
-
-(a) calibrating the camera (you may change the number of "good" pre-calibration boards by checking it on the testApp.cpp file, as well as the meaning of "good" by playing with the value of maxErrorCamera):
-
-const int preCalibrateCameraTimes = 15; // this is for calibrating the camera BEFORE starting projector calibration. const int startCleaningCamera = 8; // start cleaning outliers after this many samples (10 is ok...). Should be < than preCalibrateCameraTimes const float maxErrorCamera=0.3;
-
-(b) The camera is then used to compute the 3d position of the projected pattern (asymmetric circles) by backprojection, as long as both patterns are visible at the same time (acquisition is automatic) and is indicated as a red flash on the projected pattern. In this phase, stereo calibration is performed to obtain the camera-projector extrinsics. The process of projector calibration goes exactly like that for the camera, meaning that you need to set the maxErrorProjector, as well as the minimum number of "good" boards). There is an additional parameter "startDynamicProjectorPattern": this is the minimum of good boards before starting projecting "dynamically". When this number of boards is reached, the projection will follow the printed pattern and you can start moving the board around so as to better explore the whole field of view space (and get better and more accurate calibration):
-
-const float maxErrorProjector=0.30; const int startCleaningProjector = 6; const int startDynamicProjectorPattern=5; - after this number of projector/camera calibration, the projection will start following the printed pattern to facilitate larger exploration of the field of view. If this number is larger than minNumGoodBoards, then this will never happen automatically.
-
-const int minNumGoodBoards=15; -- after this number of simultaneoulsy acquired "good" boards, IF the projector total reprojection error is smaller than a certain threshold, we end calibration (and move to AR mode automatically)
-
-(c) Once minNumGoodBoards are acquired for both the camera and projector, extrinsics and intrinsics are saved, and the program goes into a simple AR demo mode, projecting some dots over the printed pattern. Note that this may affect the printed board detection, but it is just for trying (normally you would use another kind of fiducial, for instance a marker or the corners of a board, and project on the side or inside the board, not OVER the printed fiducials...)
-
-
-
-%\blindtext
+Tal y como se describe, el proceso completo de calibrado se puede realizar en varios minutos. Asimismo, mientras que la cámara y el proyector mantengan su posición y rotación entre ellos, no es necesario realizar una nueva calibración y es posible desplazar todo el sistema.

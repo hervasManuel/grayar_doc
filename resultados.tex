@@ -6,8 +6,8 @@ resultados. %Respecto al apartado de costes, se hará una estimación de éstos 
 
 Para finalizar, se muestra el funcionamiento del sistema desarrollado dentro del \textit{Proyecto ARgos} mediante varios casos de usos.  
 
-\section{Estadísticas del Repositorio}
-La Tabla~\ref{tab:number_of_lines} muestra el número de líneas de código de GrayAR. Prácticamente, la totalidad las líneas implementadas pertenecen al lenguage C++. El lenguaje YAML se ha utilizado para la escritura de los parámetros intrinsecos y las matrices de transformación del proceso de calibrado y XML para la definición de la configuracion del sistema. La herramienta utilizada para la contabilización ha sido \textbf{\textit{cloc}}.
+\section{Estadísticas del repositorio}
+La Tabla~\ref{tab:number_of_lines} muestra el número de líneas de código de GrayAR. Prácticamente, la totalidad las líneas implementadas pertenecen al lenguaje C++. El lenguaje YAML se ha utilizado para la escritura de los parámetros intrínsecos y las matrices de transformación del proceso de calibrado y XML para la definición de la configuración del sistema. La herramienta utilizada para la contabilización ha sido \textbf{\textit{cloc}}.
 
 \begin{table}[h]
   \centering
@@ -34,7 +34,7 @@ La Tabla~\ref{tab:number_of_lines} muestra el número de líneas de código de G
 
 \section{Recursos y costes}
 El desarrollo del presente Trabajo de Fin de Grado abarcó desde el día 18 de Noviembre de 2013, hasta
-el 25 de Noviembre de 2014, aproximadamente. En la contabilización no se ha tenido en cuenta el tiempo dedicado a la documetación de la presente memoría, ni los periodos vacacionales, por lo que el tiempo total de desarrollo y pruebas ha supuesto una duración de 43 semanas. Con una dedicación media de 7 horas diarias (5 días a la semana), se traduce en 1505 horas de trabajo. 
+el 25 de Noviembre de 2014, aproximadamente. No se ha tenido en cuenta el tiempo dedicado a la documentación de la presente memoria, ni los periodos vacacionales, por lo que el tiempo total de desarrollo y pruebas ha supuesto una duración de 43 semanas. Con una dedicación media de 7 horas diarias (5 días a la semana), se traduce en 1505 horas de trabajo. 
 
 Se ha supuesto un precio de \textit{\EUR{30}/hora} tomando como referencia la media de cobro actual
 de mercado en este sector~\footnote{Información obtenida de
@@ -77,18 +77,18 @@ El coste obtenido es meramente informativo, ya que a la hora de calcular un pres
 
 \section{\textit{Profiling}}
 
-El \textit{profiling} ó análisis de rendimiento, es la observación del comportamiento de un programa utilizando información obtenida desde el análisis dinámico del mismo. Tiene por objetivo averiguar el tiempo dedicado y el consumo de recursos en la ejecución de diferentes partes del software. Se utiliza principalmete para detectar \textit{«cuellos de botella»} del sistema, dónde sea posible llevar a cabo una optimización,
+El \textit{profiling} ó análisis de rendimiento, es la observación del comportamiento de un programa utilizando información obtenida desde el análisis dinámico del mismo. Tiene por objetivo averiguar el tiempo dedicado y el consumo de recursos en la ejecución de diferentes partes del software. Se utiliza principalmente para detectar \textit{«cuellos de botella»} del sistema, dónde sea posible llevar a cabo una optimización,
 
-Debido a los límitados recursos y capacidades de los que dispone la Raspberry Pi, durante el desarrollo de GrayAR, se han realizado numerosas mediciones del sistema con el objetivo de tomar decisiones que consiguiesen producir un sistema lo más optimizado posible.
+Debido a los limitados recursos y capacidades de los que dispone la Raspberry Pi, durante el desarrollo de GrayAR, se han realizado numerosas mediciones del sistema con el objetivo de tomar decisiones que consiguiesen producir un sistema lo más optimizado posible.
 
 \subsection{Rendimiento de cámaras utilizadas}
-La elección de la cámara era un factor muy importante para garantizar la viabilidad del proyecto. El proceso de cáptura de imágenes debería ser lo más liviano posible, ya que tiene un uso intensivo a lo largo de la ejecución. Además debe tener un rendimiento, capaz de proporcionar una sensación de tiempo real en el sistema. 
+La elección de la cámara era un factor muy importante para garantizar la viabilidad del proyecto. El proceso de captura de imágenes debería ser lo más liviano posible, ya que tiene un uso intensivo a lo largo de la ejecución. Además debe tener un rendimiento, capaz de proporcionar una sensación de tiempo real en el sistema. 
 
-En principio se utilizaron cámaras USB, pero la utilización de drivers \textit{video4linux} para la captura de las ímagenes, no tenia el rendimiento esperado, presentado las imágenes con \textit{lag} de hasta 2 segundos.
+En principio se utilizaron cámaras USB, pero la utilización de drivers \textit{video4linux} para la captura de las imágenes, no tenia el rendimiento esperado, presentado las imágenes con \textit{lag} de hasta 2 segundos.
 
 La elección final, fue la utilización de la Raspberry Pi Camera Board, que ofrece una tasa de 29,5 FPS hasta una resolución de 1280x960 a escala de grises y 14 FPS con esa misma resolución, pero esta vez en el espacio de color BGR (propio de OpenCV).
 
-En la figura \ref{fig:camaras_chart} se muestran las medidas realizadas, en frames por segundo (FPS), del proceso de captura y representación en vivo de los fotogramas capturados. No se realizar ningún tratamiento adicional a la imagen.
+En la figura \ref{fig:camaras_chart} se muestran las medidas realizadas, en \textit{frames por segundo} (FPS), del proceso de captura y representación en vivo de los fotogramas capturados. No se realizar ningún tratamiento adicional a la imagen.
 
 \begin{figure}
   \begin{center}
@@ -113,9 +113,9 @@ En la figura \ref{fig:camaras_chart} se muestran las medidas realizadas, en fram
 \subsection{Histórico de percepciones}
 La utilización de métodos totalmente visuales para la detección de la hoja de papel, provoca, que incluso cambios en la iluminación, devuelva valores distintos en el cálculo de la posición, aún cuando la hoja no se haya movido. Este efecto, se aprecia como un temblor en la proyección, y será más acusado cuanto mayor sea el error cometido.
 
-La detección de bordes más finos, ayuda a minimizar este error, pero en uĺtima instancia, la inclusión de un histórico de percepciones permite la estabilización del tracking, eliminando gran parte de este incómodo efecto, basandose en las percepciones anteriores.
+La detección de bordes más finos, ayuda a minimizar este error, pero en última instancia, la inclusión de un histórico de percepciones permite la estabilización del \textit{tracking}, eliminando gran parte de este incómodo efecto, basándose en las percepciones anteriores.
 
-En la figura \ref{fig:historic_chart} se muestran diferentes valores de la componente de la posición en X en 40 frames de captura. Lo interesante de esta figura no son los valores de estas posiciones (intencionadamente distintos), sino la forma de la trayectoria. Empleando el histórico, la trayectoria resultante es mucho más suave.
+En la figura \ref{fig:historic_chart} se muestran diferentes valores de la componente de la posición en el eje $X$ en 40 frames de captura. Lo interesante de esta figura no son los valores de estas posiciones (intencionadamente distintos), sino la forma de la trayectoria. Empleando el histórico, la trayectoria resultante es mucho más suave.
 
 \begin{figure}
   \begin{center}
@@ -125,21 +125,21 @@ En la figura \ref{fig:historic_chart} se muestran diferentes valores de la compo
   \end{center}
 \end{figure}
 
-\subsection{Rendimiento general del sistema en cada una de las iteraciones}
-En cada iteración el software crecía en funcionalidades y complejidad. La Raspberry Pi tenía que soportar, cada vez, una carga superior. Además, se le debe añadir las tareas de \textit{Belfegar}, que tambien crecía iteración tras iteración.
+\subsection{Rendimiento general del sistema tras cada iteración construida}
+En cada iteración el software crecía en funcionalidades y complejidad. La Raspberry Pi tenía que soportar, cada vez, una carga superior. Además, se le debe añadir las tareas de \textit{BelfegAR}, que también crecía iteración tras iteración.
 
 En la figura \ref{fig:iteration_chart} se muestra el rendimiento medido del sistema, en FPS, al finalizar cada \textit{sprint}. Se puede observar los malos resultados de la primera iteración al utilizar una cámara web y la recuperación experimentado en el sistema a partir de la iteración 5, que corresponde con la migración de los subsistemas más complejos al servidor.
 
 \begin{figure}
  \begin{center}
     \includegraphics[width=1.0\textwidth]{rendimiento_grayar.png}
-    \caption{Tasa de frames del sistema al finalizar cada una de las iteraciones}
+    \caption{Tasa de frames del sistema en cada iteración}
     \label{fig:iteration_chart}
   \end{center}
 \end{figure}
 
 \section{Prototipo hardware construido}
-El prototipo construido emplea una cámara de bajo coste como entrada al módulo de visión por computador y un cañón de proyección portátil para mostrar información visual, directamente alineada sobre el documento del mundo físico. La ejecución del software del sistema la realiza la unidad Raspberry Pi, que se encarga de tomar como entrada las imágenes obtenidas por la cámara y generar la salida para el cañón de proyección. También se ha incluido un amplificador con altavoz incorporado para la reprodución de mensajes y alertas del sistema.
+El prototipo construido emplea una cámara de bajo coste como entrada al módulo de visión por computador y un cañón de proyección portátil para mostrar información visual, directamente alineada sobre el documento del mundo físico. La ejecución del software del sistema la realiza la unidad Raspberry Pi, que se encarga de tomar como entrada las imágenes obtenidas por la cámara y generar la salida para el cañón de proyección. También se ha incluido un amplificador con altavoz incorporado para la reproducción de mensajes y alertas del sistema.
 
 Para obtener un conjunto compacto y reducido, se acopla la Raspberry Pi sobre el proyector y la raspiCam junto a la lente. En la figura ~\ref{fig:ARgos_hardware} se muestran por separado los componentes hardware empleados, así como su disposición final en el prototipo.
 
@@ -163,10 +163,10 @@ Finalmente, el sistema se monta sobre un trípode y se dirige en dirección a la
 
 \section{Uso del sistema}
 
-A continuación, se introducirá un caso de uso concreto del sistema \textit{ARgos}, mediante imágenes del funcionamiento real del prototipo. Los componentes dibujados son tarea de \textit{Belfegar}, que a partir del procesado de la imagen y los cálculo realizado en GrayAR, «dibuja» mediante OpenGL ES, la salida que debe proyectarse, de manera que aparezcan siempre correctamente alineados y sin deformaciones debidos a la  perspectiva, independientemente de la colocación del papel en la mesa.
+A continuación, se introducirá un caso de uso concreto del sistema \textit{ARgos}, mediante imágenes del funcionamiento real del prototipo. Los componentes dibujados son tarea de \textit{Belfegar}, que a partir del procesado de la imagen y los cálculo realizado en GrayAR, \textit{«dibuja»} mediante OpenGL ES, la salida que debe proyectarse, de manera que aparezcan siempre correctamente alineados y sin deformaciones debidos a la  perspectiva, independientemente de la colocación del papel en la mesa.
 
 \subsection{Prerrequisitos}
-Previamente, el usuario ha calibrado el sistema utilizando la herramienta que se proporciona, y de la que obtiene una serie de ficheros, que deben ser copiados en el cliente y el servidor. En estos ficheros se encuentran los parámetros instrinsecos de la cámara y el proyector, asi como las matrices de transformación entre el sistema de coordenadas de la cámara y el del proyector.
+Previamente, el usuario ha calibrado el sistema utilizando la herramienta que se proporciona, y de la que obtiene una serie de ficheros, que deben ser copiados en el cliente y el servidor. En estos ficheros se encuentran los parámetros intrínsecos de la cámara y el proyector, así como las matrices de transformación entre el sistema de coordenadas de la cámara y el del proyector.
 
 Asimismo, el usuario ha proporcionado una imagen de cada uno de los documentos posibles a identificar por el sistema, y las acciones a realizar o representar en ellos. Esta configuración se realiza por medio de los \textit{scripts} implementados en \textit{BelfegAR}.
  
@@ -192,7 +192,7 @@ Para el cliente (y detallando el registro correspondiente a \textit{ARgos}), el 
   \end{center}
 \end{figure}
 
-Una vez arrancado el sistema, el proyector muestra una imagen con información sobre un supuesto usuario ficticio (véase Figura~\ref{fig:ARgos_intro}).
+Una vez iniciado el sistema, el proyector muestra una imagen con información sobre un supuesto usuario ficticio (véase Figura~\ref{fig:ARgos_intro}).
 
 \begin{figure}
   \begin{center}
@@ -203,7 +203,7 @@ Una vez arrancado el sistema, el proyector muestra una imagen con información s
 \end{figure}
 
 \subsection{Bucle principal}
-Al finalizar la introducción, el sistema avanza hacia el próximo estado entrando en el bucle principal de detección e identificación de documentos, delegación de tareas y renderizado. Este estado es fácilmente reconocible por proyectar las cuatro esquinas que delimitan el área de trabajo sobre la superficie (véase Figura~\ref{fig:ARgos_waiting}).
+Al finalizar la introducción, el sistema avanza hacia el próximo estado, entrando en el bucle principal de detección e identificación de documentos, delegación de tareas y renderizado. Este estado es fácilmente reconocible por proyectar las cuatro esquinas que delimitan el área de trabajo sobre la superficie (véase Figura~\ref{fig:ARgos_waiting}).
 
 \begin{figure}
   \begin{center}
@@ -261,8 +261,7 @@ La Figura~\ref{fig:ARgos_videostream2} muestra como se han empezado a recibir fo
   \end{center}
 \end{figure}
 
-Durante toda la ejecución del sistema se realiza un registro de los eventos ocurridos. La Figura~\ref{fig:Client_loop} y la Figura~\ref{fig:Server_listening} muestran respectivamente los registros de eventos del cliente y
-del servidor mientras se ejecuta el bucle principal del sistema. En ellos, se puede apreciar las matrices de transformación de cada documento detectado o la comunicación realizada entre cliente y servidor.
+Durante toda la ejecución del sistema se realiza un registro de los eventos ocurridos. La Figura~\ref{fig:Client_loop} y la Figura~\ref{fig:Server_listening} muestran respectivamente los registros de eventos del cliente y del servidor mientras se ejecuta el bucle principal del sistema. En ellos, se puede apreciar las matrices de transformación de cada documento detectado o la comunicación realizada entre cliente y servidor.
 
 \begin{figure}
   \begin{center}
