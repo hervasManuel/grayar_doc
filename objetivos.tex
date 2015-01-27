@@ -23,27 +23,21 @@ La unidad de proceso se encargará de tomar como entrada las imágenes obtenidas
 
 \section{Objetivos específicos}
 
-\subsection{Captura y preprocesado de imágenes}
-Deberemos proveer al sistema de un módulo para obtener las imágenes y aplicarle el procesado previo necesario, como puede ser el escalado, umbralización, detección de bordes o detección de características \cite{Ortiz} \cite{Bay}. Otra tarea a realizar es calcular la distorsión debida a la proyección en perspectiva mediante los parámetros extrínsecos e intrínsecos de la cámara.
+\begin{itemize}
+\item \textbf{Captura y preprocesado de imágenes.} Deberemos proveer al sistema de un módulo para obtener las imágenes y aplicarle el procesado previo necesario, como puede ser el escalado, umbralización, detección de bordes o detección de características \cite{Ortiz} \cite{Bay}. Otra tarea a realizar es calcular la distorsión debida a la proyección en perspectiva mediante los parámetros extrínsecos e intrínsecos de la cámara.
 
-\subsection{Sistema de identificación de documentos}
-GrayAR contará con un sistema de identificación rápida empleando algoritmos de recuperación de imágenes y comparará el documento que está siendo analizado con una base de datos de documentos conocidos por el sistema.
+\item \textbf{Sistema de identificación de documentos.} GrayAR contará con un sistema de identificación rápida empleando algoritmos de recuperación de imágenes y comparará el documento que está siendo analizado con una base de datos de documentos conocidos por el sistema.
 
-\subsection{Implementación de técnicas de tracking y registro}
-Para el correcto alineado de la información mostrada, el módulo de tracking y registro contará con funciones de cálculo de \emph{pose} (rotación y translación del objeto en el espacio 3D) en tiempo real y algoritmos para la estimación y descripción del movimiento como \textit{Optical Flow} \cite{LKanade}.   
+\item \textbf{Implementación de técnicas de tracking y registro.} Para el correcto alineado de la información mostrada, el módulo de tracking y registro contará con funciones de cálculo de \emph{pose} (rotación y translación del objeto en el espacio 3D) en tiempo real y algoritmos para la estimación y descripción del movimiento como \textit{Optical Flow} \cite{LKanade}.   
 
-\subsection{Utilización de paradigmas de interacción natural con el usuario  (NUI)}
-El usuario podrá interactuar directamente en el espacio físico sin utilizar sistemas de mando o dispositivos de entrada tradicionales como sería un ratón, teclado, etc. siendo sustituidos por funciones más naturales como el uso de movimientos gestuales con las manos.
+\item \textbf{Utilización de paradigmas de interacción natural con el usuario (NUI).} El usuario podrá interactuar directamente en el espacio físico sin utilizar sistemas de mando o dispositivos de entrada tradicionales como sería un ratón, teclado, etc. siendo sustituidos por funciones más naturales como el uso de movimientos gestuales con las manos.
 
-\subsection{Facilitar la gestión documental a personas con necesidades especiales mediante amplificación de información} 
-Contará con diferentes modos de amplificación de la información del mundo real. Por un lado, la información visual se amplificará empleando el cañón de proyección que mostrará información relevante al contexto directamente sobre el espacio del papel, así como otras fuentes de información visual adicionales. 
+\item \textbf{Facilitar la gestión documental a personas con necesidades especiales mediante amplificación de información.} Contará con diferentes modos de amplificación de la información del mundo real. Por un lado, la información visual se amplificará empleando el cañón de proyección que mostrará información relevante al contexto directamente sobre el espacio del papel, así como otras fuentes de información visual adicionales. 
 
-\subsection{Se debe basar en componentes de bajo coste}
-Para facilitar la implantación real en el entorno de trabajo, deberá funcionar con componentes de bajo coste, incorporando mecanismos de corrección de distorsión y registro 3D totalmente software.
+\item \textbf{Se debe basar en componentes de bajo coste.} Para facilitar la implantación real en el entorno de trabajo, deberá funcionar con componentes de bajo coste, incorporando mecanismos de corrección de distorsión y registro 3D totalmente software.
 
-\subsection{Dispositivo multiplataforma (hardware y software)}
-El desarrollo de GrayAR se realizará siguiendo estándares, tecnologías y bibliotecas libres multiplataforma, con el objetivo de que pueda ser utilizado en el mayor número de plataformas posibles tanto hardware (x86, x86-64 y ARM) como software (GNU/Linux, Windows y Mac).
-
+\item \textbf{Dispositivo multiplataforma (hardware y software).} El desarrollo de GrayAR se realizará siguiendo estándares, tecnologías y bibliotecas libres multiplataforma, con el objetivo de que pueda ser utilizado en el mayor número de plataformas posibles tanto hardware (x86, x86-64 y ARM) como software (GNU/Linux, Windows y Mac).
+\end{itemize}
 
 % Local Variables:
 %  coding: utf-8

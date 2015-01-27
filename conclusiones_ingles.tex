@@ -11,41 +11,34 @@ Moreover, the system responds to different actions that the user can do in the p
 
 Therefore, the main purpose is satisfied, as it occurs with the specific objectives, defined in chapter \ref{chap:objetivos_eng} and detailed their solution in chapters \ref{chap:metodo} and \ref{chap:arquitectura}. These are explained below as a synopsis.
 
+\begin{description}
+\item [Image capture and processing.] The system is provided with a module that obtains different kind of attachable cameras, offering a common interface, despite of having different drivers and APIs. It has been provided with the required filters to process images, with scaling functions, thresholding, edge detection or characteristics detection. An external application has been developed to calculate the extrinsic and intrinsic parameters of both, camera and projector. This application allows a rapid and easy calibration of the system, using a checkerboard pattern, whenever it is needed. Once the calibration is done, we obtain three XML files, which are necessary to do the calculation of the registration in the prototype.
 
-\subsection{Image capture and processing}
-The system is provided with a module that obtains different kind of attachable cameras, offering a common interface, despite of having different drivers and APIs. It has been provided with the required filters to process images, with scaling functions, thresholding, edge detection or characteristics detection. An external application has been developed to calculate the extrinsic and intrinsic parameters of both, camera and projector. This application allows a rapid and easy calibration of the system, using a checkerboard pattern, whenever it is needed. Once the calibration is done, we obtain three XML files, which are necessary to do the calculation of the registration in the prototype.
-
-\subsection{System of document identification}
-The identification of documents in GrayAR has been made by an image-retrieval algorithm based on descriptors and it will compare the document which is being analyzing with a document database, known for the system.
+\item [System of document identification.] The identification of documents in GrayAR has been made by an image-retrieval algorithm based on descriptors and it will compare the document which is being analyzing with a document database, known for the system.
 
 These documents are located in the configuration file, as well as the possible actions that can be made on it. This kind of configuration allows an adaptable and personalised system in each organisation and user.
 
-\subsection{Implementation of tracking and registration techniques}
-The tracking and registration module will have real-time pose calculation features (rotation and translation of the object in the 3D space) to reach a fully immersive experience. This can lead to offer the user the information projected on a sheet of paper, without a dependence of the position, rotation or plane in which is located, as long as it does not exceed the limits of the projection area. 
+\item [Implementation of tracking and registration techniques.] The tracking and registration module will have real-time pose calculation features (rotation and translation of the object in the 3D space) to reach a fully immersive experience. This can lead to offer the user the information projected on a sheet of paper, without a dependence of the position, rotation or plane in which is located, as long as it does not exceed the limits of the projection area. 
 
 
-\subsection{Use of Natural User Interface (NUI) paradigms}
-The user will directly interact with the physical space without using control systems or traditional input devices such as mouse, keyboard, etc. The only need is turning the prototype on and the system will automatically respond to the action that is done when the user places documents, moves them around the projection area or points or rotates them to show their back side.
+\item [Use of Natural User Interface (NUI) paradigms.] The user will directly interact with the physical space without using control systems or traditional input devices such as mouse, keyboard, etc. The only need is turning the prototype on and the system will automatically respond to the action that is done when the user places documents, moves them around the projection area or points or rotates them to show their back side.
 
 The response is showed to the user amplified in different ways (visual and/or auditive), and it is always adapted to the scene that is happening at that moment. 
 
 
-\subsection{Facilitation of document management for people with special needs using amplification of the information}
-GrayAR will give all the required information to the representation system \textit{(BelfegAR)}, in order to draw the relevant visual information right on the paper area.
+\item[Facilitation of document management for people with special needs using amplification of the information.] GrayAR will give all the required information to the representation system \textit{(BelfegAR)}, in order to draw the relevant visual information right on the paper area.
 
 A LM386 audio amplification has been added to the Raspberry Pi to complement the visual representation. It has been built on a test board with a 1W loudspeaker, which has already «sound card» functions. It allows the reproduction of
 warnings, alarms or reading of texts to those people who need the hearing amplification for the use of the system.
 
-\subsection{It has to be based on low-cost components}
-The selected components of the prototype structure have been chosen with a minimum price, but with a minimum required qualities as well. The final cost is very low compared to other systems that can execute similar functions.
+\item [It has to be based on low-cost components.] The selected components of the prototype structure have been chosen with a minimum price, but with a minimum required qualities as well. The final cost is very low compared to other systems that can execute similar functions.
 
 The projector, which is the most expensive part of the system, costs 325\euro, and can beconsiderate an economic price, taking into account that the average price of other models is 1000\euro.
 
 Regarding to the used software, every resource and library that have been used are freely licensed, and therefore, they are not subject to licence payment.
 
-\subsection{Multi-platform device (hardware and software)}
-The development of GrayAR has been exclusively done in C++, following the C++11 standard. The configuration and calibration files are done in XML. The use of external libraries has been minimised, choosing the ones that did not depend on third parties, and always having a multi-platform free licence. These decisions guarantee the system portability, as much hardware as software (operating systems), in a unique pack and integrated form.
-
+\item [Multi-platform device (hardware and software).] The development of GrayAR has been exclusively done in C++, following the C++11 standard. The configuration and calibration files are done in XML. The use of external libraries has been minimised, choosing the ones that did not depend on third parties, and always having a multi-platform free licence. These decisions guarantee the system portability, as much hardware as software (operating systems), in a unique pack and integrated form.
+\end{description}
 
 \section{Proposals for a future project}
 The \textit{ARgos Project} has not finished yet. GrayAR comprises the augmented reality and computer-based vision functions that have been developed until now in Argos project. Some of the proposals here reflected have been developed in the final version of Argos and will be the context to develop the thesis in the Advanced Information Technologies Masters, planned for the next academic year. 
@@ -56,9 +49,8 @@ rest of the application.
 %\subsection{Expansion of the recognised gestures catalogue}
 %In order to get an optimum user experience, it is necessary to have a wide
 %range of actions that the user can do to interact with the system. ...
-
-\subsection{Tracking with top-down approximation}
-These techniques are based on the approximation of movement models based on Bayesian filters to predict the position of the camera. From this position, references are searched on the image to correct and adjust the prediction. 
+\begin{description}
+\item \textbf{Tracking with top-down approximation. } These techniques are based on the approximation of movement models based on Bayesian filters to predict the position of the camera. From this position, references are searched on the image to correct and adjust the prediction. 
 
 The Bayesian filters that have been used can be classified into two types. One of them works with Gaussian movement models and are called Kalman Filters, the others cannot be model with Gaussian models because of the noise/interference
 characteristics and are implemented better with Particle Filters.
@@ -66,7 +58,7 @@ characteristics and are implemented better with Particle Filters.
 These methods provide robustness/strength to the tracking process, considering that they let the sheet of paper be still detectable, even when there is abig occlusion of this. The time to analyse both focuses and determine which one is
 better for the characteristics of its movement around the projection area should be valued to implement this improvement.
 
-\subsection{Document image recognition using LLAH or similar} % Text pages detection 
+\item[Document image recognition using LLAH or similar.] % Text pages detection 
 The current implementation of documents detection in GrayAR is based on the search for the coincidences in the local characteristics, since these methods are precisely correct on the detection of documents with a semi-structured information, such as receipts and forms.
 
 It would be interesting, as an extension of the detection system, to be able to recognise documents with a high textual content without a predetermined structure as a first sight. For this, it is necessary to implementate a detection algorithm based on the inherent characteristics of the structure of the document and the text that this one has.
@@ -75,15 +67,14 @@ LLAH~\cite{Nakai} has a high scalability and its indexing and recovery/reclamati
 
 Several optimized implementations about LLAH exist to overcome the initial limitations in the algorithm. The task of looking for the exclusive publications about LLAH could be a future project, and it would be interesting to create a coordinated implementation with all the optimizations.
 
-\subsection{Smart estimation of parameters in filtering algorithms according to the existing illumination}
-The filtering algorithms (image smoothing, edge detection...) are defined by parameters that determine its behaviour and the result of the obtained image. Usually, they are defined by human decision and they stay static for the whole execution of the programme. They are chosen depending upon the best results in certain circumstances, the variations in the lighting of the scene can cause that an acceptable parameter, considered optimum at first, changes its status and stops being acceptable. Furthermore, there is the case that a range of values that are not acceptable exits. 
+%\subsection{Smart estimation of parameters in filtering algorithms according to the existing illumination}
+%The filtering algorithms (image smoothing, edge detection...) are defined by parameters that determine its behaviour and the result of the obtained image. Usually, they are defined by human decision and they stay static for the whole execution of the programme. They are chosen depending upon the best results in certain circumstances, the variations in the lighting of the scene can cause that an acceptable parameter, considered optimum at first, changes its status and stops being acceptable. Furthermore, there is the case that a range of values that are not acceptable exits. 
 
-Therefore, it is proposed the creation of a system with \textit{softcomputing} techniques, which analyses the current scene and determines which values are the most appropriate to obtain a known or expected result, in a series of filters used in GrayAR. 
+%Therefore, it is proposed the creation of a system with \textit{softcomputing} techniques, which analyses the current scene and determines which values are the most appropriate to obtain a known or expected result, in a series of filters used in GrayAR. 
 
-The advantages of doing this implementation would provide more robust/stronger detection methods and toleration to the light changes that can be produced while the system is being used.
+%The advantages of doing this implementation would provide more robust/stronger detection methods and toleration to the light changes that can be produced while the system is being used.
 
-\subsection{Calibration of the camera-projector system using structured light}
-Another technique for the calibration of projectors is the technique proposed by Daniel Moreno and Gabriel Taubin, based on structured light, in the paper called \textbf{\textit{«Simple, Accurate, and Robust Projector-Camera Calibration»}}. 
+\item[Calibration of the camera-projector system using structured light.] Another technique for the calibration of projectors is the technique proposed by Daniel Moreno and Gabriel Taubin, based on structured light, in the paper called \textbf{\textit{«Simple, Accurate, and Robust Projector-Camera Calibration»}}. 
 
 The implementation would consist of the following steps to perform \cite{Moreno}:
 
@@ -103,7 +94,7 @@ This method does not require any special equipment and, according to their autho
  
 On the basis of the experience in the development of the calibration process in GrayAR, this issue could be carried out in a three-or-four-weeks sprint.
 
-\subsection{Use of cameras with depth sensor}
-Replacing the main camera with other equipped one with sensors IR capable of measure the depth of the scene, we would obtain a higher precision and the possibility of enlarge the variety of recognized gestures. For example, the execution of the click (or double click) action with the fingers over the table surface or the simulation of a multi-touch surface.
+\item[Use of cameras with depth sensor.] Replacing the main camera with other equipped one with sensors IR capable of measure the depth of the scene, we would obtain a higher precision and the possibility of enlarge the variety of recognized gestures. For example, the execution of the click (or double click) action with the fingers over the table surface or the simulation of a multi-touch surface.
 
 The temporary cost of this proposal could be higher than the previous ones, since we should study the existing libraries for the execution of the device (e.g. kinect) and provide a new calibration system for the IR camera. The modification of the gesture recognition methods would be necessary as well, and they would have a different perspective due to the incorporation of additional information of the depth camera.
+\end{description}
