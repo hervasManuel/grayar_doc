@@ -320,13 +320,9 @@ Los objetivos de esta iteración venian condicionados por los malos resultados o
 \paragraph{Optimización de la captura de imágenes.}
 Durante las pruebas de la iteración anterior, con sólo cambiar la cámara USB se obtuvieron grandes mejoras, por lo que la elección de la cámara era un elemento importante. Tras consultar en diversos foros especializados, se decide que la mejor opción es utilizar la \textbf{\textit{Raspberry Pi Camera Board}}. Esta cámara está especialmente diseñada para utilizarse en la Raspberry, y se conecta directamente al conector CSI de la placa mediante un cable plano flexible de 15 pines. Dispone de un sensor de 5MP de resolución y puede llegar a grabar vídeo a 1080p a 30 fps.
 
-El gran inconveniente de es que la cámara no incluye drivers \textit{video4linux}, por lo que cualquier biblioteca para lectura de cámaras web estándar, OpenCV incluido, no es capaz de obtener los frames producidos. 
+El gran inconveniente de es que la cámara no incluye drivers \textit{video4linux}, por lo que cualquier biblioteca para lectura de cámaras web estándar, OpenCV incluido, no es capaz de obtener los frames producidos. Se investiga la manera que tienen las aplicaciones para acceder a la información de la cámara, y se encuentran unos drivers en desarrollo, basados en la API MMAL, que ha liberado la Universidad de Córdoba.
 
-Con la cámara se proporcionan 2 aplicaciones: \texttt{raspivid} y \texttt{raspistill}, para la captura de vídeo e imágenes respectivamente. Las aplicaciones utiliza la API MMAL (Multi-Media Abstraction Layer), para acceder a los datos de la cámara y transferirlos a la pantalla o codificarlo como imágenes o vídeos. A partir del código fuente disponible de estas aplicaciones, Pierre Raufast modificó el código fuente, para que una vez obtenidos los datos de la cámara, utilizar el \textit{buffer} de memoria para construir estructuras de tipo \texttt{CvMat} propias de OpenCV.
-
-Partiendo del trabajo de Pierre, otras personas, como Chris Cummings o Rafael Muñoz Salinas, están construyendo bibliotecas en C++ para poder obtener las imágenes de la cámara en objetos compatibles con OpenCV. Es precisamente la biblioteca de Rafael Muñoz, la que se ha utilizado a modo de drivers. 
-
-Tras sustituir el módulo de captura con la nueva biblioteca para la \textit{Raspberry Camera Board}, se realizan de nuevo los test de rendimiento, y obtenemos casi 30 PFS, que es un buen resultado para aplicaciones en tiempo real.
+Tras utilizar en el módulo de captura los nuevos drivers para la \textit{Raspberry Camera Board}, se realizan de nuevo los test de rendimiento, y obtenemos casi 30 PFS, que es un buen resultado para aplicaciones en tiempo real.
 
 \paragraph{Calibrado de la cámara.}
 Se construye un programa externo para el calibrado de la cámara basado en un patrón de tablero de ajedrez. Esta primera versión, devuelve un fichero XML con los parámetros intrínsecos de la cámara y los coeficientes de distorsión obtenidos, pero no tiene en cuenta el error de reproyección.

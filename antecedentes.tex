@@ -188,7 +188,7 @@ En la sección \ref{subsec:matproy} se asumió el hecho de que el centro óptico
 
 Por otro lado, en la mayor parte de las aplicaciones prácticas es necesario que la cámara se mueva o se gire, para captar adecuadamente la escena. Por ello, para poder modelar el sistema con independencia de que su posición haya sido alterada o de que un objeto se pueda referenciar respecto al origen de coordenadas de la cámara, es necesario modificar la ecuación \ref{eq:proy} introduciendo un matriz de transformación $[R|t]$ que contiene los \textbf{parámetros extrínsecos} de la cámara. 
 
-\begin{equation}
+\begin{equation}\label{eq:proyDef}
   x = K [R|t] X  
 \end{equation}
 
