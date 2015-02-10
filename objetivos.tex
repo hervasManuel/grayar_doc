@@ -12,14 +12,15 @@
    
 Según lo anterior, sería deseable disponer de una herramienta que permitiera el tratamiento directo sobre estos documentos «físicos». \textit{ARgos} es, un proyecto de la Cátedra INDRA-UCLM que pretende la construcción de un sistema de ayuda a la gestión de documentos impresos mediante el uso de técnicas de visión por computador, síntesis visual y auditiva y técnicas de realidad aumentada. En la figura \ref{fig:diagrama_argos} se recogen los componentes funcionales del sistema.
 
-
 %\subsection{Objetivos específicos}
-GrayAR, el Trabajo Fin de Grado propuesto, abordará el desarrollo de los sistemas de captura, tracking y registro, e identificación de documentos dentro del \textit{Proyecto ARgos}, mientras que la parte de representación, delegación de tareas y scripting será realizada por Santiago Sánchez Sobrino en su TFG \textit{«BelfegAR: Plataforma para el despliegue gráfico 3D y delegación de tareas en gestión documental con realidad aumentada»}. Los objetivos específicos a desarrollar se resumen a continuación.   
+GrayAR, el Trabajo Fin de Grado propuesto, abordará el desarrollo de los sistemas de captura, tracking y registro, e identificación de documentos dentro del \textit{Proyecto ARgos}, mientras que la parte de representación, delegación de tareas y scripting será realizada por Santiago Sánchez Sobrino en su TFG \textit{«BelfegAR: Plataforma para el despliegue gráfico 3D y delegación de tareas en gestión documental con realidad aumentada»}. 
 
 \section{Objetivo general}
-El sistema emplea una cámara de bajo coste como entrada al módulo de visión por computador y un cañón de proyección portátil para mostrar información visual, directamente alineada sobre el documento del mundo físico. Responderá a las peticiones que el usuario realice sobre el espacio físico, ampliando información relacionada que sea relevante a la acción que quiera realizar.
+El objetivo general es construir sistema que utilice una cámara de bajo coste como entrada al módulo de visión por computador y un cañón de proyección portátil para mostrar información visual, directamente alineada sobre el documento del mundo físico. Responderá a las peticiones que el usuario realice sobre el espacio físico, ampliando información relacionada que sea relevante a la acción que quiera realizar. El documento podrá moverse dentro de una región del escritorio y la amplificación deberá quedar perfectamente alineada en el espacio físico. Como soporte hardware, se utilizará un computador en placa Raspberry Pi con arquitectura \acs{ARM}.
 
-La unidad de proceso se encargará de tomar como entrada las imágenes obtenidas por la cámara y generar la salida para el cañón de proyección. Esta salida deberá tener en cuenta el posicionamiento 3D relativo entre el documento y el cañón para que el registro de la amplificación visual sea perfecto. El documento podrá moverse dentro de una región del escritorio y la amplificación deberá quedar perfectamente alineada en el espacio físico. Se utilizará un computador en placa Raspberry Pi con arquitectura \acs{ARM}.
+%La unidad de proceso se encargará de tomar como entrada las imágenes obtenidas por la cámara y generar la salida para el cañón de proyección. Esta salida deberá tener en cuenta el posicionamiento 3D relativo entre el documento y el cañón para que el registro de la amplificación visual sea perfecto. 
+
+En base a este objetivo general se plantean una serie de objetivos específicos que se detallan en la siguiente sección.
 
 \section{Objetivos específicos}
 
@@ -32,7 +33,7 @@ La unidad de proceso se encargará de tomar como entrada las imágenes obtenidas
 
 \item \textbf{Utilización de paradigmas de interacción natural con el usuario (NUI).} El usuario podrá interactuar directamente en el espacio físico sin utilizar sistemas de mando o dispositivos de entrada tradicionales como sería un ratón, teclado, etc. siendo sustituidos por funciones más naturales como el uso de movimientos gestuales con las manos.
 
-\item \textbf{Facilitar la gestión documental a personas con necesidades especiales mediante amplificación de información.} Contará con diferentes modos de amplificación de la información del mundo real. Por un lado, la información visual se amplificará empleando el cañón de proyección que mostrará información relevante al contexto directamente sobre el espacio del papel, así como otras fuentes de información visual adicionales. 
+\item \textbf{Facilitar la gestión documental a personas con necesidades especiales.} Contará con diferentes modos de amplificación de la información del mundo real. Por un lado, la información visual se amplificará empleando el cañón de proyección que mostrará información relevante al contexto directamente sobre el espacio del papel, así como otras fuentes de información visual adicionales. 
 
 \item \textbf{Se debe basar en componentes de bajo coste.} Para facilitar la implantación real en el entorno de trabajo, deberá funcionar con componentes de bajo coste, incorporando mecanismos de corrección de distorsión y registro 3D totalmente software.
 

@@ -104,7 +104,7 @@ y la expresión de relación de correspondencia, queda de la siguiente forma:
 
 Y de forma abreviada:
 \begin{equation}\label{eq:proy}
-  x = P X   
+  q = P Q   
 \end{equation}
 
 donde:
@@ -112,8 +112,8 @@ donde:
 \item $P = diag(f, f, 1) [I|0]$
 \item $diag(f, f, 1)$ es una matriz diagonal.
 \item $[I|0]$ representa una matriz identidad de 3x3 concatenada con un vector columna nulo de dimensión 3.
-\item $x$  es el vector columna, de dimensión 3, que representan las coordenadas homogéneas del punto de la imagen.
-\item $X$  es el vector columna, de dimensión 4, que representa las coordenadas homogéneas del punto del espacio respecto al sistema de referencia de la cámara.
+\item $q$  es el vector columna, de dimensión 3, que representan las coordenadas homogéneas del punto de la imagen.
+\item $Q$  es el vector columna, de dimensión 4, que representa las coordenadas homogéneas del punto del espacio respecto al sistema de referencia de la cámara.
 \item A la matriz $P$ de se la denomina \textbf{matriz homogénea de proyección de la cámara}.
 \end{itemize}
 
@@ -189,7 +189,7 @@ En la sección \ref{subsec:matproy} se asumió el hecho de que el centro óptico
 Por otro lado, en la mayor parte de las aplicaciones prácticas es necesario que la cámara se mueva o se gire, para captar adecuadamente la escena. Por ello, para poder modelar el sistema con independencia de que su posición haya sido alterada o de que un objeto se pueda referenciar respecto al origen de coordenadas de la cámara, es necesario modificar la ecuación \ref{eq:proy} introduciendo un matriz de transformación $[R|t]$ que contiene los \textbf{parámetros extrínsecos} de la cámara. 
 
 \begin{equation}\label{eq:proyDef}
-  x = K [R|t] X  
+  q = K [R|t] Q  
 \end{equation}
 
 \begin{figure}[h!]
@@ -286,7 +286,7 @@ La Realidad Aumentada es el \textbf{conjunto de técnicas que permiten integrar 
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.80\textwidth]{augmentedVisor.jpg}
+  \includegraphics[width=1.0\textwidth]{augmentedVisor.jpg}
   \caption{Representación conceptual de la realidad aumentada (James Provost)}
   \label{fig:augmentedVisor}
 \end{figure}
@@ -935,16 +935,16 @@ Algunos autores proponen técnicas de detección basados en la extracción de ca
 
 Mediante una variación del proceso inspirado en la metodología de Lowe \cite{Lowe} y Bay \cite{Bay}, Augereau \cite{Augereau} obtiene buenos resultados sobre documentos semi-estructurados (billetes de tren, tickets,...) realizando una selección de los puntos extraídos y una adaptación del algoritmo RANSAC para la validación de supuestos aciertos en la comparación.
 
-\begin{figure}
+\begin{figure}[!h]
   \centering
-  \includegraphics[width=1.0\textwidth]{standardObject.png}
+  \includegraphics[width=0.92\textwidth]{standardObject.png}
   \caption{Proceso habitual para reconocimiento de imágenes mediante descriptores SURF (Augereau)}
   \label{fig:extraccionSt}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[!h]
   \centering
-  \includegraphics[width=1.0\textwidth]{adaptedObject.png}
+  \includegraphics[width=0.92\textwidth]{adaptedObject.png}
   \caption{Proceso adaptado para reconocimiento de documentos mediante SURF (Augereau)}
   \label{fig:extraccionAd}
 \end{figure}

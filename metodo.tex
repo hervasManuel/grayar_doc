@@ -79,7 +79,7 @@ Cuando todos los puntos del \textit{Sprint Backlog} se han completado, se prepar
 \begin{figure}[h] 
   \centering
   \includegraphics[width=0.85\textwidth]{burndown.jpg}
-  \caption{Gráfico \textit{burndown} de un \textit{sprint}}
+  \caption{Gráfico \textit{burndown} típico de un \textit{sprint}}
   \label{fig:burndown}
 \end{figure}
 
@@ -100,7 +100,7 @@ Un \textit{sprint} consiste en un ciclo iterativo donde se realiza un incremento
 El equipo de \textit{Scrum} se auto-organiza para producir el nuevo incremento ejecutable en aproximadamente un mes natural, que suele ser la duración habitual del \textit{sprint}. Las herramientas activas del equipo son las reuniones para planear el \textit{sprint}, el \textit{sprint backlog} y las reuniones diarias de \textit{Scrum}.
 
 \section{\textit{eXtreme Programming}}
-\textit{Extreme Programming}  o programación extrema, surgió como respuesta a la lentitud de los modelos tradicionales de desarrollo. Los orígenes de esta metodología surgieron en 1996, cuando Kent Beck comenzó a trabajar en un proyecto para reemplazar el programa de nóminas para Chrysler. Aunque las tácticas por separado que utiliza \textit{XP} no son novedosas, la manera de unirlas sí. 
+\textit{Extreme Programming}~\cite{Ubeda}  o programación extrema, surgió como respuesta a la lentitud de los modelos tradicionales de desarrollo. Los orígenes de esta metodología surgieron en 1996, cuando Kent Beck comenzó a trabajar en un proyecto para reemplazar el programa de nóminas para Chrysler. Aunque las tácticas por separado que utiliza \textit{XP} no son novedosas, la manera de unirlas sí. 
 
 En la primera edición de \textit{XP} (1999), Beck definió 4 valores, 15 principios básicos, y 12 prácticas. Posteriormente el proceso fue revisado y se publicó en 2004 \cite{Beck:2004:EPE:1076267}, en él se detallan 5 valores, 14 principios, 13 prácticas primarias y 11 prácticas secundarias.
 
@@ -375,12 +375,8 @@ Desde la iteración 2, se arrastraba un pequeño \textit{bug} en el cálculo de 
 \paragraph{Corrección de la orientación del papel}
 En el cálculo de los parámetros extrínsecos del papel, dependiendo de la posición del papel, el sistema confundía la orientación y consideraba que el papel se encontraba apaisado cuando realmente no era así.
 
-La corrección del \textit{bug} fue relativamente sencilla. Tras una serie de pruebas rotando la hoja de papel para comprobar en que casos se producía el error, se observó que el problema era debido a como OpenCV enumerar las esquinas del papel. Dado un cuadrilátero, la primera esquina corresponde a la que se encuentra situada más a la derecha de la imagen. Cómo se puede observar en la figura [X], en el primer caso el punto $A$ es enumerado como punto $0$, y sin embargo, en la segunda imagen es considerado el punto $1$. 
+La corrección del \textit{bug} fue relativamente sencilla. Tras una serie de pruebas rotando la hoja de papel para comprobar en que casos se producía el error, se observó que el problema era debido a como OpenCV enumera las esquinas del papel. 
 
-Las consecuencias son que para ciertas posiciones, las dimensiones de los segmentos que forman los lados del papel tienen un valor, y en otras posiciones, esos mismos segmentos tienen otra medida. En resumen, para el cálculo de los parámetros extrínsecos, considera una distribución distinta en entre los puntos de la imagen y los puntos del objeto.
-
-La solución implementada ha sido comparar la longitud de los segmentos detectados, para determinar en que posición se están enumerando las esquinas, y aplicar una enumeración acorde al establecido en los puntos del objeto. 
- 
 \paragraph{Detector de documentos mediante descriptores de imágenes} 
 Se eligió utilizar SURF como detector y descriptor de características debido que es más rápido y robusto que otros algoritmos. Aun así, la implementación de esté modulo se realizó utilizando los \textit{wrappers} que proporciona OpenCV para la construcción de detectores y descriptores, y que tiene como ventaja, cambiar el algoritmo aplicado sin necesidad de modificar la implementación, únicamente modificando en el constructor un \textit{string} con el método que queramos utilizar (BRISK, ORB, SURF,...).
 

@@ -2,49 +2,39 @@
 \label{chap:arquitectura}
 \drop{E}{n} este capítulo se mostrarán los resultados obtenidos al aplicar la metodología descrita en la sección \ref{chap:metodo} a través de un enfoque top-down, comenzando con una descripción general, continuando con las decisiones de diseño y terminando con los detalles de implementación. 
 
-\section{Descripción general}
-%\begin{figure}
-%  \centering
-%  \includegraphics[width=1.0\textwidth]{Box_diagram.png}
-%  \caption{Diagrama de la estructura de GrayAR en el contexto de ARgos}
-%  \label{fig:GrayAR_schema}
-%\end{figure}
+GrayAR se ha diseñado como una arquitectura con 6 subsistemas (Figura \ref{fig:GrayAR_schema}) y una herramienta externa para calibrar cámaras y proyectores (Figura \ref{fig:GrayAR_calibrationToolbox}). A continuación se indica el cometido de cada uno de los módulos:
 
-%\begin{figure} 
-%  \centering
-%  \includegraphics[width=1.0\textwidth]{Flowchart.png}
-%  \caption{Secuencia de Flujo del funcionamiento de GrayAR en el contexto de ARgos}
-%  \label{fig:GrayAR_flowchart}
-%\end{figure}
+\begin{itemize}
+\item \textit{Sistema de Captura:} Es el encargado de la capturar y proveer de imágenes al sistema por medio de la cámara de la Raspberry Pi ó a través de cámaras USB.
+\item \textit{Sistema de \textit{Tracking} y Registro:} Su misión es detectar y calcular la \textit{pose} de los documentos mostrados al sistema.
+\item \textit{Sistema de Identificación de Documentos:} Este módulo asume la tarea de identificar los documentos en base a su contenido.
+\item \textit{Sistema de Interacción Natural de Usuario:} Proporciona los mecanismos para implementar el paradigma de «pantalla táctil» como interfaz del sistema.
+\item \textit{Sistema de Modelos Matemáticos:} Consiste en la implementación de los modelos matemáticos, de los que se sirven el resto de módulos para realizar sus cálculos.
+\item \textit{Sistema de Soporte y Utilidades:} Es un conjunto de utilidades internas de GrayAR. Incorpora el \textit{log} del sistema, funciones para dibujar y un gestor de configuración.
+\item \textit{Sistema de Calibrado (calibrationToolbox):} Implementado como una aplicación externa, su función es obtener los parámetros intrínsecos y extrínsecos de la cámara y el proyector.
+\end{itemize}
 
-
-1. Comenzamos con una descripción del PROBLEMA que trata de resolver
-el módulo. Para qué sirve, cuál es su objetivo, qué toma de entrada y
-qué produce de salida, etc...
-
-2. A continuación describimos la SOLUCIÓN al problema planteado. Esta
-solución será un determinado algoritmo, o método. La descripción de la
-solución será progresiva, partiendo de un párrafo general que lo
-entienda todo el mundo, y poco a poco bajamos a los infiernos del bajo
-nivel (o incluso el código en algún caso).
-
-3. Finalmente comentamos las VENTAJAS de la solución propuesta frente
-a otras posibles soluciones que se podrían tomar. "Gracias al uso del
-algoritmo TAL o CUAL tenemos esta y esta otra ventaja...". "Debido a
-la aproximación basada en tal y cual cosa tenemos esta mejora de
-rendimiento, ..."
-
-Si el PROBLEMA está formado por varios subproblemas, primero
-enunciamos el general y luego vamos bajando al análisis de los
-subproblemas, siempre en este enfoque PSV: Problema Solución
-Ventajas.
+\begin{figure}
+  \centering
+  \includegraphics[width=1.0\textwidth]{Box_diagram_full.png}
+  \caption{Diagrama de la estructura de GrayAR en el contexto de \textit{ARgos}}
+  \label{fig:GrayAR_schema}
+\end{figure}
 
 
+\begin{figure} 
+  \centering
+  \includegraphics[width=0.7\textwidth]{calibrationToolbox.png}
+  \caption{Diagrama de la estructura de calibrationToolbox}
+  \label{fig:GrayAR_calibrationToolbox}
+\end{figure}
 
+El diseño de los componentes que forman GrayAR mantiene, una independencia minimizando el acoplamiento en su definición. El encargado de establecer la relación entre ellos y controlar el bucle de ejecución es la clase \texttt{Core}.  
 
+En este capítulo se procederá a explicar en detalle los sistemas de GrayAR sin tener en cuenta la distinción entre la parte del cliente y la del servidor, ya que es totalmente transparente al sistema y no corresponde al alcance del proyecto.
+ 
 \section{Módulo externo de calibración (calibrationToolbox)}
 Como ya se explicó en el capitulo \ref{chap:antecedentes}, los objetivos de realizar el proceso de calibración son la estimación de los parámetros intrínsecos y extrínsecos de la cámara. Los parámetros intrínsecos se refieren a las características internas de la cámara, como por ejemplo, su distancia focal, distorsión, y el centro de la imagen. Los parámetros extrínsecos describen su posición y orientación dentro de un espacio de referencia. 
-
 Conocer los parámetros intrínsecos es un primer paso esencial, ya que permite calcular la estructura de la escena en el espacio euclídeo y elimina la distorsión de lentes, la cual afecta a la precisión.
 
 Para ubicar objetos en el mundo real, establecemos un sistema de referencia, denominado sistema de referencia global. Un objeto en una imagen es medido en términos de coordenadas de píxeles, los cuales están en el sistema de referencia de la imagen. El sólo conocer la distancia en píxeles entre puntos en una imagen, no nos permite determinar la distancia correspondiente a los mismos puntos en el mundo real. Por lo tanto, es necesario establecer las ecuaciones que unan el sistema de referencia global con el sistema de referencia de la imagen, de manera de establecer la relación entre los puntos en coordenadas en el espacio 3D y los puntos en coordenadas de imagen 2D. 
@@ -52,6 +42,15 @@ Para ubicar objetos en el mundo real, establecemos un sistema de referencia, den
 Desafortunadamente, no se puede establecer esta relación directamente, haciéndose necesario establecer un sistema de referencia intermedio, llamado sistema de referencia de la cámara. Por lo tanto, se deben encontrar las ecuaciones que unan el sistema de referencia de la cámara con el sistema de referencia de la imagen, y las ecuaciones que unan el sistema  de referencia del global con el sistema de referencia de la cámara. Al resolver el sistema de ecuaciones generado se obtiene la relación buscada.
 
 Básicamente, el proceso consiste en obtener una serie de imágenes en los que se encuentre visible un patrón plano (de dimensiones conocidas), con distintas orientaciones y distancias de la cámara. De cada patrón encontrado en las imágenes obtenemos una ecuación de homografía que establece la relación entre los puntos en coordenadas en el espacio 3D y los puntos en coordenadas de imagen 2D. Aunque en teoría con dos imágenes sería suficiente para resolverlo mediante un sistema lineal de ecuaciones, el objetivo es obtener el mayor número de ellas, ya que en la práctica existe gran cantidad de ruido en las imágenes adquiridas. Se recomienda por tanto, para obtener buenos resultados, al menos 10 imágenes correctas del patrón en diferentes posiciones.
+
+\begin{figure}
+\centering
+\subfigure[Patrón de Círculos Asimétricos]{\includegraphics[width=0.49\textwidth]{acircles_pattern.png}}
+\subfigure[Patrón Tipo Tablero de Ajedrez]{\includegraphics[width=0.49\textwidth]{chesspattern.png}}
+%\subfigure[Parte 3]{\includegraphics[width=0.32\textwidth]{keypoint3.png}}
+\caption{Tipos de patrones de calibración} \label{fig:pattern} 
+\end{figure}
+
 
 Como soporte al cálculo de los parámetros, OpenCV proporciona tres tipos de patrones para la calibración:
 
@@ -72,32 +71,31 @@ Se realiza el cálculo de las homografías entre el patrón y sus imágenes. Est
 
 Se ha diseñado y construido como una utilidad a parte del proceso principal, ya que una vez calibrado el sistema, genera unos ficheros YAML con los parámetros intrínsecos y extrínsecos que se cargan en el proyecto. Mientras que la cámara y el proyector mantengan su posición y rotación entre ellos, no es necesario realizar una nueva calibración y es posible mover todo el sistema.
 
-El módulo implementado está basado en un plugin para \textit{openFrameworks} que han realizado Álvaro Cassinelli, Niklas Bergström y Cyril Diagne a partir de un complemento desarrollado por Kyle McDonald. Es capaz de calibrar cámaras y proyectores, consiguiendo los parámetros intrínsecos de ambos, además de los extrínsecos en cuestión de varios minutos. 
+El módulo implementado está basado en un \textit{plugin} para \textit{openFrameworks} que han realizado Álvaro Cassinelli, Niklas Bergström y Cyril Diagne a partir de un complemento desarrollado por Kyle McDonald. Es capaz de calibrar cámaras y proyectores, consiguiendo los parámetros intrínsecos de ambos, además de los extrínsecos en cuestión de varios minutos. 
 
 El proceso de calibrado está divido en 4 fases:
 
 \begin{itemize}
 \item\textbf{Calibrado de la cámara. } Aunque la cámara y el proyector podrían ser calibrados de forma simultánea, es mejor comenzar primero por calibrar la cámara. Siguiendo en método de Zhang, los parámetros intrínsecos de la cámara se calculan encontrando las coordenadas, en el plano de imagen, de las esquinas de los cuadrados de un patrón de calibración para cada una de las orientaciones capturadas.
 
-\item\textbf{Calibración del proyector. } El sistema proyecta un patrón de círculos asimétrico en una posición fija. La cámara se utiliza para calcular la posición 3D de los círculos proyectados, primero según el sistema de coordenadas de la cámara, y luego según el sistema de coordenadas del patrón proyectado. Con esto parámetros se calculan los parámetros intrínsecos del proyector porque tiene puntos 3D (los círculos proyectados) en coordenadas reales, y sus respectivas proyecciones en el plano de imagen del proyector. El procedimiento de cálculo de homografías es el mismo que para las cámaras, ya que el modelo matemático del proyector, es el de una cámara invertida. 
+\item\textbf{Calibración del proyector. } El sistema proyecta un patrón de círculos asimétrico en una posición fija. La cámara se utiliza para calcular la posición 3D de los círculos proyectados, primero según el sistema de coordenadas de la cámara, y después según el sistema de coordenadas del patrón proyectado. Con esto parámetros se calculan los parámetros intrínsecos del proyector porque tiene puntos 3D (los círculos proyectados) en coordenadas reales, y sus respectivas proyecciones en el plano de imagen del proyector. El procedimiento de cálculo de homografías es el mismo que para las cámaras, ya que el modelo matemático del proyector, es el de una cámara invertida. 
 
-\item\textbf{Calibración del sistema estéreo (cámara-proyector). } Una vez que tengamos un buen error reproyección suficiente (para el proyector), podemos empezar a mover los puntos proyectados en torno a fin de explorar mejor el espacio (y obtener una mejor y más precisa calibración). En esta fase, podemos ejecutar la calibración estéreo OpenCV para obtener los parámetros extrínsecos cámara-proyector y otra vez, que no tenga que volver a calcular los instrinics del proyector. Después de unos pocos ciclos (y limpieza de malas "tablas"), el proceso converge, los datos se guardan.
+\item\textbf{Calibración del sistema estéreo (cámara-proyector). } Una vez que tengamos un error de reproyección suficiente (para el proyector), se puede comenzar a mover el patrón de los puntos proyectados a lo largo de toda la superficie de proyección con el fin de explorar mejor el espacio (y obtener una calibración más precisa). En esta fase, podemos ejecutar la calibración estéreo de OpenCV para obtener los parámetros extrínsecos cámara-proyector . Después de varias capturas, el proceso converge, y los datos se almacenan en un fichero YAML.
 
 \item\textbf{Verificación del calibrado. } Una vez se han obtenido todos los parámetros de calibrado del sistema, se inicia una fase de test para comprobar la fiabilidad del calibrado realizado. Utilizando el patrón de tablero de ajedrez, el sistema proyectará, de forma dinámica, 4 círculos situados en las respectivas esquinas del patrón. Si el proceso se ha realizado correctamente y con un error de reproyección contenido, las proyecciones deben coincidir con las esquinas y realizar un desplazamiento acorde, según movamos el patrón dentro de la zona de proyección 
 \end{itemize}
 
-Gracias a la decisión de separar el proceso, permite poder iniciarlo en cualquiera de las fases descritas. Podremos por tanto, calibrar solo la cámara, o partiendo de una calibración previa de la cámara calcular los parámetros del proyector o simplemente validar una calibración anterior, iniciando el proceso en la fase de verificación.  
-
+Gracias a la decisión de separar el proceso, permite poder iniciarlo en cualquiera de las fases descritas. Podremos por tanto, calibrar sólo la cámara, o partiendo de una calibración previa de la cámara calcular los parámetros del proyector o simplemente validar una calibración anterior, iniciando el proceso en la fase de verificación.  
 
 \subsection{Definición del modelo de proyección y calibrado}
 La idea principal tras los procesos de calibrado de cámaras es describir el modelo de proyección que relaciona los sistemas de coordenadas que permiten obtener los parámetros de la cámara. 
 
-%\begin{figure}
-%  \centering
-%  \includegraphics[width=0.3\textwidth]{class_intrinsics__coll__graph.png}
-%  \caption{Clase Intrinsics}
-%  \label{fig:classIntrinsics}
-%\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.3\textwidth]{class_intrinsics__coll__graph.png}
+  \caption{Clase Intrinsics}
+  \label{fig:classIntrinsics}
+\end{figure}
 La clase \texttt{Intrinsics} almacena la geometría y las características internas de la cámara. La matriz intrínseca o matriz de la cámara se representa como un objeto matriz \texttt{cv::Mat} de dimensiones 3x3 formada por los siguientes parámetros:
 
 \begin{equation}
@@ -127,76 +125,76 @@ A partir de la matriz de la cámara y el tamaño de la imagen capturada, la clas
  cv::Point2d principalPoint; // Principal point (center)
 \end{listing}
 
-OpenGL asume que no existe distorsión en la cámara por lo que a la hora de calcular la matriz de proyección debemos tener en cuenta que los parámetros de la matriz de la cámara deben estar corregidos. De esta forma, se utilizaran dos instancias de la clase \texttt{Instrinsics}: \texttt{distortedIntrinsics} y \texttt{undistortedIntrinsics}. La primera instancia almacena los parámetros ``reales'' mientras que en \texttt{undistortedIntrinsics} se encuentran los parámetros corregidos mediante las funciones \texttt{cv::getOptimalNewCameraMatrix} y \texttt{cv::initUndistortRectifyMap}.
+OpenGL asume que no existe distorsión en la cámara por lo que a la hora de calcular la matriz de proyección debemos tener en cuenta que los parámetros de la matriz de la cámara deben estar corregidos. De esta forma, se utilizaran dos instancias de la clase \texttt{Instrinsics}: \texttt{distortedIntrinsics} y \texttt{undistortedIntrinsics}. La primera instancia almacena los parámetros «reales» mientras que en \texttt{undistortedIntrinsics} se encuentran los parámetros corregidos mediante las funciones \texttt{cv::getOptimalNewCameraMatrix} y \texttt{cv::initUndistortRectifyMap}.
 
-%\begin{listing}[
-%  float=ht,
-%  language = C++,
-%  caption  = {Atributos de la clase Calibration},
-%  label    = code:Calibration]
-%  //Intrinsics
-%  Intrinsics distortedIntrinsics;
-%  Intrinsics undistortedIntrinsics;
-%  cv::Mat distCoeffs;
-%  
-%  // Calibration parameters
-%  vector<vector<cv::Point2f> > imagePoints;
-%  vector<vector<cv::Point3f> > objectPoints;
-%  float reprojectionError;
-%  vector<float> perViewErrors;
-%  vector<cv::Mat> boardRotations;
-%  vector<cv::Mat> boardTranslations;
-%
-%  // Pattern Configuration
-%  CalibrationPattern patternType;
-%  cv::Size patternSize;
-%  cv::Size addedImageSize;
-%  cv::Size subpixelSize;
-%  float squareSize;
-% 
-%  // Auxiliar calibration variables
-%  cv::Mat grayMat;
-%  bool fillFrame;
-%  cv::Mat undistortBuffer;
-%  cv::Mat undistortMapX, undistortMapY;
-%  bool ready;
-% \end{listing}
+\begin{listing}[
+  float=ht,
+  language = C++,
+  caption  = {Atributos de la clase Calibration},
+  label    = code:Calibration]
+  //Intrinsics
+  Intrinsics distortedIntrinsics;
+  Intrinsics undistortedIntrinsics;
+  cv::Mat distCoeffs;
+  
+  // Calibration parameters
+  vector<vector<cv::Point2f> > imagePoints;
+  vector<vector<cv::Point3f> > objectPoints;
+  float reprojectionError;
+  vector<float> perViewErrors;
+  vector<cv::Mat> boardRotations;
+  vector<cv::Mat> boardTranslations;
+
+  // Pattern Configuration
+  CalibrationPattern patternType;
+  cv::Size patternSize;
+  cv::Size addedImageSize;
+  cv::Size subpixelSize;
+  float squareSize;
+ 
+  // Auxiliar calibration variables
+  cv::Mat grayMat;
+  bool fillFrame;
+  cv::Mat undistortBuffer;
+  cv::Mat undistortMapX, undistortMapY;
+  bool ready;
+ \end{listing}
 
 Aunque el proceso de calibrado para la cámara y el proyector sigue el mismo enfoque, hay ciertas particularidades propias de cada dispositivo en el proceso de calibrado. La clase \texttt{Calibration} implementa toda la funcionalidad común, que es la mayoría, mientras que se han definido las clases \texttt{CameraCalibration} y \texttt{ProjectorCalibration} que heredan de \texttt{Calibration} y terminan de definir los procesos específicos.
 
 Finalmente la clase \texttt{CameraProjectorCalibration} encapsula un objeto de  \texttt{CameraCalibration} y otro de \texttt{ProjectorCalibration} con los parámetros intrínsecos de ambos dispositivos e incluye los vectores de rotación \texttt{(rotCamToProj)} y traslación \texttt{(transCamToProj)} que definen las transformaciones necesarias entre el sistema de referencia de la cámara y el sistema de referencia del proyector. 
 
-\texttt{CalibrationCore} es la encargada de inicializar la calibración de calibrado mediante la configuración establecida y define el proceso a realizar en cada una de las fases que lo compone.  bucle Update/draw
+\texttt{CalibrationCore} es la encargada de inicializar la calibración mediante la configuración establecida y define el proceso a realizar en cada una de las fases que lo compone.
 
 %La configuración del proceso:
-%\begin{listing}[
-%  float=ht,
-%  language = C++,
-%  caption  = {Configuración de la clase CalibrationCore},
-%  label    = code:CalibCore]
-%  // Threshold parameters
-%  circleDetectionThreshold = 160;
+\begin{listing}[
+  float=ht,
+  language = C++,
+  caption  = {Configuración de la clase CalibrationCore},
+  label    = code:CalibCore]
+  // Threshold parameters
+  circleDetectionThreshold = 160;
+ 
+  // Application
+  diffMinBetweenFrames = 4.0; 
+  timeMinBetweenCaptures = 2.0; 
+ 
+  //Boards parameters
+  numBoardsFinalCamera = 20;  
+  numBoardsFinalProjector = 20;
+  numBoardsBeforeCleaning = 3;  
+  numBoardsBeforeDynamicProjection = 5; 
+  maxReprojErrorCamera = 0.20;
+  maxReprojErrorProjectorStatic = 0.25;
+  maxReprojErrorProjectorDynamic = 0.43;
+
+  // Image Size
+  projectorFrame.create(cv::Size(800,600), CV_8UC1);
   
-%  // Application
-%  diffMinBetweenFrames = 4.0; 
-%  timeMinBetweenCaptures = 2.0; 
-  
-%  //Boards parameters
-%  numBoardsFinalCamera = 20;  
-%  numBoardsFinalProjector = 20;
-%  numBoardsBeforeCleaning = 3;  
-%  numBoardsBeforeDynamicProjection = 5; 
-%  maxReprojErrorCamera = 0.20;
-%  maxReprojErrorProjectorStatic = 0.25;
-%  maxReprojErrorProjectorDynamic = 0.43;
-%
-%  // Image Size
-%  projectorFrame.create(cv::Size(800,600), CV_8UC1);
-%  
-%  // --- INITIAL MODE ---
-%  setState(CAMERA); //CAMERA, PROJECTOR_STATIC, DEMO_AR
-%\end{listing}
-  
+  // --- INITIAL MODE ---
+  setState(CAMERA); //CAMERA, PROJECTOR_STATIC, DEMO_AR
+\end{listing}
+ 
 \subsection{Calibración de la cámara}
 En esta primera fase el objetivo es obtener los parámetros intrínsecos de la cámara. De forma continua, el sistema realiza capturas de imagen. Durante este proceso, se debe mostrar a la cámara el patrón impreso en distintas posiciones y orientaciones. 
 
@@ -204,7 +202,7 @@ Para cada imagen capturada, se realiza el siguiente proceso:
 
 \begin{itemize}
 
-\item Se realiza una \textbf{búsqueda de las esquinas de los cuadrados del patrón de calibración} en la imagen. Para detectar las esquinas se utiliza la función \texttt{cv::findChessboardCorners}. A esta función se le debe proporcionar la imagen actual donde buscar el patrón, las dimensiones del patrón y un vector de \texttt{cv::Point2f} donde se almacenaran los puntos de la imagen de las esquinas detectadas. Adicionalmente, para mejorar esta detección se emplea \texttt{cv::cornerSubPix}, que se encargará de ubicar estas esquinas en medidas de subpíxeles. Si se ha encontrado el tablero de ajedrez en la imagen, el vector de puntos devuelto se guardan en el vector \texttt{imagePoints} junto con las extracciones de los frames anteriores.  
+\item Se realiza una \textbf{búsqueda de las esquinas de los cuadrados del patrón de calibración} en la imagen. Para detectar las esquinas se utiliza la función \texttt{cv::findChessboardCorners}. A esta función se le debe proporcionar la imagen actual donde buscar el patrón, las dimensiones del patrón y un vector de \texttt{cv::Point2f} donde se almacenaran los puntos de la imagen de las esquinas detectadas. Adicionalmente, para mejorar esta detección se emplea \texttt{cv::cornerSubPix}, que se encargará de ubicar estas esquinas en medidas de subpíxeles. Si se ha encontrado el tablero de ajedrez en la imagen, el vector de puntos devuelto se guardan en el vector \texttt{imagePoints} junto con las extracciones de los \textit{frames} anteriores.  
 
 %\begin{listing}[
 %  float=ht,
@@ -230,7 +228,7 @@ Para cada imagen capturada, se realiza el siguiente proceso:
 %  imagePoints.push_back(pointBuf);
 %\end{listing}
 
-\item \textbf{Se generan los puntos de las esquinas del patrón en el sistema de coordenadas globales} \texttt{(objectPoints)} correspondientes a la imagen actual, en funcion del tipo, dimensiones y el valor de la medida real del lado del cuadrado del patrón que se ha impreso a través de la función \texttt{updateObjectPoints}.
+\item \textbf{Se generan los puntos de las esquinas del patrón en el sistema de coordenadas globales} \texttt{(objectPoints)} correspondientes a la imagen actual, en función del tipo, dimensiones y el valor de la medida real del lado del cuadrado del patrón que se ha impreso a través de la función \texttt{updateObjectPoints}.
 %\begin{listing}[
 %  float=ht,
 %  language = C++,
@@ -242,7 +240,7 @@ Para cada imagen capturada, se realiza el siguiente proceso:
 %  }
 %\end{listing}
 
-\item Para \textbf{realizar la asociación entre los puntos de la imagen y los del objeto} se utiliza la funcion \texttt{cv::calibrateCamera} que estima los parámetros intrínsecos y extrínsecos de la cámara para cada una de las vistas. Recibe los \texttt{objectPoints} y los \texttt{imagePoints } de todas las capturas que llevamos realizadas y el tamaño de la imagen capturada \texttt{(addedImageSize)}, y devuelve la matriz de la cámara \texttt{(cameraMatrix)}, los coeficientes de distorsión \texttt{(distCoeffs)} y un vector con los vectores de rotación \texttt{boardRotations} y traslación \texttt{boardTranslations} que se ha estimado para cada vista del patrón. Es decir, cada rotación del vector k-ésimo junto con el vector correspondiente k-ésimo de la traslación, convierte los puntos del patrón de calibración desde el sistema de coordenadas globales (en el que se especifican los puntos del objeto) al sistema de referencia de la cámara en la vista k-ésima. La función devuelve también el error de reproyección cometido para cada una de las vistas.
+\item Para \textbf{realizar la asociación entre los puntos de la imagen y los del objeto} se utiliza la función \texttt{cv::calibrateCamera} que estima los parámetros intrínsecos y extrínsecos de la cámara para cada una de las vistas. Recibe los \texttt{objectPoints} y los \texttt{imagePoints } de todas las capturas que llevamos realizadas y el tamaño de la imagen capturada \texttt{(addedImageSize)}, y devuelve la matriz de la cámara \texttt{(cameraMatrix)}, los coeficientes de distorsión \texttt{(distCoeffs)} y un vector con los vectores de rotación \texttt{boardRotations} y traslación \texttt{boardTranslations} que se ha estimado para cada vista del patrón. Es decir, cada rotación del vector k-ésimo junto con el vector correspondiente k-ésimo de la traslación, convierte los puntos del patrón de calibración desde el sistema de coordenadas globales (en el que se especifican los puntos del objeto) al sistema de referencia de la cámara en la vista k-ésima. La función devuelve también el error de reproyección cometido para cada una de las vistas.
 
 \begin{listing}[
   float=ht,
@@ -334,7 +332,7 @@ En primer lugar, Se carga el fichero con los parámetros intrínsecos de la cám
 %calibrationProjector.setStaticCandidateImagePoints();
 %\end{listing}
 
-Se busca el patrón asimétrico en la imagen capturada, para ello se utiliza la funcion \texttt{cv::findCirclesGrid} que intenta determinar si la imagen de entrada contiene una cuadrícula de círculos. Si es así, la función localiza los centros de los círculos. Para la detección de los círculos esta función se apoya en un detector de regiones \emph{(Blob detector)} que configuramos mediante los siguiente parámetros para adaptar la búsqueda en función del tamaño de la imagen y el tamaño de las regiones que se van a detectar.
+Se busca el patrón asimétrico en la imagen capturada, para ello se utiliza la función \texttt{cv::findCirclesGrid} que intenta determinar si la imagen de entrada contiene una cuadrícula de círculos. Si es así, la función localiza los centros de los círculos. Para la detección de los círculos esta función se apoya en un detector de regiones \emph{(Blob detector)} que configuramos mediante los siguiente parámetros para adaptar la búsqueda en función del tamaño de la imagen y el tamaño de las regiones que se van a detectar.
 
 %\begin{listing}[
 %  float=ht,
@@ -348,10 +346,9 @@ Se busca el patrón asimétrico en la imagen capturada, para ello se utiliza la 
 %bool bProjectedPatternFound = cv::findCirclesGrid(processedImg, calibrationProjector.getPatternSize(), circlesImgPts, cv::CALIB_CB_ASYMMETRIC_GRID | cv::CALIB_CB_CLUSTERING, blobDetector);
 %\end{listing}
 
-A continuacion, se aplica una binarización de la imagen de entrada que permite la segmentación de los círculos proyectados y realiza una separación del patrón de tablero de ajedrez.
+A continuación, se aplica una binarización de la imagen de entrada que permite la segmentación de los círculos proyectados y realiza una separación del patrón de tablero de ajedrez.
 
-Encontrado el patrón de círculos, obtenemos los vectores de rotación \texttt{boardRot} y translación \texttt{boardTrans} de los puntos proyectados en el sistema de referencia de la cámara mediante la funcion \texttt{cv:solvePnP}
-
+Encontrado el patrón de círculos, obtenemos los vectores de rotación \texttt{boardRot} y translación \texttt{boardTrans} de los puntos proyectados en el sistema de referencia de la cámara mediante la función \texttt{cv:solvePnP}
 
 %Transform all image points to world points in camera reference frame  and then into the plane reference frame
 %Se transforman los punto de la imagen a puntos reales en el sistema de referencia de la cámara, y después al sistema de referencia del patrón
@@ -359,7 +356,7 @@ Encontrado el patrón de círculos, obtenemos los vectores de rotación \texttt{
 
 %Esto significa que podemos comenzar a computar los instrinsics del proyector porque tiene puntos 3d (los círculos proyectados) en coordenadas del mundo, y sus respectivos "proyección" "imagen" en el proyector plano. 
 
-Para realizar la asociación entre los puntos de la imagen y los del objeto se utiliza la funcion \texttt{cv::calibrateCamera} que estima los parámetros intrínsecos y extrínsecos de la cámara para cada una de las vistas. Recibe los \texttt{objectPoints} y los \texttt{imagePoints} de todas las capturas que llevamos realizadas y el tamaño de la imagen \texttt{addedImageSize} y devuelve la matriz de la cámara \texttt{cameraMatrix}, los coeficientes de distorsión \texttt{distCoeffs} y un vector con los vectores de rotación y traslación que se ha estimado para cada vista del patrón. 
+Para realizar la asociación entre los puntos de la imagen y los del objeto se utiliza la función \texttt{cv::calibrateCamera} que estima los parámetros intrínsecos y extrínsecos de la cámara para cada una de las vistas. Recibe los \texttt{objectPoints} y los \texttt{imagePoints} de todas las capturas que llevamos realizadas y el tamaño de la imagen \texttt{addedImageSize} y devuelve la matriz de la cámara \texttt{cameraMatrix}, los coeficientes de distorsión \texttt{distCoeffs} y un vector con los vectores de rotación y traslación que se ha estimado para cada vista del patrón. 
 
 %Las funciones checkRange comprobar que cada elemento de la matriz de la cámara y de los coeficientes de distorsión es ni NaN ni infinito. Actualización de distortedIntrinsics, actualización del error de reproyección y calculo de undistortedIntrinsics:distortedIntrinsics.setup(cameraMatrix, addedImageSize);  updateReprojectionError();   updateUndistortion();
 
@@ -399,52 +396,53 @@ F = cameraMatrix_2^ {-T} * E * cameraMatrix_1^{-1}
 
 Mediante la función \texttt{cv::stereoCalibrate} se estima la matriz de transformación entre dos cámaras que formen un par estéreo. En nuestro caso la cámara y el proyector. 
 
-La funcion \texttt{cv::stereoCalibrate} también permite obtener los parámetros intrínsecos de cada dispositivo, sin embargo debido a la alta dimensionalidad del espacio de parámetros y el ruido que pueden introducir las imágenes de entrada, la funcion puede divergir de la solución correcta. Por tanto utilizaremos los parámetros intrínsecos calculados en las fases previas para cada uno de los dispositivos de forma individual, proporcionándolos a la funcion e indicándolo mediante el \emph{flag} CV\_CALIB\_FIX\_INTRINSIC. Esto acción, simplifica los cálculos que tiene que realizar la función y que se realicen cálculos erróneos de unas matrices de proyección que ya se han obtenido previamente con bastante precisión. 
+La función \texttt{cv::stereoCalibrate} también permite obtener los parámetros intrínsecos de cada dispositivo, sin embargo debido a la alta dimensionalidad del espacio de parámetros y el ruido que pueden introducir las imágenes de entrada, la función puede divergir de la solución correcta. Por tanto utilizaremos los parámetros intrínsecos calculados en las fases previas para cada uno de los dispositivos de forma individual, proporcionándolos a la función e indicándolo mediante el \emph{flag} CV\_CALIB\_FIX\_INTRINSIC. Esto acción, simplifica los cálculos que tiene que realizar la función y que se realicen cálculos erróneos de unas matrices de proyección que ya se han obtenido previamente con bastante precisión. 
 
-Como hemos indicado, debemos proporcionar los puntos del patrón de calibración y las proyecciones de estos puntos observados respecto a la cámara y el proyector. \texttt{setDynamicProjectorImagePoints()} nos genera los puntos del patrón asimétrico y almacena la proyección de los puntos respecto de la cámara. La funcion \texttt{calibrationProjector.calibrate()} obtiene los parámetros intrínsecos y la proyección de los puntos del patrón respecto del proyector. 
+Como hemos indicado, debemos proporcionar los puntos del patrón de calibración y las proyecciones de estos puntos observados respecto a la cámara y el proyector. \texttt{setDynamicProjectorImagePoints()} nos genera los puntos del patrón asimétrico y almacena la proyección de los puntos respecto de la cámara. La función \texttt{calibrationProjector.calibrate()} obtiene los parámetros intrínsecos y la proyección de los puntos del patrón respecto del proyector. 
 
-Al estar diseñado el bucle del programa mediante un enfoque \emph{update/draw}, tenemos que proceder en dos iteraciones para dar tiempo a la imagen proyectada a refrescarse antes de tratar de detectarlo. De lo contrario podemos estar detectando el viejo patrón proyectado, pero el uso de los puntos de imagen más recientes (que rompe por completo la calibración por supuesto)
+Al estar diseñado el bucle del programa mediante un enfoque \emph{update/draw}, tenemos que proceder en dos iteraciones para dar tiempo a la imagen proyectada a refrescarse antes de tratar de detectarlo. De lo contrario podemos estar detectando el viejo patrón proyectado, pero utilizando los puntos de imagen más recientes.
 
 Con todos los parámetros necesarios calculados:
 \begin{itemize}
-  \item objectPoints: Puntos del patrón generado dinámicamente.
-  \item auxImagePointsCamera: Proyecciones de los puntos del patrón desde el punto de vista de la cámara
-  \item calibrationProjector.imagePoints: Proyecciones de los puntos del patrón desde el punto de vista del proyector
-  \item cameraMatrix: Matriz de parámetros intrínsecos de la cámara
-  \item cameraDistCoeffs: Coeficientes de distorsión de la cámara
-  \item projectorMatrix: Matriz de parámetros intrínsecos del proyector
-  \item projectorDistCoeffs: Coeficientes de distorsión del proyector
-  \item calibrationCamera.getDistortedIntrinsics().getImageSize(): Tamaño de la imagen utilizada.
+  \item \textbf{\textit{objectPoints:}} Puntos del patrón generado dinámicamente.
+  \item \textbf{\textit{auxImagePointsCamera:}} Proyecciones de los puntos del patrón desde el punto de vista de la cámara
+  \item \textbf{\textit{calibrationProjector.imagePoints:}} Proyecciones de los puntos del patrón desde el punto de vista del proyector
+  \item \textbf{\textit{cameraMatrix:}} Matriz de parámetros intrínsecos de la cámara
+  \item \textbf{\textit{cameraDistCoeffs:}} Coeficientes de distorsión de la cámara
+  \item \textbf{\textit{projectorMatrix:}} Matriz de parámetros intrínsecos del proyector
+  \item \textbf{\textit{projectorDistCoeffs:}} Coeficientes de distorsión del proyector
+  \item \textbf{\textit{calibrationCamera.getDistortedIntrinsics().getImageSize():}} Tamaño de la imagen utilizada.
 \end{itemize}  
  
 \texttt{cv::stereoCalibrate} devuelve la matriz de rotación \texttt{rotation3x3}, el vector de translación \texttt{transCamToProj} entre el sistema de referencia de la cámara y el proyector y el error de reproyección obtenido. La función \texttt{cv::Rodrigues} transforma la matriz de rotación en el vector de rotación \texttt{rotCamToProj} que almacena el proceso de calibrado.
 
-Cada cierto número de iteraciones, configurable en el sistema, se eliminan las capturas del patrón que el error de reproyección supere un determinado umbral. Y finalmente al alcanzar un numero suficiente de calibraciones correctas, se toman los valores de los parámetros intrínsecos y extrínsecos del proyector a los que converge el proceso como los finales, guardándolos en un fichero de tipo YAML al igual que se realizó con los parámetros intrínsecos de la cámara mediante un objeto de tipo cv::FileStorage. calibrationProjector.yml CameraProjectorExtrinsics.xml
+Cada cierto número de iteraciones, configurable en el sistema, se eliminan las capturas del patrón que el error de reproyección supere un determinado umbral. Y finalmente al alcanzar un numero suficiente de calibraciones correctas, se toman los valores de los parámetros intrínsecos y extrínsecos del proyector a los que converge el proceso como los finales, guardándolos en un fichero de tipo YAML al igual que se realizó con los parámetros intrínsecos de la cámara mediante un objeto de tipo cv::FileStorage. % calibrationProjector.yml CameraProjectorExtrinsics.xml
 
-Para finalizar, el sistema pasa al modo de validación del proceso de calibrado, donde de manera visual, comprobaremos la precisión de la calibración realizada.
   %setState(DEMO_AR);
 
 \subsection{Verificación del proceso de calibrado}
-Carga de los ficheros YAML y obtener instancias de los objetos:
+Para finalizar, el sistema pasa al modo de validación del proceso de calibrado, donde de manera visual, se comprobará la precisión de la calibración realizada.
+\begin{itemize}
+\item Se cargan los ficheros YAML y se obtienen las instancias de los objetos.
 %CameraCalibration calibrationCamera = camProjCalib.getCalibrationCamera();
 %ProjectorCalibration calibrationProjector  = camProjCalib.getCalibrationProjector();
 
-Se busca el patrón de tablero de ajedrez en la imagen y se extraen los puntos de las esquinas \texttt{chessImgPts}
+\item Se busca el patrón de tablero de ajedrez en la imagen y se extraen los puntos de las esquinas \texttt{chessImgPts}.
 %bool bPrintedPatternFound = calibrationCamera.findBoard(cameraFrame, chessImgPts, true);
 
-Calcula los vectores de rotación \texttt{cv::Mat boardRot} y traslación \texttt{cv::Mat boardTrans} del patrón a la cámara
+\item Calcula los vectores de rotación \texttt{cv::Mat boardRot} y traslación \texttt{cv::Mat boardTrans} del patrón a la cámara.
 %calibrationCamera.computeCandidateBoardPose(chessImgPts, boardRot, boardTrans);
 
-Seleccionamos los ObjectPoints correspondientes a las cuatro esquinas del patrón y se almacenan en \texttt{vector<cv::Point3f> auxObjectPoints}
+\item Selecciona los \texttt{ObjectPoints} correspondientes a las cuatro esquinas del patrón y se almacenan en \texttt{vector<cv::Point3f> auxObjectPoints}.
 
 %cv::Mat rotObjToProj, transObjToProj;
 
-Componemos los vectores de rotación y traslación del objeto a la cámara con vectores cámara al projector para obtener las transformaciones objeto a proyector
+\item Compone los vectores de rotación y traslación del objeto a la cámara con vectores cámara al proyector para obtener las transformaciones objeto a proyector.
 %cv::composeRT(boardRot,  boardTrans,
 %camProjCalib.getCamToProjRotation(), camProjCalib.getCamToProjTranslation(),
 %rotObjToProj, transObjToProj);
 
-Proyectamos con la funcion \texttt{cv::projectPoints} los puntos de las cuatro esquinas del patrón \texttt{auxObjectPoints}, mediante las transformaciones objeto-proyector y los parámetros intrínsecos del proyector
+\item Proyecta con la función \texttt{cv::projectPoints} los puntos de las cuatro esquinas del patrón \texttt{auxObjectPoints}, mediante las transformaciones objeto-proyector y los parámetros intrínsecos del proyector.
 
 %projectPoints(cv::Mat(auxObjectPoints),
 %rotObjToProj, transObjToProj,
@@ -452,20 +450,21 @@ Proyectamos con la funcion \texttt{cv::projectPoints} los puntos de las cuatro e
 %calibrationProjector.getDistCoeffs(),
 %out);
 
-Establecemos los puntos obtenidos en la proyección \texttt{vector<cv::Point2f> out} como la salida que tiene que representar el proyector y que deben coincidir físicamente si se ha realizado una buena calibración. %calibrationProjector.setCandidateImagePoints(out);
+\item Establece los puntos obtenidos en la proyección \texttt{vector<cv::Point2f> out} como la salida que tiene que representar el proyector y que deben coincidir físicamente si se ha realizado una buena calibración. %calibrationProjector.setCandidateImagePoints(out);
+\end{itemize}
 
 \section{Subsistema de captura}
-El módulo de captura de vídeo se encarga de crear y proporcionar fuentes de vídeo de diversa naturaleza para dar soporte al submódulo de tracking y registro (ver Sección X.X.x), al submódulo de interacción natural de usuario (ver Sección x.x.x), y al submódulo de identificación de documentos (ver Sección x.x.x).
+El módulo de captura de vídeo se encarga de crear y proporcionar fuentes de vídeo de diversa naturaleza para dar soporte al submódulo de \textit{tracking} y registro, al submódulo de interacción natural de usuario, y al submódulo de identificación de documentos.
 
 Es capaz de dar soporte multicámara. Se pueden crear tantas fuentes de vídeo como se disponga en el sistema, que será de alguno de los siguientes tipos: 
 \begin{itemize}
-\item RaspiCam: Para un rendimiento óptimo en la raspberry pi, al menos la cámara principal debería ser de este tipo.
-\item Cámara USB: En caso de no disponer de una raspicam o si se quieren incluir cámara adicionales para obtener capturas desde otra posición (videoconferencia,...).
+\item \textbf{RaspiCam:} Para un rendimiento óptimo en la Raspberry Pi, al menos la cámara principal debería ser de este tipo.
+\item \textbf{Cámara USB:} En caso de no disponer de una raspiCam o si se quieren incluir cámara adicionales para obtener capturas desde otra posición (videoconferencia,...).
 \end{itemize}
 
 OpenCV es la biblioteca de visión por computador más utilizada. Las estructuras que proporciona implementan todas la operaciones necesarias para el tratamiento de imágenes y su uso está ampliamente extendido y aceptado. OpenCV utiliza un tipo de matriz propio, denominado \texttt{(cv::Mat)}, adaptado a las necesidades de esta tecnología. Por este motivo, GrayAR utiliza esta estructura internamente para representar imágenes y su tratamiento en las diferentes funciones del sistema.
 
-El uso la cámara raspiCam \textit{(Raspberry Pi Camera Board)}, presenta un inconveniente. El dispositivo no es compatible con \emph{video4linux} y se debe utilizar la API MMAL (Multi-Media Abstraction Layer) sobre OpenMAX, para acceder a los datos de la cámara y transferirlos a la pantalla o codificarlo como imágenes o vídeos. Esto se traduce en que no es posible la utilización de OpenCV para la gestión del dispositivo y la estructura de datos para almacenar la imagén no es compatible con \texttt{cv::Mat}.  
+El uso la cámara raspiCam \textit{(Raspberry Pi Camera Board)}, presenta un inconveniente. El dispositivo no es compatible con \emph{video4linux} y se debe utilizar la API MMAL (Multi-Media Abstraction Layer) sobre OpenMAX, para acceder a los datos de la cámara y transferirlos a la pantalla o codificarlo como imágenes o vídeos. Esto se traduce en que no es posible la utilización de OpenCV para la gestión del dispositivo y la estructura de datos para almacenar la imagen no es compatible con \texttt{cv::Mat}.  
 
 
 La solución definida en el submódulo de captura es la implementación en dos componentes: el \texttt{VideoCapture}, que proporciona la interfaz de creación y gestión de fuentes de vídeo basada en la biblioteca de visión artificial OpenCV y \texttt{RaspiCam} para la gestión de la cámara propia de la Raspberry.
@@ -474,30 +473,30 @@ Con la raspiCam se proporcionan 2 aplicaciones: \texttt{raspivid} y \texttt{rasp
 
 Partiendo del trabajo de Pierre, otras personas, como Chris Cummings o Rafael Muñoz Salinas\footnote{Grupo de Investigación «Aplicaciones de la Visión Artificial» de la Universidad de Córdoba}, han desarrollado esta solución en C++ para poder obtener las imágenes de la cámara en objetos compatibles con OpenCV. Es precisamente la biblioteca de Rafael Muñoz, la que se ha utilizado a modo de drivers de la raspiCam. 
 
-El rendimiento que ofrece en el uso de la raspiCam es de hasta 30 fps para los modos YUV420, RGB y en escala de grises con imágenes de hasta 1280x960 píxeles. En modo BGR y con un tamaño de 1280x960 el rendimiento cae hasta los 14 fps, ya que el proceso de conversión del espacio de color consume bastantes recursos. 
+El rendimiento que ofrece en el uso de la raspiCam es de hasta 30 FPS para los modos YUV420, RGB y en escala de grises con imágenes de hasta 1280x960 píxeles. En modo BGR y con un tamaño de 1280x960 el rendimiento cae hasta los 14 fps, ya que el proceso de conversión del espacio de color consume bastantes recursos. 
 
 Por defecto, cuando se utiliza esta biblioteca con OpenCV las imágenes obtenidas están en el espacio de color BGR, con lo que el desempeño es menor. 
 Al utilizar una arquitectura cliente-servidor, se decide que la tarea de conversión sea delegada, y sea el servidor el encargado de cambiar al espacio de color de OpenCV cuando la imagen es recibida.
 
-Gracias al diseño, en el que las fuentes de vídeo concretas tienen que respetar un interfaz común, se obtiene un acceso homogeneo. Así, el acceso a los recursos que proporciona cualquier fuente es común a todas ellas:
+Gracias al diseño, en el que las fuentes de vídeo concretas tienen que respetar un interfaz común, se obtiene un acceso homogéneo. Así, el acceso a los recursos que proporciona cualquier fuente es común a todas ellas:
 %La aplicación de los enfoques anteriormente expuestos aportan que la utilización del módulo de captura sea homogenea:   
 \begin{itemize}
-\item La utilización de la biblioteca raspiCam proporciona una interfaz sencilla, sin necesidad de dependencias y compatible con los objetos de OpenCV. De esta forma, todos los submódulos reciben la misma estructura de datos, independiente del dispositivo.
+\item La utilización de la biblioteca raspiCam proporciona una interfaz sencilla, sin necesidad de dependencias y compatible con los objetos de OpenCV. De esta forma, todos los subsistemas reciben la misma estructura de datos, independiente del dispositivo.
 
-\item Utilizando la misma interfaz de OpenCV, no es necesario un aprendizaje previo para el acceso a las fuentes de video y obtenemos una transparencia que simplifica la utilización de cara al usuario y le abstrae de la implementaciones propias. En resumen, a una cámara se accede siempre igual, independientemente del tipo que sea.
+\item Utilizando la misma interfaz de OpenCV, no es necesario un aprendizaje previo para el acceso a las fuentes de vídeo y obtenemos una transparencia que simplifica la utilización de cara al usuario y le abstrae de la implementaciones propias. En resumen, a una cámara se accede siempre igual, independientemente del tipo que sea.
 
 \item Para la realización de este proyecto se ha compilado una versión de OpenCV con soporte de archivos de vídeo basado en FFMPEG y con soporte de dispositivos de vídeo basado en Video4Linux2. Gracias a esto, OpenCV encapsula el acceso a cualquier tipo de fuente de vídeo, por lo que obtener las imágenes desde un archivo de vídeo se realiza de la misma forma que de una cámara.
 \end{itemize}
 
 \section{Subsistema de \textit{tracking} y registro}
-El cálculo del registro requiere posicionar el sistema cámara-proyector, mediante su posición y rotación, relativo a las hojas de papel que se encuentren en la escena capturada. Los métodos de tracking, en general, son los encargados de obtener una estimación de la trayectoria que realiza un
+El cálculo del registro requiere posicionar el sistema cámara-proyector, mediante su posición y rotación, relativo a las hojas de papel que se encuentren en la escena capturada. Los métodos de \textit{tracking}, en general, son los encargados de obtener una estimación de la trayectoria que realiza un
 objeto. 
 
-En GrayAR, se ha optado por implementar un sistema de tracking visual basado en una aproximación \textbf{\textit{bottom-up}}\cite{Marimon}, en la que se calculan los seis grados de libertad de la cámara a partir de lo que se está percibiendo en la imagen.
+En GrayAR, se ha optado por implementar un sistema de \textit{tracking} visual basado en una aproximación \textbf{\textit{bottom-up}}\cite{Marimon}, en la que se calculan los seis grados de libertad de la cámara a partir de lo que se está percibiendo en la imagen.
 
-El módulo tiene como entrada el frame actual, donde va a realizar la búsqueda de cuadrilateros candidatos a ser hojas de papel; los parámetros de calibración de la cámara y el proyector; las dimensiones de la hoja de papel y por último, si la pose se debe calcular para representarse por pantalla o en el proyector.
+El módulo tiene como entrada el \textit{frame} actual, donde va a realizar la búsqueda de cuadriláteros candidatos a ser hojas de papel; los parámetros de calibración de la cámara y el proyector; las dimensiones de la hoja de papel y por último, si la pose se debe calcular para representarse por pantalla o en el proyector.
 
-La salida consistirá en un vector con las hojas de papel detectadas (definidas por las esquinas), así como sus parametros extrinsecos correspondientes. Estos parametros extrinsecos, consistentes en una matriz de rotación y un vector de translación, son los que aplicados a un objeto virtual 3D producen la transformación necesaria, para al realizar su representación esté correctamente situado respecto al sistema de referencia del papel.   
+La salida consistirá en un vector con las hojas de papel detectadas (definidas por las esquinas), así como sus parámetros extrínsecos correspondientes. Estos parámetros extrínsecos, consistentes en una matriz de rotación y un vector de translación, son los que aplicados a un objeto virtual 3D producen la transformación necesaria, para al realizar su representación esté correctamente situado respecto al sistema de referencia del papel.   
 
 %\begin{itemize}
 %\item Una primera fase basada en una aproximación \textbf{\textit{bottom-up}}\cite{Marimon}, en la que se
@@ -518,13 +517,10 @@ Conociendo las posiciones 2D de las aristas y vértices que definen la hoja de p
   \label{fig:input}
 \end{figure}
 
-El enfoque utilizado es similar al de ArUCo ó ARToolkit, mediante un algoritmo de detección de bordes y un método de estimación de la orientación. Sobre la imagen obtenida se inicia el primer paso de búsqueda de hojas de papel. La imagen se convierte a blanco y negro para facilitar la detección de cuadriláteros; primero se convierte a escala de grises, y después se binariza eligiendo un parámetro de umbral «threshold» que elige a partir de qué valor de gris (de entre 256 valores distintos) se considera blanco o negro. A continuación el algoritmo de visión por computador extrae componentes conectados de la imagen previamente binarizada,cuya área es suficientemente grande como para ser una hoja de papel. A estas regiones se les aplica un algoritmo de detección de contornos, obteniendo a continuación los vértices y aristas que definen la región de la hoja en 2D.
+El enfoque utilizado es similar al de ArUCo ó ARToolkit, mediante un algoritmo de detección de bordes y un método de estimación de la orientación. Sobre la imagen obtenida se inicia el primer paso de búsqueda de hojas de papel. La imagen se convierte a blanco y negro para facilitar la detección de cuadriláteros; primero se convierte a escala de grises, y después se binariza eligiendo un parámetro de umbral \textit{«threshold»} que elige a partir de qué valor de gris (de entre 256 valores distintos) se considera blanco o negro. A continuación el algoritmo de visión por computador extrae componentes conectados de la imagen previamente binarizada,cuya área es suficientemente grande como para ser una hoja de papel. A estas regiones se les aplica un algoritmo de detección de contornos, obteniendo a continuación los vértices y aristas que definen la región de la hoja en 2D.
 
-
-
-
-\subsection{Conversión a escala de grises (Grayscale)}
-El primer paso en el proceso de detección consiste en convertir el frame capturado por la cámara a escala de grises mediante la función \texttt{cv::cvtColor}. Esta función convierte una imagen de un espacio de color a otro. La constante \texttt{CV\_BGR2GRAY} sirve para indicar que queremos pasar de una imagen BGR (estándar de OpenCV) a otra en escala de grises.
+\subsection{Conversión a escala de grises}
+El primer paso en el proceso de detección, consiste en convertir el \textit{frame} capturado por la cámara a escala de grises mediante la función \texttt{cv::cvtColor}. Esta función convierte una imagen de un espacio de color a otro. La constante \texttt{CV\_BGR2GRAY} sirve para indicar que queremos pasar de una imagen BGR (estándar de OpenCV) a otra en escala de grises.
 
 \begin{figure}[h] 
   \centering
@@ -540,10 +536,10 @@ El primer paso en el proceso de detección consiste en convertir el frame captur
 %\caption{Conversión a escala de Grises} \label{fig:conversionGrises}
 %\end{figure}
 
-\subsection{Umbralización o binarización (Thresholding)}
+\subsection{Umbralización o binarización}
 La umbralización consiste en definir un valor umbral y compararlo con cada uno de los píxeles de la imagen. A los píxeles que estén por debajo del umbral se les asigna un valor, y a los que estén por encima otro. De esta forma se divide toda la población de valores en tan sólo dos grupos, reduciendo considerablemente la complejidad de la información a analizar.
 
-En GrayAR, se han desarrollado tres soluciones distintas para tratar de resolver este problema del thresholding básico (fijo, adaptativo y el método Canny). En un principio, solo se implementaron los métodos fijos y adaptativo, pero en una fase de optimización realizada posteriormente, se incluyo
+En GrayAR, se han desarrollado tres soluciones distintas para tratar de resolver este problema del \textit{thresholding} básico (fijo, adaptativo y el método Canny). En un principio, sólo se implementaron los métodos fijos y adaptativo, pero en una fase de optimización realizada posteriormente, se incluyo
 el método Canny. 
 
 La ventaja aportada por el algoritmo de Canny respecto a los anteriores es que proporciona bordes más precisos, y es tolerante a las variaciones de iluminación, produciendo menores índices de ruido en la imagen binarizada.
@@ -565,20 +561,20 @@ El siguiente paso del proceso es la detección de contornos, una operación un t
   \label{fig:contours}
 \end{figure}
 
-Para este paso se parte de la imagen resultante del paso anterior. Es decir, de una imagen que tan solo consta de píxeles con valor cero o uno. Sobre ella se aplica un algoritmo que la barre, empezando por su esquina superior izquierda, a la busca de un primer píxel a uno, y que cuando lo
+Para este paso se parte de la imagen resultante del paso anterior. Es decir, de una imagen que tan sólo consta de píxeles con valor cero o uno. Sobre ella se aplica un algoritmo que la barre, empezando por su esquina superior izquierda, a la busca de un primer píxel a uno, y que cuando lo
 encuentra es capaz de seguir la cadena de píxeles con valor uno que se encuentran unidos a él hasta volver al píxel de partida. Esa cadena de píxeles a uno encontrados se denomina contorno. Y es más, el algoritmo es capaz de encontrar todos los contornos presentes en la imagen, ya que cuando termina con uno empieza de nuevo el proceso hasta asegurarse de haber barrido la imagen por completo.
 
 En la documentación, así como la referencia de implementación, se refiere al \textit{paper} original «Topological structural analysis of digitized binary images by border following» de Satoshi Suzuki and Keiichi Abe. 
 
-GrayAR utiliza la función \texttt{findContours} que implementa este algoritmo. Básicamente hay un contador de contornos encontrados y un buffer de píxeles recorridos. El contador se inicializa a cero y el buffer con una copia de la imagen original. Se barre el buffer de arriba abajo y de izquierda a derecha. Una transición de un píxel 0 a otro 1 indica que se ha detectado un borde exterior, momento en que se suma uno al contador de contornos encontrados y se buscan todos los píxeles 1 vecinos del encontrado. Si el píxel no tiene vecinos a 1 se cambia el valor del píxel por el del contador con signo contrario y se empieza otra vez con el siguiente píxel. En caso
+GrayAR utiliza la función \texttt{findContours} que implementa este algoritmo. Básicamente hay un contador de contornos encontrados y un \textit{buffer} de píxeles recorridos. El contador se inicializa a cero y el \textit{buffer} con una copia de la imagen original. Se barre el \textit{buffer} de arriba abajo y de izquierda a derecha. Una transición de un píxel 0 a otro 1 indica que se ha detectado un borde exterior, momento en que se suma uno al contador de contornos encontrados y se buscan todos los píxeles 1 vecinos del encontrado. Si el píxel no tiene vecinos a 1 se cambia el valor del píxel por el del contador con signo contrario y se empieza otra vez con el siguiente píxel. En caso
 contrario se cambia el valor del píxel por el del contador, excepto que su valor sea mayor que 1, lo que significa que ya ha sido visitado, y se continúa buscando vecinos a 1 hasta retornar al píxel inicial. Una transición de un píxel con valor igual o mayor que 1 a otro 0 indica que se ha
 detectado un borde interior, momento en que se repite el mismo proceso usado para los contornos exteriores.
 
-El algoritmo presenta una pequeña dificultad en los bordes de la imagen, y para solventarlo presupone que la imagen está rodeada por los cuatro lados de píxeles con valor 0. Es decir, que el buffer que utiliza tiene una fila más por encima y por debajo, y una columna más a derecha e izquierda, que la imagen original.
+El algoritmo presenta una pequeña dificultad en los bordes de la imagen, y para solventarlo presupone que la imagen está rodeada por los cuatro lados de píxeles con valor 0. Es decir, que el \textit{buffer} que utiliza tiene una fila más por encima y por debajo, y una columna más a derecha e izquierda, que la imagen original.
 
 Gracias a este algoritmo, no sólo se obtienen los contornos exteriores, como ocurre con otras implementaciones, sino también los interiores a otros, y retornarlos clasificados jerárquicamente. 
 
-Otra ventaja de esta implemación, al devolver todos y cada uno de los puntos que forman el contorno, es que permite tomar algunas decisiones tempranas, como por ejemplo descartar los contornos que no tengan un mínimo de puntos. Es decir, aquellos que no son susceptibles de formar la hoja de papel. 
+Otra ventaja de esta implementación, al devolver todos y cada uno de los puntos que forman el contorno, es que permite tomar algunas decisiones tempranas, como por ejemplo descartar los contornos que no tengan un mínimo de puntos. Es decir, aquellos que no son susceptibles de formar la hoja de papel. 
 
 \subsection{Aproximación a polígonos}
 Los contornos de los que se parte para este paso son colecciones de puntos del paso anterior. El objetivo de este método es obtener el polígono que mejor se ajuste a cada uno de los contorno de entrada.
@@ -598,7 +594,7 @@ OpenCV proporciona la función \texttt{cv::convexHull} para encontrar la envoltu
 
 A continuación, la conversión de una colección de puntos en un polígono se realiza mediante el algoritmo de Douglas-Peucker. El algoritmo admite como entrada una lista de puntos y una distancia máxima permitida. Define un segmento que va desde el primer punto de la lista hasta el último, y calcula la distancia más corta que hay desde dicho segmento a todos y cada uno del resto de puntos de la lista. Si encuentra un punto a una distancia mayor que la máxima pasada como parámetro divide la lista y el segmento en dos, utilizando el punto encontrado como nuevo extremo. Y vuelve a empezar el proceso comprobando cada nueva lista contra cada nuevo segmento de forma individual, creando nuevas listas y segmentos si fuera necesario, de forma recursiva.
 
-Esta implentación se realiza en GrayAR mediante la función \texttt{approxPolyDP}. GrayAR utiliza como distancia máxima para al algoritmo el 10\% del número de puntos que tiene cada contorno de forma individual.
+Esta implantación se realiza en GrayAR mediante la función \texttt{approxPolyDP}. GrayAR utiliza como distancia máxima para al algoritmo el 10\% del número de puntos que tiene cada contorno de forma individual.
 
 Una vez convertidos los puntos a polígonos se descartan los que no tengan cuatro lados. 
 
@@ -609,7 +605,7 @@ Gracias a la utilización del cálculo de la envoltura convexa como paso previo,
 \begin{figure}[h] 
   \centering
   \includegraphics[width=0.98\textwidth]{douglas.png}
-  \caption{Poligonos en encontrados en la imagen}
+  \caption{Polígonos en encontrados en la imagen}
   \label{fig:douglas}
 \end{figure}
 
@@ -618,9 +614,9 @@ Mientras se este realizando alguna interacción con el documento, nuestra mano, 
 
 En estos casos, la búsqueda de la hoja de papel en la imagen se debe realiza mediante detectores de líneas basados en la transformada de Hough.
 
-Esta función se invocará sólo cuando no se hayan detectado cuadriláteros mediante el algoritmo anterior, ya que esta función es costosa computacionalmente debido al tamaño del espacio de busqueda. 
+Esta función se invocará sólo cuando no se hayan detectado cuadriláteros mediante el algoritmo anterior, ya que esta función es costosa computacionalmente debido al tamaño del espacio de búsqueda. 
 
-El resultado será, al igual que la función anterior, un vector con todos los cuadrilateros que corresponden a las hojas de papel detectadas.
+El resultado será, al igual que la función anterior, un vector con todos los cuadriláteros que corresponden a las hojas de papel detectadas.
 
 \begin{figure}[h!] 
   \centering
@@ -669,7 +665,7 @@ Se seleccionan un conjunto de las rectas detectadas para ser examinado en funci�
   
 \item El segmento es mayor que un valor umbral.
 \item Sólo se tienen en cuenta los segmentos más próximos a los límites de proyección. El detector
-  de Hough puede encontrar rectas en el interior de la hoja de papel que estamos buscando. Así solo
+  de Hough puede encontrar rectas en el interior de la hoja de papel que estamos buscando. Así sólo
   seleccionaremos los posibles candidatos a formar el borde del papel.
  \item Los ángulos que formen dos rectas contiguas estará comprendido dentro del rango de 75º a 105º.
 \item Los ángulos que formen dos rectas opuestas deben ser cercanos a 180º ó 360º.
@@ -709,30 +705,15 @@ Para ello se generan las posibles combinaciones de 4 segmentos del conjunto de r
 \begin{figure}[h!] 
     \centering
     \includegraphics[width=0.98\textwidth]{overlappingResult3.png}
-    \caption{Cuadrilatero formado por lo segmentos y que cumple las condiciones}
+    \caption{Cuadrilátero formado por lo segmentos y que cumple las condiciones}
     \label{fig:overlappingResult}
   \end{figure}
 
 
 \subsection{Estimación de la pose}
-%Essential problem in AR: POSE ESTIMATION
-%WHERE to put the CG object
-%ORIENTAION of CG object
-%SIZE of CG object
+EL reto principal en un sistema de realidad aumentada es la estimación de la \textit{pose}. Básicamente consiste en obtener, en función del sistema de referencia del dispositivo de representación, \textit{donde} se debe colocar el objeto virtual, que \textit{orientación} tiene y con que \textit{tamaño}, por medio de matrices de translación, rotación y escalado respectivamente. 
 
-%(translation)
-%(rotation)
-%(scaling)
-
-Una vez detectadas e identificadas las hojas de papel de la imagen, se procede a calcular los parámetros extrínsecos de la cámara respecto a cada una de ellas.
-
-\begin{equation}
-  [R|t] = \begin{bmatrix} R_{1,1} & R_{1,2} & R_{1,3} & T_{1}  \\
-    R_{2,1} & R_{2,2} & R_{2,3} & T_{2}  \\
-    R_{3,1} & R_{3,2} & R_{3,3} & T_{3}  \\
-    0    &     0    &     0    &  1
-  \end{bmatrix}
-\end{equation}
+La solución a este problema se ha encapsulado mediante la clase \texttt{Paper}. Esta clase representa una hoja de papel detectada por el sistema, mediante el almacenamiento de los puntos correspondientes a sus esquinas. Se ha diseñado mediante el patrón \textit{Decorator} aplicado a un vector de \texttt{cv::Point2f}, añadiendo las funciones necesarias calcular los parámetros extrínsecos de la cámara respecto a las cuatro esquinas del papel almacenadas en el vector.
 
 Para convertir las coordenadas del mundo a coordenadas de pantalla, de espacio tridimensional a bidimensional, se utilizará la fórmula \ref{eq:proyDef} desarrollada en la sección 2:
 
@@ -743,25 +724,38 @@ donde
 \begin{equation}
   q=\begin{bmatrix} u \\ v \\ 1 \end{bmatrix} \quad K=\begin{bmatrix} f_{x} & 0 & c_{x} \\ 0 & f_{y} & c_{y} \\ 0 & 0 & 1 \end{bmatrix} \quad Q=\begin{bmatrix} X \\ Y \\ Z \end{bmatrix}
 \end{equation}
+\begin{equation}
+  [R|t] = \begin{bmatrix} R_{1,1} & R_{1,2} & R_{1,3} & T_{1}  \\
+    R_{2,1} & R_{2,2} & R_{2,3} & T_{2}  \\
+    R_{3,1} & R_{3,2} & R_{3,3} & T_{3}  \\
+    0    &     0    &     0    &  1
+  \end{bmatrix}
+\end{equation}
 
-Por tanto, $q$ representa el espacio bidimensional en coordenadas homogéneas, y $q$ el espacio
-tridimensional. $f_{x}$ es la distancia focal en el eje $X$, $f_{y}$ la distancia focal en el eje
-$Y$, ($c_{x},c_{y}$) marcan el punto principal, el punto donde el eje de visión corta el plano de
-visión (normalmente suele estar en el centro de la imagen, o muy cerca).
+Por tanto, $q$ representa el espacio bidimensional en coordenadas homogéneas, y $Q$ el espacio tridimensional. $f_{x}$ es la distancia focal en el eje $X$, $f_{y}$ la distancia focal en el eje $Y$, ($c_{x},c_{y}$) marcan el punto principal, el punto donde el eje de visión corta el plano de visión (normalmente suele estar en el centro de la imagen, o muy cerca). 
 
-Mediante la función de OpenCV \texttt{cv::solvePnp}, se calcula la \emph{pose} (rotación y
-traslación $[R|t]$) de la hoja de papel. Dado un conjunto de puntos del objeto \texttt{(ObjPoints)}, sus proyecciones en la imagen correspondiente \texttt{(ImagePoints)}, así como la matriz de la cámara ($K$) \texttt{(camMatrix)} y los coeficientes de distorsión \texttt{(distCoeff)}. Esta función encuentra una \emph{pose} que minimiza el error de reproyección, es decir, la suma de los cuadrados de las distancias entre las proyecciones \texttt{imagePoints} observados y los \texttt{objectPoints} proyectados.
+El cálculo de la pose en función del dispositivo de representación, se ha definido en la función \texttt{calculateExtrinsics}. Esta función es una interfaz común para obtener la \textit{pose} tanto para la cámara como para el proyector. Recibe como argumentos las dimensiones de la hoja de papel y un objeto de la clase \texttt{cameraProjectorSystem} que encapsula las matrices de proyección de ambos dispositivos. Adicionalmente, y como parámetros opcionales, admite dos valores \textit{booleanos}. El primero, \texttt{setYPerperdicular} indica si considera el sistema de coordenadas cartesianas con el eje Y vertical, y el segundo, para definir el dispositivo de representación, y por tanto seleccionar una u otra matriz de parámetros intrínsecos a la hora de realizar los cálculos.
 
-Se establece el centro del papel como centro de coordenadas $(0,0,0)$, por lo que las esquinas que se le proporcionan a la función son :
+Mediante la función de OpenCV \texttt{cv::solvePnp}, se calcula la \emph{pose} (rotación y traslación $[R|t]$) de la hoja de papel. Dado un conjunto de puntos del objeto \texttt{(ObjPoints)}, sus proyecciones en la imagen correspondiente \texttt{(ImagePoints)}, así como la matriz de la cámara (ó del proyector) ($K$) \texttt{(camMatrix)} y los coeficientes de distorsión \texttt{(distCoeff)}. Esta función encuentra una \emph{pose} que minimiza el error de reproyección, es decir, la suma de los cuadrados de las distancias entre las proyecciones \texttt{imagePoints} observados y los \texttt{objectPoints} proyectados.
+
+Se establece el centro del papel como centro de coordenadas $(0,0,0)$, por lo que las esquinas que se le proporcionan a la función son:
 \begin{equation}
   ObjPoints =\begin{bmatrix} -w/2 & -h/2 & 0 \\
     w/2 & -h/2 & 0 \\
     w/2 &  h/2 & 0 \\
     -w/2 &  h/2 & 0
   \end{bmatrix}
-\end{equation}
+\end{equation} 
 
 Siendo $h$ y $w$ la altura y anchura de la hoja de papel respectivamente. 
+
+Se debe conocer cómo OpenCV enumera las esquinas del papel. Dado un cuadrilátero, la primera esquina corresponde a la que se encuentra situada más a la derecha de la imagen.  Las consecuencias son que para ciertas posiciones, las dimensiones de los segmentos que forman los lados del papel tienen un valor, y en otras posiciones, esos mismos segmentos tienen otra medida. En resumen, para el cálculo de los parámetros extrínsecos, considera una distribución distinta en entre los puntos de la imagen y los puntos del objeto.
+
+La solución implementada ha sido comparar la longitud de los segmentos detectados, para determinar en que posición se están enumerando las esquinas, y aplicar una enumeración acorde al establecido en los puntos del objeto.
+
+OpenGL trabaja con matrices de modelo \textit{(ModelViewMatrix)} y de proyección \textit{(ProjectionMatrix)} para realizar las transformaciones necesarias en el proceso de representación de un objeto 3D. La función \texttt{getGetModelViewMatrix} es la encargada de realizar las operaciones sobre las matrices de rotación y translación para obtener una matriz tipo \texttt{float} equivalente y compatible con OpenGL.
+
+Las ventajas al utilizar el patrón \textit{Decorator} en la clase \texttt{Paper}, nos permite extender su funcionalidad de una manera más flexible que con la herencia. La parametrización de los ejes cartesianos y del dispositivo de representación, permiten la utilización de distintos sistemas de representación gráfica, como OGRE3D u OpenGL; y dispositivos como cámaras o proyectores, sin la necesidad de realizar modificaciones en la clase.  
 
 
 \subsection{Refinamiento de la \emph{pose}}
@@ -852,7 +846,7 @@ general.
 \begin{figure}
 \centering
 \subfigure[Imagen de Entrada]{\includegraphics[width=0.49\textwidth]{input.png}}
-\subfigure[Cuadrilatero extraido]{\includegraphics[width=0.49\textwidth]{warp.png}}
+\subfigure[Cuadrilátero extraído]{\includegraphics[width=0.49\textwidth]{warp.png}}
 \caption{Eliminación de la transformación de perspectiva} \label{fig:warp}
 \end{figure}
 
@@ -897,10 +891,10 @@ es un descriptor de un punto clave.
 \subsection{Búsqueda de Coincidencias}
 \begin{figure}
 \centering
-\subfigure[Parte 1]{\includegraphics[width=0.49\textwidth]{keypoint1.png}}
-\subfigure[Parte 2]{\includegraphics[width=0.49\textwidth]{keypoint2.png}}
+\subfigure[KeyPoints en el formulario ASLA]{\includegraphics[width=0.49\textwidth]{keypoint1.png}}
+\subfigure[KeyPoints en el formulario ASPRONA]{\includegraphics[width=0.49\textwidth]{keypoint2.png}}
 %\subfigure[Parte 3]{\includegraphics[width=0.32\textwidth]{keypoint3.png}}
-\caption{Puntos de interes} \label{fig:keypoints}
+\caption{Puntos de interés} \label{fig:keypoints}
 \end{figure}
 
 
@@ -960,7 +954,7 @@ la candidata para devolver su índice como resultado de la identificación.
   \begin{figure}] 
     \centering
     \includegraphics[width=0.98\textwidth]{knn1.png}
-    \caption{Busqueda de coincidencias de descriptores Imagen 1}
+    \caption{Búsqueda de coincidencias de descriptores Imagen 1}
     \label{fig:knn1}
   \end{figure}
 
@@ -969,7 +963,7 @@ la candidata para devolver su índice como resultado de la identificación.
   \begin{figure} 
     \centering
     \includegraphics[width=0.98\textwidth]{knn2.png}
-    \caption{Busqueda de coincidencias de descriptores Imagen 2}
+    \caption{Búsqueda de coincidencias de descriptores Imagen 2}
     \label{fig:knn2}
   \end{figure}
 
@@ -978,7 +972,7 @@ la candidata para devolver su índice como resultado de la identificación.
   \begin{figure} 
     \centering
     \includegraphics[width=0.98\textwidth]{knn3.png}
-    \caption{Busqueda de coincidencias de descriptores Imagen 3}
+    \caption{Búsqueda de coincidencias de descriptores Imagen 3}
     \label{fig:knn3}
   \end{figure}
 
@@ -1021,6 +1015,12 @@ el su crominancia, por lo tanto en lugar de utilizar el espacio de
 color RGB, se utilizará el  \textbf{espacio de color HSV} (Hue, Saturation,
 Value), que es más adecuado se aproxima a la percepción humana.
 
+ \begin{figure}
+    \centering
+    \includegraphics[width=0.96\textwidth]{H.png}
+    \caption{Canal H (Espacio de Color HSV)}
+    \label{fig:H}
+  \end{figure}
 
 Se utilizan los canales de color H y S (matiz y saturación) para
 detectar la piel. En el canal H, la piel se compone de zonas pequeñas
@@ -1029,6 +1029,15 @@ primer lugar, se realiza una \textbf{ecualización del histograma} del canal H
 para conseguir una distribución uniforme. Es decir, que exista el
 mismo número de píxeles para cada nivel de gris del histograma de del
 canal.
+ 
+
+  \begin{figure} 
+    \centering
+    \includegraphics[width=0.96\textwidth]{Heq.png}
+    \caption{Ecualización del Histograma}
+    \label{fig:Heq}
+  \end{figure}
+
 
 A continuación, se aplica una \textbf{erosión morfológica} al canal para reducir los
 contornos y separar las zonas similares próximas, a la vez que se
@@ -1042,10 +1051,27 @@ elemento estructural define el tamaño y la forma con la que se aplica
 la operación. En GrayAR se aplica un elemento en forma de elipse de
 tamaño 7x7 píxeles.
 
+  \begin{figure} 
+    \centering
+    \includegraphics[width=0.96\textwidth]{Herode.png}
+    \caption{Erosión Morfológica}
+    \label{fig:Herode}
+  \end{figure}
+
+
+
 Para finalizar el tratamiento previo, se aplica un \textbf{filtro bilateral}
 tanto al canal H como al S. El filtra bilateral es una herramienta muy
 útil en visión por computador ya que permite suavizar las zonas
 homogéneas de una imagen manteniendo los bordes.
+
+\begin{figure} 
+    \centering
+    \includegraphics[width=0.96\textwidth]{Hbilat.png}
+    \caption{Aplicación de Filtro Bilateral}
+    \label{fig:Hbital}
+  \end{figure}
+
 
 En este momento la imagen se encuentra preparada para seleccionar
 píxeles perteneciente a la piel. Se unifican los tres canales y
@@ -1063,6 +1089,12 @@ donde las zonas más claras pertenecen a píxeles de piel y los
 contornos negros son zonas indeterminadas. Estableciendo un umbral, se
 seleccionan los píxeles candidatos y \textbf{se genera la máscara} que
 corresponderá a la región ocupada por la mano en la imagen.
+\begin{figure} 
+    \centering
+    \includegraphics[width=0.96\textwidth]{Hthrehold.png}
+    \caption{Máscara generada por la mano extraída}
+    \label{fig:Hthrehold}
+  \end{figure}
 
 \subsection{Análisis de la imagen para la detección de la mano}
 Una vez que disponemos en una imagen binaria la región de la mano,
@@ -1099,18 +1131,18 @@ s \begin{bmatrix}
 u\\
 v\\
 1
-\end{bmatrix} = M(R\begin{bmatrix}
+\end{bmatrix} = K(R\begin{bmatrix}
 X\\
 Y\\
 Z_{const}
 \end{bmatrix}+t)
 \end{equation}
-donde $M$ es la matriz de la cámara, $R$ la matriz de rotación, $t$ el
+donde $K$ es la matriz de la cámara, $R$ la matriz de rotación, $t$ el
 vector de rotación, y $s$ es el factor de escala de la homografía. $Zconst$ representa la altura
 donde se están representado los componentes gráficos en relación al papel, en GrayAR es 0.
 
 \begin{equation}
-R^{-1} M^{-1} s \begin{bmatrix}
+R^{-1} K^{-1} s \begin{bmatrix}
 u\\
 v\\
 1
@@ -1130,24 +1162,36 @@ centro de la hoja.
 
 \section{Subsistema de soporte y utilidades}
 \subsection{Gestor de configuración}
-Existen muchos parámetros configurables en GrayAR. En las primeras versiones del proyecto estos parámetros estaban implementados en variables dentro del programa y cada vez que era necesario modificar estos parámetros, por ejemplo para la realizacion de pruebas, era necesario recompilar el código. Para los archivos que se encuentran en la Raspberry, el tiempo de compilación al modificar el valor de uno de esto parámetros podia incluso a tardar varios minutos. Otro problema que surgió al crecer el proyecto esra que estos parámetros estaban repartidos entre varios ficheros, lo que suponia tener que recordar donde estaba localizado cada parametro y el consecuente riesgo de dejarse alguno sin actualizar que invalidaria las pruebas realizadas.
+Existen muchos parámetros configurables en GrayAR. En las primeras versiones del proyecto estos parámetros estaban implementados en variables dentro del programa y cada vez que era necesario modificar estos parámetros, por ejemplo para la realización de pruebas, era necesario recompilar el código. Para los archivos que se encuentran en la Raspberry, el tiempo de compilación al modificar el valor de uno de esto parámetros podía incluso a tardar varios minutos. Otro problema que surgió al crecer el proyecto era que estos parámetros estaban repartidos entre varios ficheros, lo que suponla tener que recordar donde estaba localizado cada parámetro y el consecuente riesgo de dejarse alguno sin actualizar que invalidaría las pruebas realizadas.
 
-Lo primero que se realizo fue sacar todos los parámetros configurables a un fichero \acs{XML} que es leido al inicio del programa permitiendo que todos los parámetros sean accesibles por cualquier módulo dentro del programa.
+Lo primero que se realizo fue sacar todos los parámetros configurables a un fichero \acs{XML} que es leído al inicio del programa permitiendo que todos los parámetros sean accesibles por cualquier módulo dentro del programa.
 
-Las ventajas son apreciables a instante, el proceso de pruebas es mucho más rápido, ya que no es necesario volver a compilar cada vez que se realiza un cambio en la configuración. Todos los parámetros se encuentran en un único fichero, que al ser \acs{XML}, tiene una estructura clara y legible para las personas, y que permite una edicion y modificacion sencilla. Tambien permite tener varios ficheros con distintas configuraciones y que se cargue en el programa uno u otro en funcion de las necesidades del momento.
+Las ventajas son apreciables a instante, el proceso de pruebas es mucho más rápido, ya que no es necesario volver a compilar cada vez que se realiza un cambio en la configuración. Todos los parámetros se encuentran en un único fichero, que al ser \acs{XML}, tiene una estructura clara y legible para las personas, y que permite una edición y modificación sencilla. También permite tener varios ficheros con distintas configuraciones y que se cargue en el programa uno u otro en función de las necesidades del momento.
  
 La necesidad es la de tener una clase centralizada y accesible desde cualquier parte del programa que sea capaz de leer un fichero de configuración en \acs{XML} y almacene aquellas variables parametrizables de
 
-Para implementar el gestor de configuración se ha creado la clase  \texttt{ConfigManager}. Esta tiene la funcion  \texttt{loadConfiguration} a la que se le indica el fichero \acs{XML} con la configuración a cargar 
+Para implementar el gestor de configuración se ha creado la clase  \texttt{ConfigManager}. Esta tiene la función  \texttt{loadConfiguration} a la que se le indica el fichero \acs{XML} con la configuración a cargar 
 
-Se ha optado por seguir el principio de diseño \acs{KISS} que establece que la mayoría de sistemas funcionan mejor si se mantienen simplesen lugar de hacerlos complejos; por ello, la simplicidad debe ser mantenida como un objetivo clave del diseño, y cualquier complejidad innecesaria debe ser evitada. Las ventajas genéricas que ofrece un patrón Singleton frente a la implementación de un clase estática como puede ser que las funciones se puedan sobreescribir en las clases herederas, que la inicialización asincrona mientras que una clase estática generalmente se inicializa cuando se carga por primera vez o que el singleton pueda ser manejado polimorficamente sin forzar a los usuarios a asumir que solo existe una instancia, no suponen un mejora para la funcionalidad que necesitamos implementar. 
+Se ha optado por seguir el principio de diseño \acs{KISS} que establece que la mayoría de sistemas funcionan mejor si se mantienen simplesen lugar de hacerlos complejos; por ello, la simplicidad debe ser mantenida como un objetivo clave del diseño, y cualquier complejidad innecesaria debe ser evitada. Las ventajas genéricas que ofrece un patrón \textit{Singleton} frente a la implementación de un clase estática como puede ser que las funciones se puedan sobrescribir en las clases herederas, que la inicialización asíncrona mientras que una clase estática generalmente se inicializa cuando se carga por primera vez o que el \textit{Singleton} pueda ser manejado polimórficamente sin forzar a los usuarios a asumir que sólo existe una instancia, no suponen un mejora para la funcionalidad que necesitamos implementar. 
 
 \subsection{Funciones de representación para depuración}
-Aunque la creación de funciones para la representación gráfica están fuera del alcance de este proyecto, a la hora de probar y depurar los distintos algoritmos implementados resulta muy practico disponer de algunas funciones de dibujado ya implementadas para corregir errores y tener una vision preeliminar de como puede quedar finalmente.
+Aunque la creación de funciones para la representación gráfica están fuera del alcance de este proyecto, a la hora de probar y depurar los distintos algoritmos implementados resulta muy practico disponer de algunas funciones de dibujado ya implementadas para corregir errores y tener una visión preliminar de como puede quedar finalmente.
 
 A partir de las primitivas de dibujado que ofrece OpenCV se han implementado una serie de funciones para facilitar la representación de contornos, esquinas, y una vez obtenidos los parámetros extrínsecos de las cámara y el proyector, dibujado de ejes, cubos u ortoedros que permiten validar si los cálculos se han realizado correctamente.
 
+\subsection{Log del sistema}
+GrayAR proporciona la clase \texttt{Log} que es la encargada de mantener el registro de eventos con los sucesos que ocurren en el sistema. Es una clase estática que realiza la escritura en la salida estándar con resaltado en distintos colores en función del tipo de mensaje. La clase además proporciona algunas funciones para imprimir vectores y matrices:
+\begin{itemize}
+\item \textbf{plain:} Mensaje sin colores.
+\item \textbf{info:}  Mensaje de información. Color azul.
+\item \textbf{error:} Mensaje de error. Color rojo.
+\item \textbf{success:} Mensaje de éxito. Color verde.
+\end{itemize}
 
-
-
-
+% Local Variables:
+% TeX-master: "main.tex"
+%  coding: utf-8
+%  mode: latex
+%  mode: flyspell
+%  ispell-local-dictionary: "castellano8"
+% End:
