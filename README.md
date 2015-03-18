@@ -1,4 +1,4 @@
-# GrayAR - Computer vision and augmented reality techniques applied to achievement management 
+# GrayAR - Computer vision and augmented reality techniques applied to document management 
 
 ## Project Report
 
